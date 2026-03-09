@@ -1,7 +1,10 @@
+import { InterfacePanel } from "../panel";
+
 export function HeroSection() {
   return (
     <section className="relative z-10 h-screen w-full flex flex-col items-center justify-center pointer-events-none select-none">
-      <h1
+      <InterfacePanel title="Main" className="w-[90vw] h-[85vh]">
+        <h1
         className="text-5xl font-bold tracking-tight sm:text-7xl"
         style={{ color: '#eaeaea' }}
       >
@@ -13,6 +16,7 @@ export function HeroSection() {
       >
         Full-Stack Developer
       </p>
+      </InterfacePanel>
     </section>
   );
 }

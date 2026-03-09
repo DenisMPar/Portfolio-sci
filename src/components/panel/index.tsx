@@ -1,0 +1,111 @@
+import { cn } from "@/lib/utils"
+import type { ReactNode } from "react"
+
+function NoiseTexture() {
+  return (
+    <div
+      className="absolute inset-0 pointer-events-none opacity-[0.03]"
+      style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+      }}
+    />
+  )
+}
+
+function CrtScanlines() {
+  return (
+    <div
+      className="absolute inset-0 pointer-events-none opacity-[0.04]"
+      style={{
+        background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.3) 2px, rgba(0, 0, 0, 0.3) 4px)",
+      }}
+    />
+  )
+}
+
+function VignetteEdge() {
+  return (
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        background: "radial-gradient(ellipse at center, transparent 50%, rgba(0, 10, 30, 0.6) 100%)",
+      }}
+    />
+  )
+}
+
+function ColorAberration() {
+  return (
+    <div
+      className="absolute inset-0 pointer-events-none opacity-30"
+      style={{
+        boxShadow: "inset 0 0 60px rgba(50, 120, 180, 0.15), inset 0 0 20px rgba(80, 160, 220, 0.1)",
+      }}
+    />
+  )
+}
+
+function GlowLine({ position }: { position: "top" | "bottom" }) {
+  return (
+    <div
+      className={cn(
+        "absolute left-8 right-8 h-px bg-gradient-to-r from-transparent to-transparent",
+        position === "top" ? "top-0 via-primary/40" : "bottom-0 via-primary/20"
+      )}
+    />
+  )
+}
+
+function PanelContent({ title, children }: { title?: string; children: ReactNode }) {
+  return (
+    <div className="relative z-10">
+      {title && (
+        <div className="flex items-center gap-3 px-4 py-3">
+          <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_rgba(80,140,200,0.6)]" />
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
+            {title}
+          </h3>
+          <div className="flex-1 h-px bg-gradient-to-r from-primary/30 to-transparent" />
+        </div>
+      )}
+      <div className="p-4">{children}</div>
+    </div>
+  )
+}
+
+interface InterfacePanelProps {
+  children: ReactNode
+  title?: string
+  className?: string
+  variant?: "default" | "glow" | "minimal"
+}
+
+export function InterfacePanel({ children, title, className, variant = "default" }: InterfacePanelProps) {
+  return (
+    <div
+      className={cn(
+        "relative",
+        variant === "glow" && "drop-shadow-[0_0_25px_rgba(80,140,200,0.4)]",
+        className
+      )}
+    >
+      <div
+        className={cn(
+          "relative overflow-hidden bg-card h-full",
+          "before:absolute before:inset-0 before:bg-gradient-to-b before:from-primary/8 before:to-transparent before:pointer-events-none"
+        )}
+        style={{
+          clipPath: "polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px))",
+        }}
+      >
+        <NoiseTexture />
+        <CrtScanlines />
+        <VignetteEdge />
+        <ColorAberration />
+        <PanelContent title={title}>{children}</PanelContent>
+        <GlowLine position="top" />
+        <GlowLine position="bottom" />
+      </div>
+    </div>
+  )
+}

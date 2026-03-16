@@ -5,6 +5,13 @@
   --foreground: #eaeaea;
   --card: rgb(30 30 54 / 0.1);
   --primary: #508ccc;
+  --accent: #00ff88;
+  --nav-h: 40px;
+  --footer-h: 42px;
+  --section-gap: 14px;
+  --section-gap-top: 30px;
+  --section-pt: calc(var(--nav-h) + var(--section-gap-top));
+  --section-pb: calc(var(--footer-h) + var(--section-gap));
 }
 
 @theme inline {
@@ -12,6 +19,7 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-primary: var(--primary);
+  --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -28,6 +36,14 @@
   80% { transform: translate(5%, -10%); }
   90% { transform: translate(-5%, 5%); }
   100% { transform: translate(0, 0); }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 0;
 }
 
 body {

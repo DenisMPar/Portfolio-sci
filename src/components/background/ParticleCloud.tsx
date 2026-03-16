@@ -54,7 +54,7 @@ const fragmentShader = /* glsl */ `
 const FAR_AWAY = new THREE.Vector3(0, 0, -1000);
 
 export function ParticleCloud() {
-  const positions = useMemo(() => fibonacciSphere(3500, 13.5), []);
+  const positions = useMemo(() => fibonacciSphere(3000, 13.5), []);
 
   const trailArray = useMemo(
     () => Array.from({ length: TRAIL_LENGTH }, () => new THREE.Vector3().copy(FAR_AWAY)),

@@ -21,6 +21,8 @@ export function BackgroundScene() {
         dpr={[1, 2]}
         gl={{ alpha: true, antialias: false }}
         style={{ width: '100%', height: '100%' }}
+        eventSource={typeof document !== 'undefined' ? document.documentElement : undefined}
+        eventPrefix="client"
       >
         <WebGLGuard />
         <Suspense fallback={null}>

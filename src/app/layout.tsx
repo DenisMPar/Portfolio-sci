@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { BackgroundClient } from "@/components/background/BackgroundClient";
 import { BackgroundReadyProvider } from "@/components/background/BackgroundReadyContext";
+import { GlobalLoader } from "@/components/GlobalLoader";
 import { NavBar } from "@/components/nav/NavBar";
 import { Footer } from "@/components/footer/Footer";
 import "./globals.css";
@@ -32,6 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <BackgroundReadyProvider>
+          <GlobalLoader />
           <BackgroundClient />
           <NavBar />
           {children}

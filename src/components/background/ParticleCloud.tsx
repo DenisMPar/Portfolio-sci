@@ -4,9 +4,9 @@ import { useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { fibonacciSphere } from './utils/fibonacciSphere';
+import { useHasHover } from '@/hooks/useHasHover';
 
 const TRAIL_LENGTH = 8;
-const HAS_HOVER = typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
@@ -55,26 +55,27 @@ const fragmentShader = /* glsl */ `
 const FAR_AWAY = new THREE.Vector3(0, 0, -1000);
 
 export function ParticleCloud() {
+  const hasHover = useHasHover();
   const positions = useMemo(() => fibonacciSphere(2000, 13.5), []);
 
   const trailArray = useMemo(
-    () => HAS_HOVER
+    () => hasHover
       ? Array.from({ length: TRAIL_LENGTH }, () => new THREE.Vector3().copy(FAR_AWAY))
       : null,
-    [],
+    [hasHover],
   );
   const trailIndex = useRef(0);
   const trailCount = useRef(0);
   const lastTrailTime = useRef(0);
 
-  const raycaster = useMemo(() => HAS_HOVER ? new THREE.Raycaster() : null, []);
-  const sphereGeo = useMemo(() => HAS_HOVER ? new THREE.SphereGeometry(13.5, 32, 32) : null, []);
+  const raycaster = useMemo(() => hasHover ? new THREE.Raycaster() : null, [hasHover]);
+  const sphereGeo = useMemo(() => hasHover ? new THREE.SphereGeometry(13.5, 32, 32) : null, [hasHover]);
   const dummyMesh = useMemo(() => {
-    if (!HAS_HOVER || !sphereGeo) return null;
+    if (!hasHover || !sphereGeo) return null;
     const m = new THREE.Mesh(sphereGeo, new THREE.MeshBasicMaterial());
     m.visible = false;
     return m;
-  }, [sphereGeo]);
+  }, [hasHover, sphereGeo]);
 
   const uniformsRef = useRef({
     uTime:       { value: 0 },
@@ -95,7 +96,7 @@ export function ParticleCloud() {
     uniformsRef.current.uTime.value       = t;
     uniformsRef.current.uPixelRatio.value = gl.getPixelRatio();
 
-    if (!HAS_HOVER || !dummyMesh || !raycaster || !trailArray) return;
+    if (!hasHover || !dummyMesh || !raycaster || !trailArray) return;
 
     dummyMesh.rotation.set(0, t * 0.025, 0);
     dummyMesh.updateMatrixWorld();

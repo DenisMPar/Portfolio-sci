@@ -3,6 +3,7 @@
 import { m } from "framer-motion";
 import { InterfacePanel, type InterfacePanelProps } from "./index";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
+import { useHasHover } from "@/hooks/useHasHover";
 
 const panelVariants = {
   hidden: { y: -30},
@@ -22,6 +23,15 @@ export function AnimatedPanel({
   ...props
 }: InterfacePanelProps & { delay?: number }) {
   const ready = useBackgroundReady();
+  const hasHover = useHasHover();
+
+  if (!hasHover) {
+    return (
+      <div className="h-full" style={{ opacity: ready ? 1 : 0 }}>
+        <InterfacePanel {...props} />
+      </div>
+    );
+  }
 
   return (
     <m.div

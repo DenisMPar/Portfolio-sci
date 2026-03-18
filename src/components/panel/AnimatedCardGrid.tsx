@@ -2,6 +2,7 @@
 
 import { m } from "framer-motion";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
+import { useHasHover } from "@/hooks/useHasHover";
 
 const containerVariants = {
   hidden: {},
@@ -34,6 +35,15 @@ export function AnimatedCardGrid({
   className?: string;
 }) {
   const ready = useBackgroundReady();
+  const hasHover = useHasHover();
+
+  if (!hasHover) {
+    return (
+      <div className={className} style={{ opacity: ready ? 1 : 0 }}>
+        {children}
+      </div>
+    );
+  }
 
   return (
     <m.div
@@ -48,5 +58,9 @@ export function AnimatedCardGrid({
 }
 
 export function AnimatedCard({ children }: { children: React.ReactNode }) {
+  const hasHover = useHasHover();
+  if (!hasHover) {
+    return <div className="h-full">{children}</div>;
+  }
   return <m.div className="h-full" variants={itemVariants}>{children}</m.div>;
 }

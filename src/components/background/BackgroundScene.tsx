@@ -8,6 +8,7 @@ import { LiquidSmoke } from './LiquidSmoke';
 import { AnalogDecay } from './effects/AnalogDecay';
 import { useWebGLGuard } from './hooks/useWebGLGuard';
 import { useMarkBackgroundReady } from './BackgroundReadyContext';
+import { useHasHover } from '@/hooks/useHasHover';
 import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
 
@@ -36,6 +37,8 @@ function ReadySignal() {
 }
 
 export function BackgroundScene() {
+  const hasHover = useHasHover();
+
   return (
     <div className="fixed inset-0 z-0" aria-hidden>
       <Canvas
@@ -53,22 +56,24 @@ export function BackgroundScene() {
           <LiquidSmoke />
         </Suspense>
         <ParticleCloud />
-        <EffectComposer>
-          <Bloom
-            intensity={0.3}
-            luminanceThreshold={0.0}
-            luminanceSmoothing={1.25}
-            mipmapBlur
-          />
-          <AnalogDecay
-            grain={0.1}
-            bleeding={0.3}
-            scanlines={0.15}
-            vignette={1.0}
-            jitter={0.4}
-            intensity={0.4}
-          />
-        </EffectComposer>
+        {hasHover && (
+          <EffectComposer>
+            <Bloom
+              intensity={0.3}
+              luminanceThreshold={0.0}
+              luminanceSmoothing={1.25}
+              mipmapBlur
+            />
+            <AnalogDecay
+              grain={0.1}
+              bleeding={0.3}
+              scanlines={0.15}
+              vignette={1.0}
+              jitter={0.4}
+              intensity={0.2}
+            />
+          </EffectComposer>
+        )}
       </Canvas>
     </div>
   );

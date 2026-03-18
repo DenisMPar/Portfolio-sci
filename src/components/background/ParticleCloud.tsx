@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { fibonacciSphere } from './utils/fibonacciSphere';
 
 const TRAIL_LENGTH = 8;
+const HAS_HOVER = typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
@@ -57,16 +58,19 @@ export function ParticleCloud() {
   const positions = useMemo(() => fibonacciSphere(2000, 13.5), []);
 
   const trailArray = useMemo(
-    () => Array.from({ length: TRAIL_LENGTH }, () => new THREE.Vector3().copy(FAR_AWAY)),
+    () => HAS_HOVER
+      ? Array.from({ length: TRAIL_LENGTH }, () => new THREE.Vector3().copy(FAR_AWAY))
+      : null,
     [],
   );
   const trailIndex = useRef(0);
   const trailCount = useRef(0);
   const lastTrailTime = useRef(0);
 
-  const raycaster = useMemo(() => new THREE.Raycaster(), []);
-  const sphereGeo = useMemo(() => new THREE.SphereGeometry(13.5, 32, 32), []);
+  const raycaster = useMemo(() => HAS_HOVER ? new THREE.Raycaster() : null, []);
+  const sphereGeo = useMemo(() => HAS_HOVER ? new THREE.SphereGeometry(13.5, 32, 32) : null, []);
   const dummyMesh = useMemo(() => {
+    if (!HAS_HOVER || !sphereGeo) return null;
     const m = new THREE.Mesh(sphereGeo, new THREE.MeshBasicMaterial());
     m.visible = false;
     return m;
@@ -91,24 +95,21 @@ export function ParticleCloud() {
     uniformsRef.current.uTime.value       = t;
     uniformsRef.current.uPixelRatio.value = gl.getPixelRatio();
 
-    // Rotate the dummy mesh to match the shader rotation
-    const angle = t * 0.025;
-    dummyMesh.rotation.set(0, angle, 0);
+    if (!HAS_HOVER || !dummyMesh || !raycaster || !trailArray) return;
+
+    dummyMesh.rotation.set(0, t * 0.025, 0);
     dummyMesh.updateMatrixWorld();
 
-    // Skip raycast if pointer hasn't moved
     const pointerMoved = pointer.x !== lastPointer.current.x || pointer.y !== lastPointer.current.y;
     lastPointer.current.x = pointer.x;
     lastPointer.current.y = pointer.y;
 
     if (!pointerMoved) return;
 
-    // Raycast against the sphere
     raycaster.setFromCamera(pointer, camera);
     const hits = raycaster.intersectObject(dummyMesh);
 
     if (hits.length > 0) {
-      // Add a new trail point every ~30ms
       if (t - lastTrailTime.current > 0.03) {
         const idx = trailIndex.current % TRAIL_LENGTH;
         trailArray[idx].copy(hits[0].point);
@@ -118,7 +119,6 @@ export function ParticleCloud() {
       }
     }
 
-    // Build trail uniform in order: newest first
     const uTrail = uniformsRef.current.uTrail.value;
     for (let i = 0; i < TRAIL_LENGTH; i++) {
       const arrIdx = ((trailIndex.current - 1 - i) % TRAIL_LENGTH + TRAIL_LENGTH) % TRAIL_LENGTH;

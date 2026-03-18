@@ -62,12 +62,12 @@ const PLANE_SIZE = 120;
 export function LiquidSmoke() {
   const meshRef = useRef<THREE.Mesh>(null);
 
-  const noiseTex = useLoader(THREE.TextureLoader, '/noise.png');
+  const noiseTex = useLoader(THREE.TextureLoader, '/noise.webp');
   noiseTex.wrapS = THREE.RepeatWrapping;
   noiseTex.wrapT = THREE.RepeatWrapping;
   noiseTex.magFilter = THREE.LinearFilter;
-  noiseTex.minFilter = THREE.LinearMipMapLinearFilter;
-  noiseTex.anisotropy = 4;
+  noiseTex.minFilter = THREE.LinearMipMapNearestFilter;
+  noiseTex.anisotropy = 1;
 
   const uniforms = useMemo(
     () => ({

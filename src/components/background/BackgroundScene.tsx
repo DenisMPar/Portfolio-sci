@@ -11,6 +11,11 @@ import { useMarkBackgroundReady } from './BackgroundReadyContext';
 import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
 
+const CAMERA = { position: [0, 0, 16] as const, fov: 75 };
+const GL = { alpha: true, antialias: false };
+const DPR: [number, number] = [1, 1.5];
+const PERF = { min: 0.5 };
+
 function WebGLGuard() {
   useWebGLGuard();
   return null;
@@ -34,9 +39,10 @@ export function BackgroundScene() {
   return (
     <div className="fixed inset-0 z-0" aria-hidden>
       <Canvas
-        camera={{ position: [0, 0, 16], fov: 75 }}
-        dpr={[1, 2]}
-        gl={{ alpha: true, antialias: false }}
+        camera={CAMERA}
+        dpr={DPR}
+        performance={PERF}
+        gl={GL}
         style={{ width: '100%', height: '100%' }}
         eventSource={typeof document !== 'undefined' ? document.documentElement : undefined}
         eventPrefix="client"

@@ -2,7 +2,9 @@
 
 import { forwardRef, useMemo } from 'react';
 import { Effect } from 'postprocessing';
-import { Uniform, Vector2 } from 'three';
+import { Uniform, Vector2, type WebGLRenderer } from 'three';
+
+const _sizeVec = new Vector2();
 
 const fragmentShader = /* glsl */ `
   uniform float uTime;
@@ -97,7 +99,7 @@ class AnalogDecayEffect extends Effect {
     super('AnalogDecayEffect', fragmentShader, {
       uniforms: new Map<string, Uniform>([
         ['uTime', new Uniform(0)],
-        ['uResolution', new Uniform(new Vector2(window.innerWidth, window.innerHeight))],
+        ['uResolution', new Uniform(new Vector2(1, 1))],
         ['uGrain', new Uniform(grain)],
         ['uBleeding', new Uniform(bleeding)],
         ['uScanlines', new Uniform(scanlines)],
@@ -108,9 +110,10 @@ class AnalogDecayEffect extends Effect {
     });
   }
 
-  update(_renderer: unknown, _inputBuffer: unknown, deltaTime: number) {
-    const u = this.uniforms.get('uTime')!;
-    u.value += deltaTime;
+  update(renderer: WebGLRenderer, _inputBuffer: unknown, deltaTime: number) {
+    this.uniforms.get('uTime')!.value += deltaTime;
+    const res = this.uniforms.get('uResolution')!.value as Vector2;
+    res.copy(renderer.getSize(_sizeVec));
   }
 }
 

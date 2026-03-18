@@ -80,7 +80,7 @@ export function ParticleCloud() {
     uTrailCount: { value: 0 },
   });
 
-  const { camera } = useThree();
+  const camera = useThree((s) => s.camera);
 
   const elapsedRef = useRef(0);
   const lastPointer = useRef({ x: 0, y: 0 });

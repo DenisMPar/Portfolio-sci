@@ -1,8 +1,9 @@
 import { useRef, useMemo } from 'react';
-import { useFrame, useThree, useLoader } from '@react-three/fiber';
+import { useFrame, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 
 const elapsedRef = { value: 0 };
+const _sizeVec = new THREE.Vector2();
 
 const vertexShader = /* glsl */ `
   varying vec2 vUv;
@@ -56,21 +57,22 @@ const fragmentShader = /* glsl */ `
   }
 `;
 
+const PLANE_SIZE = 120;
+
 export function LiquidSmoke() {
   const meshRef = useRef<THREE.Mesh>(null);
-  const { viewport } = useThree();
 
   const noiseTex = useLoader(THREE.TextureLoader, '/noise.png');
   noiseTex.wrapS = THREE.RepeatWrapping;
   noiseTex.wrapT = THREE.RepeatWrapping;
   noiseTex.magFilter = THREE.LinearFilter;
   noiseTex.minFilter = THREE.LinearMipMapLinearFilter;
-  noiseTex.anisotropy = 16;
+  noiseTex.anisotropy = 4;
 
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+      uResolution: { value: new THREE.Vector2(1, 1) },
       uNoiseTex: { value: noiseTex },
     }),
     [noiseTex]
@@ -89,9 +91,10 @@ export function LiquidSmoke() {
     [uniforms]
   );
 
-  useFrame((_, delta) => {
+  useFrame(({ gl }, delta) => {
     elapsedRef.value += delta;
     uniforms.uTime.value = elapsedRef.value;
+    uniforms.uResolution.value.copy(gl.getSize(_sizeVec));
   });
 
   return (
@@ -101,7 +104,7 @@ export function LiquidSmoke() {
       material={material}
       renderOrder={-10}
     >
-      <planeGeometry args={[viewport.width * 3, viewport.height * 3]} />
+      <planeGeometry args={[PLANE_SIZE, PLANE_SIZE]} />
     </mesh>
   );
 }

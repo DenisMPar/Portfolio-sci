@@ -13,12 +13,12 @@ export const skills: SkillCategory[] = [
     ],
   },
   {
-    name: "State & Testing",
-    skills: ["Recoil", "Zustand", "React Context API", "Jest", "Vitest", "React Testing Library", "Unit Testing"],
-  },
-  {
     name: "Backend",
     skills: ["Node.js", "Express.js", "APIs REST", "PostgreSQL", "JWT Authentication", "Firebase"],
+  },
+  {
+    name: "State & Testing",
+    skills: ["Recoil", "Zustand", "React Context API", "Jest", "Vitest", "React Testing Library", "Unit Testing"],
   },
   {
     name: "Tools",

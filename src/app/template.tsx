@@ -1,18 +1,18 @@
 "use client";
 
-import { m } from "framer-motion";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const ready = useBackgroundReady();
 
   return (
-    <m.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+    <div
+      style={{
+        animation: ready ? 'page-enter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both' : 'none',
+        opacity: ready ? undefined : 0,
+      }}
     >
       {children}
-    </m.div>
+    </div>
   );
 }

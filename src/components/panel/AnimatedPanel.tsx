@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { InterfacePanel, type InterfacePanelProps } from "./index";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 
@@ -24,7 +24,7 @@ export function AnimatedPanel({
   const ready = useBackgroundReady();
 
   return (
-    <motion.div
+    <m.div
       variants={panelVariants}
       initial="hidden"
       animate={ready ? "visible" : "hidden"}
@@ -32,6 +32,6 @@ export function AnimatedPanel({
       className="h-full"
     >
       <InterfacePanel {...props} />
-    </motion.div>
+    </m.div>
   );
 }

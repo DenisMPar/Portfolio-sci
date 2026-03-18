@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 
 const containerVariants = {
@@ -36,17 +36,17 @@ export function AnimatedCardGrid({
   const ready = useBackgroundReady();
 
   return (
-    <motion.div
+    <m.div
       className={className}
       variants={containerVariants}
       initial="hidden"
       animate={ready ? "visible" : "hidden"}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
 export function AnimatedCard({ children }: { children: React.ReactNode }) {
-  return <motion.div className="h-full" variants={itemVariants}>{children}</motion.div>;
+  return <m.div className="h-full" variants={itemVariants}>{children}</m.div>;
 }

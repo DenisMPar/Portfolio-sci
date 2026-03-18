@@ -7,9 +7,26 @@ import { ParticleCloud } from './ParticleCloud';
 import { LiquidSmoke } from './LiquidSmoke';
 import { AnalogDecay } from './effects/AnalogDecay';
 import { useWebGLGuard } from './hooks/useWebGLGuard';
+import { useMarkBackgroundReady } from './BackgroundReadyContext';
+import { useFrame } from '@react-three/fiber';
+import { useRef } from 'react';
 
 function WebGLGuard() {
   useWebGLGuard();
+  return null;
+}
+
+function ReadySignal() {
+  const markReady = useMarkBackgroundReady();
+  const fired = useRef(false);
+
+  useFrame(() => {
+    if (!fired.current) {
+      fired.current = true;
+      markReady();
+    }
+  });
+
   return null;
 }
 
@@ -25,6 +42,7 @@ export function BackgroundScene() {
         eventPrefix="client"
       >
         <WebGLGuard />
+        <ReadySignal />
         <Suspense fallback={null}>
           <LiquidSmoke />
         </Suspense>

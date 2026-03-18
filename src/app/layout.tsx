@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { BackgroundClient } from "@/components/background/BackgroundClient";
+import { BackgroundReadyProvider } from "@/components/background/BackgroundReadyContext";
 import { NavBar } from "@/components/nav/NavBar";
 import { Footer } from "@/components/footer/Footer";
 import "./globals.css";
@@ -30,10 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <BackgroundClient />
-        <NavBar />
-        {children}
-        <Footer />
+        <BackgroundReadyProvider>
+          <BackgroundClient />
+          <NavBar />
+          {children}
+          <Footer />
+        </BackgroundReadyProvider>
       </body>
     </html>
   );

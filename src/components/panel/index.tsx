@@ -65,15 +65,18 @@ function PanelContent({ title, children }: { title?: string; children: ReactNode
           <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
             {title}
           </h3>
-          <div className="flex-1 h-px bg-gradient-to-r from-primary/30 to-transparent" />
+          <div
+            className="flex-1 h-px bg-gradient-to-r from-primary/30 to-transparent origin-left"
+            style={{ transform: 'scaleX(0)', animation: 'line-expand 0.8s ease-out 0.35s forwards' }}
+          />
         </div>
       )}
-      <div className="p-4 flex-1">{children}</div>
+      <div className="p-4 mb-3 flex-1 overflow-y-auto">{children}</div>
     </div>
   )
 }
 
-interface InterfacePanelProps {
+export interface InterfacePanelProps {
   children: ReactNode
   title?: string
   className?: string

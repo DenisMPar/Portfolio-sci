@@ -38,12 +38,14 @@
   100% { transform: translate(0, 0); }
 }
 
-html {
-  scroll-behavior: smooth;
+@keyframes line-expand {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
-section[id] {
-  scroll-margin-top: 0;
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(30 50 95 / 0.6) transparent;
 }
 
 body {

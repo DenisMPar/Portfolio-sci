@@ -48,6 +48,7 @@ function ColorAberration() {
 function GlowLine({ position }: { position: "top" | "bottom" }) {
   return (
     <div
+      aria-hidden="true"
       className={cn(
         "absolute left-8 right-8 h-px bg-gradient-to-r from-transparent to-transparent",
         position === "top" ? "top-0 via-primary/40" : "bottom-0 via-primary/20"
@@ -61,13 +62,14 @@ function PanelContent({ title, children }: { title?: string; children: ReactNode
     <div className="relative z-10 h-full flex flex-col">
       {title && (
         <div className="flex items-center gap-3 px-4 py-3">
-          <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_rgba(80,140,200,0.6)]" />
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
+          <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_rgba(80,140,200,0.6)]" aria-hidden="true" />
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground text-wrap-balance">
             {title}
-          </h3>
+          </h2>
           <div
-            className="flex-1 h-px bg-gradient-to-r from-primary/30 to-transparent origin-left"
+            className="flex-1 h-px bg-gradient-to-r from-primary/30 to-transparent origin-left motion-reduce:!animate-none"
             style={{ transform: 'scaleX(0)', animation: 'line-expand 0.8s ease-out 0.35s forwards' }}
+            aria-hidden="true"
           />
         </div>
       )}

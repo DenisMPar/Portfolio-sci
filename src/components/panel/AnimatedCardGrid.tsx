@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 import { useHasHover } from "@/hooks/useHasHover";
 
@@ -27,6 +27,11 @@ const itemVariants = {
   },
 };
 
+const reducedItemVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};
+
 export function AnimatedCardGrid({
   children,
   className,
@@ -39,7 +44,7 @@ export function AnimatedCardGrid({
 
   if (!hasHover) {
     return (
-      <div className={className} style={{ opacity: ready ? 1 : 0 }}>
+      <div className={className + " transition-opacity duration-300"} style={{ opacity: ready ? 1 : 0 }}>
         {children}
       </div>
     );
@@ -59,8 +64,9 @@ export function AnimatedCardGrid({
 
 export function AnimatedCard({ children }: { children: React.ReactNode }) {
   const hasHover = useHasHover();
+  const prefersReduced = useReducedMotion();
   if (!hasHover) {
     return <div className="h-full">{children}</div>;
   }
-  return <m.div className="h-full" variants={itemVariants}>{children}</m.div>;
+  return <m.div className="h-full" variants={prefersReduced ? reducedItemVariants : itemVariants}>{children}</m.div>;
 }

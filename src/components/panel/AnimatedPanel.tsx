@@ -1,12 +1,12 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { InterfacePanel, type InterfacePanelProps } from "./index";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 import { useHasHover } from "@/hooks/useHasHover";
 
 const panelVariants = {
-  hidden: { y: -30},
+  hidden: { y: -30 },
   visible: {
     y: 0,
     transition: {
@@ -18,16 +18,22 @@ const panelVariants = {
   },
 };
 
+const reducedVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};
+
 export function AnimatedPanel({
   delay = 0,
   ...props
 }: InterfacePanelProps & { delay?: number }) {
   const ready = useBackgroundReady();
   const hasHover = useHasHover();
+  const prefersReduced = useReducedMotion();
 
   if (!hasHover) {
     return (
-      <div className="h-full" style={{ opacity: ready ? 1 : 0 }}>
+      <div className="h-full transition-opacity duration-300" style={{ opacity: ready ? 1 : 0 }}>
         <InterfacePanel {...props} />
       </div>
     );
@@ -35,7 +41,7 @@ export function AnimatedPanel({
 
   return (
     <m.div
-      variants={panelVariants}
+      variants={prefersReduced ? reducedVariants : panelVariants}
       initial="hidden"
       animate={ready ? "visible" : "hidden"}
       transition={{ delay }}

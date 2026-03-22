@@ -5,7 +5,7 @@ import { AnimatedPanel } from "../panel/AnimatedPanel";
 export function HeroSection() {
   return (
     <section id="hero" className="relative z-10 h-screen w-full flex flex-col items-center justify-center pointer-events-none select-none" style={{ paddingTop: 'var(--section-pt)', paddingBottom: 'var(--section-pb)' }}>
-      <AnimatedPanel title="Main" className="w-[90vw] h-full">
+      <AnimatedPanel title="Main" className="w-[90vw] max-w-[1500px] h-full">
         <div className="flex flex-col items-center justify-center h-full text-center">
         <h1
           className="text-5xl font-bold tracking-tight sm:text-7xl"

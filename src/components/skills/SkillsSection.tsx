@@ -8,7 +8,7 @@ import { skills } from "@/data/skills";
 export function SkillsSection() {
   return (
     <section id="skills" className="relative z-10 h-screen w-full flex items-center justify-center pointer-events-none" style={{ paddingTop: 'var(--section-pt)', paddingBottom: 'var(--section-pb)' }}>
-      <AnimatedPanel title="Skills" className="w-[90vw] h-full pointer-events-auto">
+      <AnimatedPanel title="Skills" className="w-[90vw] max-w-[1500px] h-full pointer-events-auto">
         <div className="min-h-full flex items-center justify-center">
         <AnimatedCardGrid className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-4xl">
           {skills.map((category) => (

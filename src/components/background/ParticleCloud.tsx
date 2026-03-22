@@ -56,7 +56,7 @@ const FAR_AWAY = new THREE.Vector3(0, 0, -1000);
 
 export function ParticleCloud() {
   const hasHover = useHasHover();
-  const positions = useMemo(() => fibonacciSphere(2000, 13.5), []);
+  const positions = useMemo(() => fibonacciSphere(2800, 13.5), []);
 
   const trailArray = useMemo(
     () => hasHover

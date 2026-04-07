@@ -18,8 +18,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Denis — Full-Stack Developer",
-  description: "Portfolio of Denis, a full-stack developer specializing in React, Next.js, and Node.js.",
+  metadataBase: new URL(process.env.SITE_URL ?? "https://example.com"),
+  title: "Denis — Frontend Engineer",
+  description:
+    "Portfolio of Denis, a frontend engineer specializing in React, Next.js, and TypeScript.",
+  openGraph: {
+    title: "Denis — Frontend Engineer",
+    description:
+      "Portfolio of Denis, a frontend engineer specializing in React, Next.js, and TypeScript.",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Denis — Frontend Engineer",
+    description:
+      "Portfolio of Denis, a frontend engineer specializing in React, Next.js, and TypeScript.",
+  },
 };
 
 export default function RootLayout({

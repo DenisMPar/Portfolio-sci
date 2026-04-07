@@ -1,7 +1,7 @@
 const contacts = [
-  { label: "GitHub", href: "https://github.com/denis", prefix: "gh:" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/denis", prefix: "in:" },
-  { label: "Email", href: "mailto:denis@example.com", prefix: "mail:" },
+  { label: "GitHub", href: "https://github.com/DenisMPar", prefix: "gh:" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/denismpar/", prefix: "in:" },
+  { label: "Email", href: "mailto:denispar.dev@gmail.com", prefix: "mail:" },
 ] as const;
 
 export function Footer() {

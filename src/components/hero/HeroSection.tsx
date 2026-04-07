@@ -17,20 +17,19 @@ export function HeroSection() {
           className="mt-4 text-lg sm:text-2xl font-mono"
           style={{ color: '#00ff88' }}
         >
-          Full-Stack Developer
+          Frontend Engineer
         </p>
         <div className="mt-8 max-w-2xl font-mono text-sm sm:text-base leading-relaxed space-y-4 text-foreground/80">
           <p>
-            I&apos;m a full-stack developer who enjoys building performant web
+            I&apos;m a frontend engineer who enjoys building performant web
             applications and exploring the intersection of design and
             engineering.
           </p>
           <p>
-            I work across the stack — from crafting polished{" "}
-            <span className="text-accent">React</span> interfaces to designing
-            robust <span className="text-accent">APIs</span> and infrastructure.
-            I care about clean code, developer experience, and shipping things
-            that actually work.
+            I focus on crafting polished{" "}
+            <span className="text-accent">React</span> interfaces with attention
+            to detail and performance. I care about clean code, developer
+            experience, and shipping things that actually work.
           </p>
         </div>
         </div>

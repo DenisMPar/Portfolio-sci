@@ -62,9 +62,9 @@ function ProjectPreview({ project }: { project: Project }) {
           </div>
         </div>
 
-        <h3 className="font-semibold text-foreground mb-1 text-wrap-balance">{project.title}</h3>
+        <h3 className="font-semibold text-foreground mb-1 2xl:text-lg text-wrap-balance">{project.title}</h3>
 
-        <p className="font-mono text-xs text-foreground/60 leading-relaxed mb-3">
+        <p className="font-mono text-xs 2xl:text-sm text-foreground/60 leading-relaxed mb-3">
           {project.description}
         </p>
 
@@ -72,14 +72,14 @@ function ProjectPreview({ project }: { project: Project }) {
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="font-mono text-[10px] border border-primary/20 px-1.5 py-0.5 text-foreground/50"
+              className="font-mono text-[10px] 2xl:text-xs border border-primary/20 px-1.5 2xl:px-2 py-0.5 text-foreground/50"
             >
               {tag}
             </span>
           ))}
         </div>
 
-        <div className="flex gap-3 font-mono text-xs">
+        <div className="flex gap-3 font-mono text-xs 2xl:text-sm">
           {project.liveUrl && (
             <a
               href={project.liveUrl}
@@ -129,10 +129,10 @@ function ProjectNav({
                 : "border-l-2 border-l-transparent text-foreground/50 hover:text-foreground/80 hover:bg-primary/5"
             }`}
           >
-            <span className="font-mono text-[10px] text-primary/40 shrink-0">
+            <span className="font-mono text-[10px] 2xl:text-xs text-primary/40 shrink-0">
               {String(index + 1).padStart(2, "0")}
             </span>
-            <span className="font-mono text-xs truncate">{project.title}</span>
+            <span className="font-mono text-xs 2xl:text-sm truncate">{project.title}</span>
           </button>
         );
       })}

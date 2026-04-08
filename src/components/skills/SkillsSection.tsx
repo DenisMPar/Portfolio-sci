@@ -35,7 +35,7 @@ const reducedChipVariants = {
 };
 
 const chipClass =
-  "inline-flex items-center gap-1.5 font-mono text-xs 2xl:text-sm border border-primary/20 px-2.5 py-1 2xl:px-3 2xl:py-1.5 text-foreground/70 transition-all hover:text-foreground hover:border-primary/40 hover:shadow-[0_0_12px_rgba(80,140,200,0.15)] cursor-default";
+  "inline-flex items-center gap-1.5 text-[11px] 2xl:text-xs border border-primary/20 px-2.5 py-1 2xl:px-3 2xl:py-1.5 text-foreground/70 transition-all hover:text-foreground hover:border-primary/40 hover:shadow-[0_0_12px_rgba(80,140,200,0.15)] cursor-default";
 
 function SkillChip({ skill }: { skill: Skill }) {
   const Icon = skill.icon;
@@ -51,7 +51,7 @@ function CategoryRow({ category, isLast }: { category: (typeof skills)[number]; 
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-baseline gap-3 sm:gap-6 py-5 px-2">
-        <span className="font-mono text-[10px] 2xl:text-xs text-primary/70 uppercase tracking-wider sm:w-40 2xl:w-44 shrink-0">
+        <span className="text-[10px] 2xl:text-xs text-primary/70 uppercase tracking-wider sm:w-40 2xl:w-44 shrink-0">
           {category.name}
           <span className="text-accent/40 ml-2">({category.skills.length})</span>
         </span>
@@ -75,7 +75,7 @@ function AnimatedCategoryRow({ category, isLast }: { category: (typeof skills)[n
   return (
     <m.div variants={categoryVariants}>
       <div className="flex flex-col sm:flex-row sm:items-baseline gap-3 sm:gap-6 py-5 px-2">
-        <m.span className="font-mono text-[10px] 2xl:text-xs text-primary/70 uppercase tracking-wider sm:w-40 2xl:w-44 shrink-0" variants={variants}>
+        <m.span className="text-[10px] 2xl:text-xs text-primary/70 uppercase tracking-wider sm:w-40 2xl:w-44 shrink-0" variants={variants}>
           {category.name}
           <span className="text-accent/40 ml-2">({category.skills.length})</span>
         </m.span>

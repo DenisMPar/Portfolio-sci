@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Audiowide, Electrolize, Geist_Mono } from "next/font/google";
 import { BackgroundClient } from "@/components/background/BackgroundClient";
 import { BackgroundReadyProvider } from "@/components/background/BackgroundReadyContext";
 import { GlobalLoader } from "@/components/GlobalLoader";
@@ -7,8 +7,15 @@ import { NavBar } from "@/components/nav/NavBar";
 import { Footer } from "@/components/footer/Footer";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const audiowide = Audiowide({
+  variable: "--font-display",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const electrolize = Electrolize({
+  variable: "--font-body",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -45,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${audiowide.variable} ${electrolize.variable} ${geistMono.variable} antialiased`}
       >
         <BackgroundReadyProvider>
           <GlobalLoader />

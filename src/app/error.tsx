@@ -9,7 +9,7 @@ export default function ErrorPage({
 }) {
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center h-screen w-screen">
-      <div className="flex flex-col items-center text-center font-mono">
+      <div className="flex flex-col items-center text-center">
         <h1 className="text-7xl font-bold text-primary tracking-widest drop-shadow-[0_0_30px_rgba(80,140,204,0.5)]">
           Error
         </h1>

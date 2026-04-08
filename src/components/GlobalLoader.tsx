@@ -27,7 +27,7 @@ export function GlobalLoader() {
         {/* Simple retro spinner */}
         <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
         
-        <div className="font-mono text-sm tracking-widest text-primary/80 animate-pulse">
+        <div className="text-sm tracking-widest text-primary/80 animate-pulse">
           INITIALIZING_
         </div>
       </div>

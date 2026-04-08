@@ -8,18 +8,18 @@ export function HeroSection() {
       <AnimatedPanel title="Main" className="w-[90vw] max-w-[1500px] h-full">
         <div className="flex flex-col items-center justify-center h-full text-center">
         <h1
-          className="text-5xl font-bold tracking-tight sm:text-7xl"
+          className="text-5xl font-bold tracking-tight sm:text-7xl font-display"
           style={{ color: '#eaeaea' }}
         >
-          Denis
+          DENIS
         </h1>
         <p
-          className="mt-4 text-lg sm:text-2xl font-mono"
+          className="mt-4 text-lg sm:text-2xl"
           style={{ color: '#00ff88' }}
         >
           Frontend Engineer
         </p>
-        <div className="mt-8 max-w-2xl font-mono text-sm sm:text-base leading-relaxed space-y-4 text-foreground/80">
+        <div className="mt-8 max-w-2xl text-sm sm:text-base leading-relaxed space-y-4 text-foreground/80">
           <p>
             I&apos;m a frontend engineer who enjoys building performant web
             applications and exploring the intersection of design and

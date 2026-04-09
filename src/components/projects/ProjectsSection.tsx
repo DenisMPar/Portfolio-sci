@@ -43,7 +43,7 @@ function ProjectPreview({ project }: { project: Project }) {
         className="flex flex-col h-full"
       >
         <div
-          className="relative w-full max-w-2xl aspect-video max-h-[40vh] mb-4"
+          className="relative w-full max-w-xl aspect-video max-h-[30vh] mb-4"
           style={{
             clipPath: "polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px))",
           }}
@@ -62,9 +62,9 @@ function ProjectPreview({ project }: { project: Project }) {
           </div>
         </div>
 
-        <h3 className="font-semibold text-foreground mb-1 2xl:text-lg text-wrap-balance">{project.title}</h3>
+        <h3 className="font-medium text-foreground mb-1 text-base 2xl:text-lg text-wrap-balance">{project.title}</h3>
 
-        <p className="text-xs 2xl:text-sm text-foreground/60 leading-relaxed mb-3">
+        <p className="text-sm 2xl:text-base text-foreground/60 leading-relaxed mb-3 font-light">
           {project.description}
         </p>
 
@@ -72,14 +72,14 @@ function ProjectPreview({ project }: { project: Project }) {
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="text-[10px] 2xl:text-xs border border-primary/20 px-1.5 2xl:px-2 py-0.5 text-foreground/50"
+              className="text-xs 2xl:text-sm border border-primary/20 px-1.5 2xl:px-2 py-0.5 text-foreground/50 font-light"
             >
               {tag}
             </span>
           ))}
         </div>
 
-        <div className="flex gap-3 text-xs 2xl:text-sm">
+        <div className="flex gap-3 text-sm 2xl:text-base">
           {project.liveUrl && (
             <a
               href={project.liveUrl}
@@ -123,16 +123,16 @@ function ProjectNav({
           <button
             key={project.slug}
             onClick={() => onSelect(project.slug)}
-            className={`flex items-center gap-2 px-3 py-2 text-left cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none ${
+            className={`flex items-center gap-2 px-3 py-2 text-left cursor-pointer transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none ${
               isActive
-                ? "bg-primary/10 border-l-2 border-l-accent text-foreground"
-                : "border-l-2 border-l-transparent text-foreground/50 hover:text-foreground/80 hover:bg-primary/5"
+                ? "bg-primary/10 border-l-2 border-l-accent text-foreground translate-x-1"
+                : "border-l-2 border-l-transparent text-foreground/50 hover:text-foreground/80 hover:bg-primary/5 hover:translate-x-1 hover:border-l-primary/40"
             }`}
           >
-            <span className="text-[10px] 2xl:text-xs text-primary/40 shrink-0">
+            <span className="text-xs 2xl:text-sm text-primary/40 shrink-0 font-light">
               {String(index + 1).padStart(2, "0")}
             </span>
-            <span className="text-xs 2xl:text-sm truncate">{project.title}</span>
+            <span className="text-sm 2xl:text-base truncate font-normal">{project.title}</span>
           </button>
         );
       })}

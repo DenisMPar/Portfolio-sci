@@ -12,6 +12,7 @@ interface ProjectFields {
   imgMovil?: EntryFieldTypes.AssetLink;
   imgMedium?: EntryFieldTypes.AssetLink;
   proyectType?: EntryFieldTypes.Text;
+  order?: EntryFieldTypes.Integer;
 }
 
 interface ProjectSkeleton extends EntrySkeletonType {
@@ -36,7 +37,7 @@ function richTextToPlain(doc: unknown): string {
 export async function getProjects(): Promise<Project[]> {
   const entries = await client.getEntries<ProjectSkeleton>({
     content_type: "proyect",
-    order: ["-sys.createdAt"],
+    order: ["fields.order"],
   });
 
   return entries.items.map((item) => {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Audiowide, Electrolize, Geist_Mono } from "next/font/google";
+import { Audiowide, Oxanium, Geist_Mono } from "next/font/google";
 import { BackgroundClient } from "@/components/background/BackgroundClient";
 import { BackgroundReadyProvider } from "@/components/background/BackgroundReadyContext";
 import { GlobalLoader } from "@/components/GlobalLoader";
@@ -13,9 +13,9 @@ const audiowide = Audiowide({
   subsets: ["latin"],
 });
 
-const electrolize = Electrolize({
+const oxanium = Oxanium({
   variable: "--font-body",
-  weight: "400",
+  weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -52,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${audiowide.variable} ${electrolize.variable} ${geistMono.variable} antialiased`}
+        className={`${audiowide.variable} ${oxanium.variable} ${geistMono.variable} antialiased`}
       >
         <BackgroundReadyProvider>
           <GlobalLoader />

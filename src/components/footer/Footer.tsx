@@ -1,3 +1,7 @@
+"use client";
+
+import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
+
 const contacts = [
   { label: "GitHub", href: "https://github.com/DenisMPar", prefix: "gh:" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/denismpar/", prefix: "in:" },
@@ -5,8 +9,18 @@ const contacts = [
 ] as const;
 
 export function Footer() {
+  const ready = useBackgroundReady();
+
   return (
-    <footer className="fixed bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-4 px-4 bg-card backdrop-blur-md border-t border-primary/10 font-mono text-xs" style={{ paddingTop: 13, paddingBottom: 13 }}>
+    <footer
+      className="fixed bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-4 px-4 bg-background border-t border-primary/10 font-mono text-xs transition-transform duration-500 ease-out"
+      style={{
+        paddingTop: 13,
+        paddingBottom: 13,
+        transform: ready ? "translateY(0)" : "translateY(100%)",
+        transitionDelay: ready ? "300ms" : "0ms",
+      }}
+    >
       {contacts.map((contact) => (
         <span key={contact.label}>
           <span className="text-foreground/40">{contact.prefix} </span>

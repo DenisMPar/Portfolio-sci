@@ -29,6 +29,12 @@ export const metadata: Metadata = {
   title: "Denis — Frontend Engineer",
   description:
     "Portfolio of Denis, a frontend engineer specializing in React, Next.js, and TypeScript.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+  },
   openGraph: {
     title: "Denis — Frontend Engineer",
     description:

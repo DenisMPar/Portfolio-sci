@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ProjectsSection } from "@/components/projects/ProjectsSection";
 import { getProjects } from "@/lib/contentful";
 import { projects as fallbackProjects } from "@/data/projects";
@@ -13,7 +14,9 @@ export default async function ProjectsPage() {
 
   return (
     <main>
-      <ProjectsSection projects={projects} />
+      <Suspense>
+        <ProjectsSection projects={projects} />
+      </Suspense>
     </main>
   );
 }

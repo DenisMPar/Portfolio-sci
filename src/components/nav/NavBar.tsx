@@ -26,7 +26,7 @@ export function NavBar() {
         <Link
           key={link.href}
           href={link.href}
-          className={`font-mono text-xs px-3 py-1.5 transition-colors ${
+          className={`font-mono text-sm px-3 py-2 transition-colors ${
             pathname === link.href
               ? "text-accent"
               : "text-foreground/50 hover:text-foreground/80"

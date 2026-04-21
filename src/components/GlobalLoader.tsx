@@ -19,17 +19,19 @@ export function GlobalLoader() {
 
   return (
     <div
+      role="status"
+      aria-live="polite"
       className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-background transition-opacity duration-500 pointer-events-none select-none ${
         isReady ? "opacity-0" : "opacity-100"
       }`}
     >
       <div className="flex flex-col items-center gap-4">
-        {/* Simple retro spinner */}
         <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
-        
+
         <div className="text-sm tracking-widest text-primary/80 animate-pulse">
           INITIALIZING_
         </div>
+        <span className="sr-only">Loading interface</span>
       </div>
     </div>
   );

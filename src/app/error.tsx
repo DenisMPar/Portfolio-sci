@@ -17,8 +17,8 @@ export default function ErrorPage({
         <p className="text-foreground/70 text-sm uppercase tracking-wider">
           System malfunction
         </p>
-        <p className="mt-2 text-foreground/40 text-xs max-w-md mx-auto">
-          {error.message || "An unexpected error occurred."}
+        <p className="mt-2 text-foreground/70 text-xs max-w-md mx-auto">
+          An unexpected error occurred.
         </p>
         <button
           onClick={reset}

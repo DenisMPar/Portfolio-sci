@@ -11,7 +11,7 @@ export default function NotFound() {
         <p className="text-foreground/70 text-sm uppercase tracking-wider">
           Signal not found
         </p>
-        <p className="mt-2 text-foreground/40 text-xs">
+        <p className="mt-2 text-foreground/70 text-xs">
           The requested resource does not exist on this server.
         </p>
         <Link

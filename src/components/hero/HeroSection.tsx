@@ -1,15 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { AnimatedPanel } from "../panel/AnimatedPanel";
 
 export function HeroSection() {
   return (
-    <section id="hero" className="relative z-10 h-screen w-full flex flex-col items-center justify-center pointer-events-none select-none" style={{ paddingTop: 'var(--section-pt)', paddingBottom: 'var(--section-pb)' }}>
+    <section id="hero" className="relative z-10 h-screen w-full flex flex-col items-center justify-center pointer-events-none" style={{ paddingTop: 'var(--section-pt)', paddingBottom: 'var(--section-pb)' }}>
       <AnimatedPanel title="Main" className="w-[90vw] max-w-[1500px] h-full">
-        <div className="flex flex-col items-center justify-center h-full text-center">
+        <div className="flex flex-col items-center justify-center h-full text-center pointer-events-auto select-text">
         <h1
-          className="text-5xl font-bold sm:text-7xl font-display"
-          style={{ color: '#eaeaea', letterSpacing: '-0.04em' }}
+          className="text-5xl font-bold sm:text-7xl font-display text-foreground"
+          style={{ letterSpacing: '-0.04em' }}
         >
           DENIS
         </h1>
@@ -31,6 +32,14 @@ export function HeroSection() {
             experience, and shipping things that actually work.
           </p>
         </div>
+        <Link
+          href="/projects"
+          className="mt-10 inline-flex items-center gap-2 border border-accent/40 px-6 py-3 text-sm font-mono text-accent tracking-wider uppercase hover:bg-accent/10 hover:border-accent/70 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          style={{ clipPath: 'polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)' }}
+        >
+          View projects
+          <span aria-hidden="true">&rarr;</span>
+        </Link>
         </div>
       </AnimatedPanel>
     </section>

@@ -21,7 +21,7 @@ export function Footer() {
     >
       {contacts.map((contact) => (
         <span key={contact.label}>
-          <span className="text-foreground/40">{contact.prefix} </span>
+          <span className="text-foreground/70">{contact.prefix} </span>
           <a
             href={contact.href}
             target="_blank"

@@ -4,6 +4,7 @@ import type { ReactNode } from "react"
 function NoiseTexture() {
   return (
     <div
+      aria-hidden="true"
       className="absolute inset-0 pointer-events-none opacity-[0.03]"
       style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
@@ -15,6 +16,7 @@ function NoiseTexture() {
 function CrtScanlines() {
   return (
     <div
+      aria-hidden="true"
       className="absolute inset-0 pointer-events-none opacity-[0.04]"
       style={{
         background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.3) 2px, rgba(0, 0, 0, 0.3) 4px)",
@@ -26,6 +28,7 @@ function CrtScanlines() {
 function VignetteEdge() {
   return (
     <div
+      aria-hidden="true"
       className="absolute inset-0 pointer-events-none"
       style={{
         background: "radial-gradient(ellipse at center, transparent 50%, rgba(0, 10, 30, 0.6) 100%)",
@@ -37,6 +40,7 @@ function VignetteEdge() {
 function ColorAberration() {
   return (
     <div
+      aria-hidden="true"
       className="absolute inset-0 pointer-events-none opacity-30"
       style={{
         boxShadow: "inset 0 0 60px rgba(50, 120, 180, 0.15), inset 0 0 20px rgba(80, 160, 220, 0.1)",
@@ -62,10 +66,10 @@ function PanelContent({ title, children }: { title?: string; children: ReactNode
     <div className="relative z-10 h-full flex flex-col">
       {title && (
         <div className="flex items-center gap-3 px-4 py-3">
-          <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_rgba(80,140,200,0.6)]" aria-hidden="true" />
-          <h2 className="text-base font-medium uppercase tracking-wider text-foreground text-wrap-balance font-display">
+          <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_rgba(80,140,204,0.6)]" aria-hidden="true" />
+          <h1 className="text-base font-medium uppercase tracking-wider text-foreground text-wrap-balance font-display">
             {title}
-          </h2>
+          </h1>
           <div
             className="flex-1 h-px bg-gradient-to-r from-primary/30 to-transparent origin-left motion-reduce:!animate-none"
             style={{ transform: 'scaleX(0)', animation: 'line-expand 0.8s ease-out 0.35s forwards' }}
@@ -92,7 +96,7 @@ export function InterfacePanel({ children, title, className, variant = "default"
     <div
       className={cn(
         "relative",
-        variant === "glow" && "drop-shadow-[0_0_25px_rgba(80,140,200,0.4)]",
+        variant === "glow" && "drop-shadow-[0_0_25px_rgba(80,140,204,0.4)]",
         className
       )}
     >

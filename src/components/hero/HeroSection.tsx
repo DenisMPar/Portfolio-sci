@@ -6,7 +6,7 @@ import { AnimatedPanel } from "../panel/AnimatedPanel";
 export function HeroSection() {
   return (
     <section id="hero" className="relative z-10 h-screen w-full flex flex-col items-center justify-center pointer-events-none" style={{ paddingTop: 'var(--section-pt)', paddingBottom: 'var(--section-pb)' }}>
-      <AnimatedPanel title="Main" className="w-[90vw] max-w-[1500px] h-full">
+      <AnimatedPanel className="w-[90vw] max-w-[1500px] h-full">
         <div className="flex flex-col items-center justify-center h-full text-center pointer-events-auto select-text">
         <h1
           className="text-5xl font-bold sm:text-7xl font-display text-foreground"
@@ -27,7 +27,7 @@ export function HeroSection() {
           </p>
           <p>
             I focus on crafting polished{" "}
-            <span className="text-accent font-normal">React</span> interfaces with attention
+            <span className="text-foreground font-medium">React</span> interfaces with attention
             to detail and performance. I care about clean code, developer
             experience, and shipping things that actually work.
           </p>

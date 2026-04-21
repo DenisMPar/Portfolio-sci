@@ -123,6 +123,7 @@ function ProjectNav({
           <button
             key={project.slug}
             onClick={() => onSelect(project.slug)}
+            aria-current={isActive ? "true" : undefined}
             className={`flex items-center gap-2 px-3 py-2 text-left cursor-pointer transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none ${
               isActive
                 ? "bg-primary/10 border-l-2 border-l-accent text-foreground translate-x-1"

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { AnimatedPanel } from "../panel/AnimatedPanel";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 import { useHasHover } from "@/hooks/useHasHover";
@@ -85,7 +86,7 @@ function ProjectPreview({ project }: { project: Project }) {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent hover:text-accent/80 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none transition-colors"
+              className="text-accent hover:text-accent/80 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors"
             >
               [ Live ]
             </a>
@@ -95,7 +96,7 @@ function ProjectPreview({ project }: { project: Project }) {
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none transition-colors"
+              className="text-primary hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors"
             >
               [ Repo ]
             </a>
@@ -124,13 +125,13 @@ function ProjectNav({
             key={project.slug}
             onClick={() => onSelect(project.slug)}
             aria-current={isActive ? "true" : undefined}
-            className={`flex items-center gap-2 px-3 py-2 text-left cursor-pointer transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none ${
+            className={`flex items-center gap-2 px-3 py-2 text-left ${isActive ? "cursor-default" : "cursor-pointer"} transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none ${
               isActive
-                ? "bg-primary/10 border-l-2 border-l-accent text-foreground translate-x-1"
+                ? "bg-primary/10 border-l-2 border-l-state-active text-foreground translate-x-1"
                 : "border-l-2 border-l-transparent text-foreground/50 hover:text-foreground/80 hover:bg-primary/5 hover:translate-x-1 hover:border-l-primary/40"
             }`}
           >
-            <span className="text-xs 2xl:text-sm text-primary/40 shrink-0 font-light">
+            <span className="text-xs 2xl:text-sm text-primary/70 shrink-0 font-light">
               {String(index + 1).padStart(2, "0")}
             </span>
             <span className="text-sm 2xl:text-base truncate font-normal">{project.title}</span>
@@ -142,10 +143,19 @@ function ProjectNav({
 }
 
 export function ProjectsSection({ projects }: { projects: Project[] }) {
-  const [activeSlug, setActiveSlug] = useState(projects[0]?.slug ?? "");
+  const searchParams = useSearchParams();
+  const defaultSlug = projects[0]?.slug ?? "";
+  const [activeSlug, setActiveSlug] = useState(
+    () => searchParams.get("project") ?? defaultSlug,
+  );
   const ready = useBackgroundReady();
   const hasHover = useHasHover();
   const prefersReduced = useReducedMotion();
+
+  const selectProject = useCallback((slug: string) => {
+    setActiveSlug(slug);
+    window.history.replaceState(null, "", `/projects?project=${slug}`);
+  }, []);
 
   const activeProject = projects.find((p) => p.slug === activeSlug) ?? projects[0];
 
@@ -169,7 +179,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
     <div className="flex flex-col sm:flex-row gap-4 w-full max-w-5xl h-full">
       {/* Navigation list */}
       <div className="sm:w-48 shrink-0 sm:border-r sm:border-primary/15 sm:pr-4">
-        <ProjectNav projects={projects} activeSlug={activeSlug} onSelect={setActiveSlug} />
+        <ProjectNav projects={projects} activeSlug={activeSlug} onSelect={selectProject} />
       </div>
 
       {/* Preview area */}
@@ -191,7 +201,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
         className="sm:w-48 shrink-0 sm:border-r sm:border-primary/15 sm:pr-4"
         variants={prefersReduced ? reducedItemVariants : itemVariants}
       >
-        <ProjectNav projects={projects} activeSlug={activeSlug} onSelect={setActiveSlug} />
+        <ProjectNav projects={projects} activeSlug={activeSlug} onSelect={selectProject} />
       </m.div>
 
       {/* Preview area */}

@@ -29,7 +29,7 @@ export function NavBar() {
           aria-current={pathname === link.href ? "page" : undefined}
           className={`font-mono text-sm px-3 py-2 transition-colors ${
             pathname === link.href
-              ? "text-accent"
+              ? "text-state-active"
               : "text-foreground/50 hover:text-foreground/80"
           }`}
         >

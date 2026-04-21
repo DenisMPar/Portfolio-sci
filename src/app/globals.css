@@ -5,7 +5,8 @@
   --foreground: #eaeaea;
   --card: rgb(30 30 54 / 0.1);
   --primary: #508ccc;
-  --accent: #00ff88;
+  --accent: #3dd684;
+  --state-active: #00ff88;
   --nav-h: 40px;
   --footer-h: 42px;
   --section-gap: 14px;
@@ -20,24 +21,12 @@
   --color-card: var(--card);
   --color-primary: var(--primary);
   --color-accent: var(--accent);
+  --color-state-active: var(--state-active);
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-mono: var(--font-geist-mono);
 }
 
-@keyframes noise {
-  0% { transform: translate(0, 0); }
-  10% { transform: translate(-5%, -5%); }
-  20% { transform: translate(5%, 10%); }
-  30% { transform: translate(-10%, 5%); }
-  40% { transform: translate(10%, -5%); }
-  50% { transform: translate(-5%, 10%); }
-  60% { transform: translate(10%, 5%); }
-  70% { transform: translate(-10%, -5%); }
-  80% { transform: translate(5%, -10%); }
-  90% { transform: translate(-5%, 5%); }
-  100% { transform: translate(0, 0); }
-}
 
 @keyframes line-expand {
   from { transform: scaleX(0); }

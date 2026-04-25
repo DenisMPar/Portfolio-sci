@@ -212,7 +212,7 @@ function ProjectPreview({ project }: { project: Project }) {
           className="flex flex-col h-full"
         >
           {/* Image grid — hero (60%) + 2 stacked squares (40%) when secondary images exist */}
-          <div className={`grid ${project.imgMovil || project.imgMedium ? "grid-cols-[60fr_40fr]" : ""} flex-1 min-h-0 overflow-hidden`}>
+          <div className={`grid ${project.imgMovil || project.imgMedium ? "grid-cols-[60fr_40fr]" : ""} flex-1 min-h-[250px] sm:min-h-0 overflow-hidden`}>
             <button
               type="button"
               className="relative min-h-0 cursor-pointer overflow-hidden group"
@@ -429,7 +429,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
         className="relative z-10 h-screen w-full flex items-center justify-center pointer-events-none pb-[env(safe-area-inset-bottom)]"
         style={{ paddingTop: "var(--section-pt)", paddingBottom: "var(--section-pb)" }}
       >
-        <AnimatedPanel title="Projects" className="w-[90vw] max-w-[1500px] h-full pointer-events-auto">
+        <AnimatedPanel title="Projects" className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
           <div className="min-h-full flex items-center justify-center">
             <p className="text-sm text-foreground/50">No projects yet.</p>
           </div>
@@ -483,7 +483,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
       className="relative z-10 h-screen w-full flex items-center justify-center pointer-events-none pb-[env(safe-area-inset-bottom)]"
       style={{ paddingTop: "var(--section-pt)", paddingBottom: "var(--section-pb)" }}
     >
-      <AnimatedPanel title="Projects" className="w-[90vw] max-w-[1500px] h-full pointer-events-auto">
+      <AnimatedPanel title="Projects" className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
         <div className="h-full flex items-start justify-center">
           {hasHover ? (
             staggeredContent

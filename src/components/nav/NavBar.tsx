@@ -16,7 +16,7 @@ export function NavBar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-20 flex items-center justify-center gap-1 px-4 py-3 bg-background border-b border-primary/10 transition-transform duration-500 ease-out"
+      className="fixed top-0 left-0 right-0 z-20 flex items-center justify-center gap-4 px-4 py-3 bg-background border-b border-primary/10 transition-transform duration-500 ease-out"
       style={{
         transform: ready ? "translateY(0)" : "translateY(-100%)",
         transitionDelay: ready ? "300ms" : "0ms",

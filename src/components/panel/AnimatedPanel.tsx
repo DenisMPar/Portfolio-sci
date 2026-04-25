@@ -33,7 +33,7 @@ export function AnimatedPanel({
 
   if (!hasHover) {
     return (
-      <div className="h-full transition-opacity duration-300" style={{ opacity: ready ? 1 : 0 }}>
+      <div className="h-full min-[1920px]:h-auto transition-opacity duration-300" style={{ opacity: ready ? 1 : 0 }}>
         <InterfacePanel {...props} />
       </div>
     );
@@ -41,11 +41,11 @@ export function AnimatedPanel({
 
   return (
     <m.div
+      className="h-full min-[1920px]:h-auto"
       variants={prefersReduced ? reducedVariants : panelVariants}
       initial="hidden"
       animate={ready ? "visible" : "hidden"}
       transition={{ delay }}
-      className="h-full"
     >
       <InterfacePanel {...props} />
     </m.div>

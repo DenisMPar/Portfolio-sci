@@ -12,6 +12,8 @@ interface ProjectFields {
   imgMovil?: EntryFieldTypes.AssetLink;
   imgMedium?: EntryFieldTypes.AssetLink;
   proyectType?: EntryFieldTypes.Text;
+  year?: EntryFieldTypes.Integer;
+  status?: EntryFieldTypes.Text;
   order?: EntryFieldTypes.Integer;
 }
 
@@ -46,9 +48,15 @@ export async function getProjects(): Promise<Project[]> {
     const title = fields.proyectTitle as unknown as string;
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-    const thumbnail = fields.proyectPreviewImg as unknown as {
-      fields: { file: { url: string } };
-    };
+    type AssetShape = { fields: { file: { url: string } } };
+
+    const thumbnail = fields.proyectPreviewImg as unknown as AssetShape;
+    const imgMovil = fields.imgMovil as unknown as AssetShape | undefined;
+    const imgMedium = fields.imgMedium as unknown as AssetShape | undefined;
+
+    const thumbUrl = `https:${thumbnail.fields.file.url}`;
+    const movilUrl = imgMovil ? `https:${imgMovil.fields.file.url}` : thumbUrl;
+    const mediumUrl = imgMedium ? `https:${imgMedium.fields.file.url}` : thumbUrl;
 
     const techs = fields.techs as unknown as Record<string, string>;
     const tags = Object.values(techs);
@@ -57,8 +65,13 @@ export async function getProjects(): Promise<Project[]> {
       slug,
       title,
       description: richTextToPlain(fields.proyectDescription),
-      thumbnail: `https:${thumbnail.fields.file.url}`,
+      thumbnail: thumbUrl,
+      imgMovil: imgMovil ? movilUrl : undefined,
+      imgMedium: imgMedium ? mediumUrl : undefined,
       tags,
+      year: fields.year as unknown as number,
+      role: (fields.proyectType as unknown as string) as Project["role"],
+      status: (fields.status as unknown as string) as Project["status"],
       liveUrl: (fields.webLink as unknown as string) || undefined,
       repoUrl: (fields.gitHubLink as unknown as string) || undefined,
     };

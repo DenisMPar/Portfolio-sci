@@ -4,7 +4,7 @@ import { m, useReducedMotion } from "framer-motion";
 import { AnimatedPanel } from "../panel/AnimatedPanel";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 import { useHasHover } from "@/hooks/useHasHover";
-import { skills, type Skill } from "@/data/skills";
+import { skills, exploringSkills, type Skill } from "@/data/skills";
 
 const gridVariants = {
   hidden: {},
@@ -35,7 +35,7 @@ const reducedChipVariants = {
 };
 
 const chipClass =
-  "inline-flex items-center gap-1.5 text-xs 2xl:text-sm border border-primary/20 px-2.5 py-1 2xl:px-3 2xl:py-1.5 text-foreground/70 font-light transition-all hover:text-foreground hover:border-primary/40 hover:shadow-[0_0_12px_rgba(80,140,204,0.15)] cursor-default";
+  "inline-flex items-center gap-1.5 text-xs 2xl:text-sm border border-primary/20 px-2 py-0.5 2xl:px-2.5 2xl:py-1 text-foreground/70 font-light transition-all hover:text-foreground hover:border-primary/40 hover:shadow-[0_0_12px_rgba(80,140,204,0.15)] cursor-default";
 
 function SkillChip({ skill }: { skill: Skill }) {
   const Icon = skill.icon;
@@ -47,76 +47,219 @@ function SkillChip({ skill }: { skill: Skill }) {
   );
 }
 
-function CategoryRow({ category, isLast }: { category: (typeof skills)[number]; isLast: boolean }) {
+const maxSkillCount = Math.max(...skills.map((c) => c.skills.length));
+const totalSkills = skills.reduce((sum, c) => sum + c.skills.length, 0);
+
+const contentVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.2 },
+  },
+};
+
+function StatsBar() {
   return (
-    <div>
-      <div className="flex flex-col sm:flex-row sm:items-baseline gap-3 sm:gap-6 py-5 px-2">
-        <span className="text-xs 2xl:text-sm text-primary uppercase tracking-wider sm:w-40 2xl:w-44 shrink-0 font-normal">
-          {category.name}
-          <span className="text-accent/70 ml-2">({category.skills.length})</span>
-        </span>
-        <div className="flex flex-wrap gap-2">
-          {category.skills.map((skill) => (
-            <SkillChip key={skill.name} skill={skill} />
-          ))}
-        </div>
+    <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 px-4 pb-4 border-b border-primary/10">
+      <div className="flex items-baseline gap-1.5">
+        <span className="text-xs text-foreground/50 uppercase tracking-wider">skills:</span>
+        <span className="text-sm text-accent/70 font-bold">{totalSkills}</span>
       </div>
-      {!isLast && (
-        <div className="h-px bg-gradient-to-r from-primary/15 via-primary/10 to-transparent" aria-hidden="true" />
-      )}
+      <div className="flex items-baseline gap-1.5">
+        <span className="text-xs text-foreground/50 uppercase tracking-wider">experience:</span>
+        <span className="text-sm text-accent/70 font-bold">+3 yrs</span>
+      </div>
+      <div className="flex items-baseline gap-1.5">
+        <span className="text-xs text-foreground/50 uppercase tracking-wider">main stack:</span>
+        <span className="text-sm text-accent/70 font-bold">Next.js · React · TypeScript</span>
+      </div>
     </div>
   );
 }
 
-function AnimatedCategoryRow({ category, isLast }: { category: (typeof skills)[number]; isLast: boolean }) {
-  const prefersReduced = useReducedMotion();
-  const variants = prefersReduced ? reducedChipVariants : chipVariants;
+function ExploringBar() {
+  return (
+    <div className="px-4 pt-4 border-t border-primary/10">
+      <span className="text-xs text-foreground/50 uppercase tracking-wider">
+        Exploring & Improving
+      </span>
+      <div className="flex flex-wrap gap-1.5 mt-2">
+        {exploringSkills.map((skill) => (
+          <SkillChip key={skill.name} skill={skill} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function getColumnDividers(index: number): string {
+  const last = skills.length - 1;
+  if (index === last) return "";
+
+  const classes = ["border-primary/10"];
+
+  classes.push("border-b");
+  if (index >= 2) classes.push("md:border-b-0");
+
+  if (index % 2 === 0) classes.push("md:border-r");
+
+  return classes.join(" ");
+}
+
+function CategoryColumn({
+  category,
+  index,
+}: {
+  category: (typeof skills)[number];
+  index: number;
+}) {
+  const barWidth = Math.round((category.skills.length / maxSkillCount) * 100);
 
   return (
-    <m.div variants={categoryVariants}>
-      <div className="flex flex-col sm:flex-row sm:items-baseline gap-3 sm:gap-6 py-5 px-2">
-        <m.span className="text-xs 2xl:text-sm text-primary uppercase tracking-wider sm:w-40 2xl:w-44 shrink-0 font-normal" variants={variants}>
-          {category.name}
-          <span className="text-accent/70 ml-2">({category.skills.length})</span>
-        </m.span>
-        <div className="flex flex-wrap gap-2">
-          {category.skills.map((skill) => (
-            <m.div key={skill.name} variants={variants}>
-              <SkillChip skill={skill} />
-            </m.div>
-          ))}
+    <div
+      className={`flex flex-col gap-3 px-4 py-2 min-[1920px]:py-6 ${getColumnDividers(index)}`}
+    >
+      <div className="flex items-start justify-between pb-2 border-b border-primary/15">
+        <div>
+          <span className="text-sm 2xl:text-base text-primary uppercase tracking-wider font-normal">
+            {category.name}
+          </span>
+          <span className="block text-xs text-accent/70 mt-0.5">
+            {category.skills.length} skills
+          </span>
         </div>
+        <span
+          className="text-[32px] font-bold leading-none select-none"
+          style={{ color: "rgba(80,140,204,0.07)" }}
+          aria-hidden="true"
+        >
+          {String(index + 1).padStart(2, "0")}
+        </span>
       </div>
-      {!isLast && (
-        <div className="h-px bg-gradient-to-r from-primary/15 via-primary/10 to-transparent" aria-hidden="true" />
-      )}
+
+      <div
+        className="h-0.5 w-full rounded-sm"
+        style={{ background: "rgba(80,140,204,0.08)" }}
+        aria-hidden="true"
+      >
+        <div
+          className="h-full rounded-sm"
+          style={{
+            width: `${barWidth}%`,
+            background:
+              "linear-gradient(to right, rgba(80,140,204,0.55), rgba(80,140,204,0.15))",
+          }}
+        />
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        {category.skills.map((skill) => (
+          <SkillChip key={skill.name} skill={skill} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AnimatedCategoryColumn({
+  category,
+  index,
+}: {
+  category: (typeof skills)[number];
+  index: number;
+}) {
+  const prefersReduced = useReducedMotion();
+  const variants = prefersReduced ? reducedChipVariants : chipVariants;
+  const barWidth = Math.round((category.skills.length / maxSkillCount) * 100);
+
+  return (
+    <m.div
+      variants={categoryVariants}
+      className={`flex flex-col gap-3 px-4 py-2 min-[1920px]:py-6 ${getColumnDividers(index)}`}
+    >
+      <div className="flex items-start justify-between pb-2 border-b border-primary/15">
+        <div>
+          <m.span
+            variants={variants}
+            className="text-sm 2xl:text-base text-primary uppercase tracking-wider font-normal"
+          >
+            {category.name}
+          </m.span>
+          <span className="block text-xs text-accent/70 mt-0.5">
+            {category.skills.length} skills
+          </span>
+        </div>
+        <span
+          className="text-[32px] font-bold leading-none select-none"
+          style={{ color: "rgba(80,140,204,0.07)" }}
+          aria-hidden="true"
+        >
+          {String(index + 1).padStart(2, "0")}
+        </span>
+      </div>
+
+      <div
+        className="h-0.5 w-full rounded-sm"
+        style={{ background: "rgba(80,140,204,0.08)" }}
+        aria-hidden="true"
+      >
+        <div
+          className="h-full rounded-sm"
+          style={{
+            width: `${barWidth}%`,
+            background:
+              "linear-gradient(to right, rgba(80,140,204,0.55), rgba(80,140,204,0.15))",
+          }}
+        />
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        {category.skills.map((skill) => (
+          <m.div key={skill.name} variants={variants}>
+            <SkillChip skill={skill} />
+          </m.div>
+        ))}
+      </div>
     </m.div>
   );
 }
 
-function SkillRows() {
+function SkillsContent() {
   return (
-    <div className="flex flex-col w-full max-w-5xl">
-      {skills.map((category, i) => (
-        <CategoryRow key={category.name} category={category} isLast={i === skills.length - 1} />
-      ))}
+    <div className="flex flex-col justify-evenly h-full w-full">
+      <StatsBar />
+      <div className="grid grid-cols-1 md:grid-cols-2 w-full">
+        {skills.map((category, i) => (
+          <CategoryColumn key={category.name} category={category} index={i} />
+        ))}
+      </div>
+      <ExploringBar />
     </div>
   );
 }
 
-function AnimatedSkillRows() {
+function AnimatedSkillsContent() {
   const ready = useBackgroundReady();
+  const prefersReduced = useReducedMotion();
+  const variants = prefersReduced ? reducedChipVariants : chipVariants;
 
   return (
     <m.div
-      className="flex flex-col w-full max-w-5xl"
-      variants={gridVariants}
+      className="flex flex-col w-full"
+      variants={contentVariants}
       initial="hidden"
       animate={ready ? "visible" : "hidden"}
     >
-      {skills.map((category, i) => (
-        <AnimatedCategoryRow key={category.name} category={category} isLast={i === skills.length - 1} />
-      ))}
+      <m.div variants={variants}>
+        <StatsBar />
+      </m.div>
+      <m.div variants={gridVariants} className="grid grid-cols-1 md:grid-cols-2 w-full">
+        {skills.map((category, i) => (
+          <AnimatedCategoryColumn key={category.name} category={category} index={i} />
+        ))}
+      </m.div>
+      <m.div variants={variants}>
+        <ExploringBar />
+      </m.div>
     </m.div>
   );
 }
@@ -131,13 +274,13 @@ export function SkillsSection() {
       className="relative z-10 h-screen w-full flex items-center justify-center pointer-events-none"
       style={{ paddingTop: "var(--section-pt)", paddingBottom: "var(--section-pb)" }}
     >
-      <AnimatedPanel title="Skills" className="w-[90vw] max-w-[1500px] h-full pointer-events-auto">
-        <div className="h-full flex items-center justify-center">
+      <AnimatedPanel title="Skills" className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
+        <div className="h-full flex items-center">
           {hasHover ? (
-            <AnimatedSkillRows />
+            <AnimatedSkillsContent />
           ) : (
             <div className="w-full transition-opacity duration-300" style={{ opacity: ready ? 1 : 0 }}>
-              <SkillRows />
+              <SkillsContent />
             </div>
           )}
         </div>

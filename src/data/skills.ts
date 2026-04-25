@@ -22,6 +22,7 @@ import {
   SiTestinglibrary,
   SiGit,
   SiGithub,
+  SiFramer,
 } from "react-icons/si";
 import {
   TbLayoutDashboard,
@@ -30,6 +31,7 @@ import {
   TbTestPipe,
   TbLayoutKanban,
   TbCloud,
+  TbSitemap,
 } from "react-icons/tb";
 
 export interface Skill {
@@ -94,4 +96,10 @@ export const skills: SkillCategory[] = [
       { name: "CI/CD basics", icon: TbCloud },
     ],
   },
+];
+
+export const exploringSkills: Skill[] = [
+  { name: "Architecture", icon: TbSitemap },
+  { name: "Framer Motion", icon: SiFramer },
+  { name: "Three.js", icon: SiThreedotjs },
 ];

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils"
 import type { ReactNode } from "react"
 
-function NoiseTexture() {
+export function NoiseTexture() {
   return (
     <div
       aria-hidden="true"
@@ -13,7 +13,7 @@ function NoiseTexture() {
   )
 }
 
-function CrtScanlines() {
+export function CrtScanlines() {
   return (
     <div
       aria-hidden="true"
@@ -25,7 +25,7 @@ function CrtScanlines() {
   )
 }
 
-function VignetteEdge() {
+export function VignetteEdge() {
   return (
     <div
       aria-hidden="true"
@@ -37,7 +37,7 @@ function VignetteEdge() {
   )
 }
 
-function ColorAberration() {
+export function ColorAberration() {
   return (
     <div
       aria-hidden="true"

@@ -28,6 +28,10 @@
 }
 
 
+@keyframes border-glow {
+  to { transform: rotate(360deg); }
+}
+
 @keyframes line-expand {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }

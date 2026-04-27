@@ -21,15 +21,17 @@ export function HeroSection() {
         </p>
         <div className="mt-8 max-w-2xl text-base sm:text-[17px] leading-relaxed space-y-4 text-foreground/80 font-light">
           <p>
-            I&apos;m a frontend engineer who enjoys building performant web
-            applications and exploring the intersection of design and
-            engineering.
+            Frontend engineer with{" "}
+            <span className="text-foreground font-medium">3+ years</span> building
+            products that feel as good as they look. I&apos;ve worked closely
+            with design teams in fintech and software factories — from
+            greenfield builds to evolving complex admin systems.
           </p>
           <p>
-            I focus on crafting polished{" "}
-            <span className="text-foreground font-medium">React</span> interfaces with attention
-            to detail and performance. I care about clean code, developer
-            experience, and shipping things that actually work.
+            I care about{" "}
+            <span className="text-foreground font-medium">solid foundations</span>,
+            reusable components, and interfaces where every detail is
+            intentional. If it ships, it should work — and it should feel right.
           </p>
         </div>
         <Link

@@ -9,7 +9,8 @@ import { AnimatedPanel } from "../panel/AnimatedPanel";
 import { NoiseTexture, CrtScanlines, VignetteEdge, ColorAberration } from "../panel";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 import { useHasHover } from "@/hooks/useHasHover";
-import type { Project } from "@/data/projects";
+import { CaseStudyPreview } from "./CaseStudyPreview";
+import type { Project, ShowcaseProject } from "@/data/projects";
 
 function Gallery({
   images,
@@ -175,7 +176,7 @@ const reducedItemVariants = {
   visible: { opacity: 1 },
 };
 
-function ProjectPreview({ project }: { project: Project }) {
+function ProjectPreview({ project }: { project: ShowcaseProject }) {
   const prefersReduced = useReducedMotion();
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -184,11 +185,10 @@ function ProjectPreview({ project }: { project: Project }) {
 
   const closeGallery = useCallback(() => setGalleryIndex(null), []);
 
-  const galleryImages = [
-    { src: project.thumbnail, alt: project.title },
-    ...(project.imgMovil ? [{ src: project.imgMovil, alt: `${project.title} — mobile` }] : []),
-    ...(project.imgMedium ? [{ src: project.imgMedium, alt: `${project.title} — medium` }] : []),
-  ];
+  const galleryImages = project.images.map((src, i) => ({
+    src,
+    alt: i === 0 ? project.title : `${project.title} — ${i}`,
+  }));
 
   return (
     <>
@@ -211,8 +211,9 @@ function ProjectPreview({ project }: { project: Project }) {
           transition={prefersReduced ? { duration: 0.15 } : { type: "spring", damping: 25, stiffness: 250 }}
           className="flex flex-col h-full"
         >
-          {/* Image grid — hero (60%) + 2 stacked squares (40%) when secondary images exist */}
-          <div className={`grid ${project.imgMovil || project.imgMedium ? "grid-cols-[60fr_40fr]" : ""} flex-1 min-h-[250px] sm:min-h-0 overflow-hidden`}>
+          {/* Image grid — hero (60%) + stacked secondaries (40%) */}
+          <div className={`grid ${project.images.length > 1 ? "grid-cols-[60fr_40fr]" : ""} flex-1 min-h-[250px] sm:min-h-0 overflow-hidden`}>
+            {project.images[0] && (
             <button
               type="button"
               className="relative min-h-0 cursor-pointer overflow-hidden group"
@@ -228,7 +229,7 @@ function ProjectPreview({ project }: { project: Project }) {
               <div className="absolute inset-[2px] z-10 overflow-hidden">
                 <Image
                   unoptimized
-                  src={project.thumbnail}
+                  src={project.images[0]}
                   alt={project.title}
                   fill
                   className="object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:brightness-110"
@@ -236,14 +237,16 @@ function ProjectPreview({ project }: { project: Project }) {
                 />
               </div>
             </button>
+            )}
 
-            {(project.imgMovil || project.imgMedium) && (
-            <div className={`grid ${project.imgMovil && project.imgMedium ? "grid-rows-2" : ""} min-h-0 border-l border-primary/15`}>
-              {project.imgMovil && (
+            {project.images.length > 1 && (
+            <div className={`grid grid-rows-${project.images.length - 1} min-h-0 border-l border-primary/15`}>
+              {project.images.slice(1).map((src, i) => (
               <button
+                key={src}
                 type="button"
-                className="relative min-h-0 cursor-pointer overflow-hidden group"
-                onClick={() => setGalleryIndex(1)}
+                className={`relative min-h-0 cursor-pointer overflow-hidden group ${i > 0 ? "border-t border-primary/15" : ""}`}
+                onClick={() => setGalleryIndex(i + 1)}
               >
                 <div className="absolute inset-0 bg-primary/20" />
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -255,41 +258,15 @@ function ProjectPreview({ project }: { project: Project }) {
                 <div className="absolute inset-[2px] z-10 overflow-hidden">
                   <Image
                     unoptimized
-                    src={project.imgMovil}
-                    alt={`${project.title} — mobile`}
+                    src={src}
+                    alt={`${project.title} — ${i + 1}`}
                     fill
                     className="object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:brightness-110"
                     sizes="25vw"
                   />
                 </div>
               </button>
-              )}
-
-              {project.imgMedium && (
-              <button
-                type="button"
-                className={`relative min-h-0 ${project.imgMovil ? "border-t border-primary/15" : ""} cursor-pointer overflow-hidden group`}
-                onClick={() => setGalleryIndex(project.imgMovil ? 2 : 1)}
-              >
-                <div className="absolute inset-0 bg-primary/20" />
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div
-                    className="absolute inset-[-100%] animate-[border-glow_5s_linear_infinite]"
-                    style={{ background: 'conic-gradient(from 0deg, transparent 70%, var(--accent) 85%, transparent 95%)' }}
-                  />
-                </div>
-                <div className="absolute inset-[2px] z-10 overflow-hidden">
-                  <Image
-                    unoptimized
-                    src={project.imgMedium}
-                    alt={`${project.title} — medium`}
-                    fill
-                    className="object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:brightness-110"
-                    sizes="25vw"
-                  />
-                </div>
-              </button>
-              )}
+              ))}
             </div>
             )}
           </div>
@@ -325,6 +302,7 @@ function ProjectPreview({ project }: { project: Project }) {
                 ["Year", String(project.year)],
                 ["Role", project.role],
                 ["Status", project.status],
+                ["Type", "Showcase"],
               ] as const).map(([label, value], i) => (
                 <div
                   key={label}
@@ -447,7 +425,9 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
 
       {/* Main content — preview top, info row bottom */}
       <div className="flex flex-col min-h-0 overflow-hidden">
-        {activeProject && <ProjectPreview project={activeProject} />}
+        {activeProject && (activeProject.type === "case-study"
+                  ? <CaseStudyPreview project={activeProject} />
+                  : <ProjectPreview project={activeProject} />)}
       </div>
     </div>
   );
@@ -472,7 +452,9 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
         className="flex flex-col min-h-0 overflow-hidden"
         variants={prefersReduced ? reducedItemVariants : itemVariants}
       >
-        {activeProject && <ProjectPreview project={activeProject} />}
+        {activeProject && (activeProject.type === "case-study"
+                  ? <CaseStudyPreview project={activeProject} />
+                  : <ProjectPreview project={activeProject} />)}
       </m.div>
     </m.div>
   );

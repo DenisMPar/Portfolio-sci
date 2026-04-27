@@ -1,10 +1,7 @@
-export interface Project {
+interface ProjectBase {
   slug: string;
   title: string;
   description: string;
-  thumbnail: string;
-  imgMovil?: string;
-  imgMedium?: string;
   tags: string[];
   year: number;
   role: "Solo Dev" | "Team Dev";
@@ -12,3 +9,20 @@ export interface Project {
   liveUrl?: string;
   repoUrl?: string;
 }
+
+export interface ShowcaseProject extends ProjectBase {
+  type: "showcase";
+  images: string[];
+}
+
+export interface CaseStudySection {
+  title: string;
+  content: string;
+}
+
+export interface CaseStudyProject extends ProjectBase {
+  type: "case-study";
+  sections: CaseStudySection[];
+}
+
+export type Project = ShowcaseProject | CaseStudyProject;

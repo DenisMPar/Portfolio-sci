@@ -25,7 +25,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.SITE_URL ?? "https://example.com"),
+  metadataBase: new URL(process.env.SITE_URL!),
   title: "Denis — Frontend Engineer",
   description:
     "Portfolio of Denis, a frontend engineer specializing in React, Next.js, and TypeScript.",
@@ -35,13 +35,36 @@ export const metadata: Metadata = {
       "Portfolio of Denis, a frontend engineer specializing in React, Next.js, and TypeScript.",
     type: "website",
     locale: "en_US",
+    images: [{ url: "/og.png", width: 2400, height: 1260, alt: "Denis — Frontend Engineer" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Denis — Frontend Engineer",
     description:
       "Portfolio of Denis, a frontend engineer specializing in React, Next.js, and TypeScript.",
+    images: ["/og.png"],
   },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Denis Parada",
+  jobTitle: "Frontend Engineer",
+  url: process.env.SITE_URL!,
+  image: `${process.env.SITE_URL!}/og.png`,
+  sameAs: [
+    "https://github.com/DenisMPar",
+    "https://www.linkedin.com/in/denismpar",
+  ],
+  knowsAbout: [
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Three.js",
+    "Tailwind CSS",
+    "Clean Architecture",
+  ],
 };
 
 export default function RootLayout({
@@ -54,6 +77,10 @@ export default function RootLayout({
       <body
         className={`${audiowide.variable} ${oxanium.variable} ${geistMono.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <BackgroundReadyProvider>
           <GlobalLoader />
           <BackgroundClient />

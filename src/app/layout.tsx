@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Audiowide, Oxanium, Geist_Mono } from "next/font/google";
-import { BackgroundClient } from "@/components/background/BackgroundClient";
+import { DeferredBackground } from "@/components/background/DeferredBackground";
 import { BackgroundReadyProvider } from "@/components/background/BackgroundReadyContext";
-import { GlobalLoader } from "@/components/GlobalLoader";
 import { NavBar } from "@/components/nav/NavBar";
 import { Footer } from "@/components/footer/Footer";
 import "./globals.css";
@@ -82,8 +81,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <BackgroundReadyProvider>
-          <GlobalLoader />
-          <BackgroundClient />
+          <DeferredBackground />
           <NavBar />
           {children}
           <Footer />

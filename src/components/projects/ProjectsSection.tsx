@@ -265,7 +265,7 @@ function ProjectPreview({ project }: { project: Project }) {
                 {hasMultipleImages && (
                   <>
                     <div
-                      className="absolute left-2 top-1/2 -translate-y-1/2 z-20 text-foreground/30 hover:text-foreground/80 transition-colors text-2xl"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 hover:text-foreground/90 transition-colors text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
                       role="button"
                       onClick={(e) => { e.stopPropagation(); prevImage(); }}
                       onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); prevImage(); } }}
@@ -275,7 +275,7 @@ function ProjectPreview({ project }: { project: Project }) {
                       ‹
                     </div>
                     <div
-                      className="absolute right-2 top-1/2 -translate-y-1/2 z-20 text-foreground/30 hover:text-foreground/80 transition-colors text-2xl"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 hover:text-foreground/90 transition-colors text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
                       role="button"
                       onClick={(e) => { e.stopPropagation(); nextImage(); }}
                       onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); nextImage(); } }}
@@ -284,7 +284,7 @@ function ProjectPreview({ project }: { project: Project }) {
                     >
                       ›
                     </div>
-                    <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-2">
+                    <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1">
                       {project.images.map((_, i) => (
                         <div
                           key={i}
@@ -292,13 +292,15 @@ function ProjectPreview({ project }: { project: Project }) {
                           tabIndex={0}
                           onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
                           onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); setCarouselIndex(i); } }}
-                          className={`w-1.5 h-1.5 rotate-45 transition-all cursor-pointer ${
+                          className="w-6 h-6 flex items-center justify-center cursor-pointer"
+                          aria-label={`Image ${i + 1}`}
+                        >
+                          <span className={`w-1.5 h-1.5 rotate-45 transition-all block ${
                             i === carouselIndex
                               ? "bg-primary shadow-[0_0_6px_rgba(80,140,204,0.6)]"
                               : "bg-foreground/30 hover:bg-foreground/50"
-                          }`}
-                          aria-label={`Image ${i + 1}`}
-                        />
+                          }`} />
+                        </div>
                       ))}
                     </div>
                   </>
@@ -311,9 +313,9 @@ function ProjectPreview({ project }: { project: Project }) {
               <div className="flex flex-col overflow-y-auto px-5 py-4 gap-4 border-l border-primary/15">
                 {project.sections.map((section) => (
                   <div key={section.title}>
-                    <h4 className="text-xs uppercase tracking-widest text-primary font-display mb-1">
+                    <p className="text-xs uppercase tracking-widest text-primary font-display mb-1">
                       {section.title}
-                    </h4>
+                    </p>
                     <p className="text-sm 2xl:text-base text-foreground/70 leading-relaxed font-light">
                       {section.content}
                     </p>
@@ -330,7 +332,7 @@ function ProjectPreview({ project }: { project: Project }) {
             </div>
           <div className="grid grid-cols-1 sm:grid-cols-[55fr_45fr]">
             <div className="px-4 py-3 flex flex-col gap-1.5 overflow-y-auto">
-              <h3 className="font-medium text-foreground text-base 2xl:text-lg text-wrap-balance">{project.title}</h3>
+              <h2 className="font-medium text-foreground text-base 2xl:text-lg text-wrap-balance">{project.title}</h2>
               <p className="text-sm 2xl:text-base text-foreground/60 leading-relaxed font-light">
                 {project.description}
               </p>

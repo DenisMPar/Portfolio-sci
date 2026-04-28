@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 
 const links = [
   { label: "Home", href: "/" },
@@ -12,16 +11,9 @@ const links = [
 
 export function NavBar() {
   const pathname = usePathname();
-  const ready = useBackgroundReady();
 
   return (
-    <nav
-      className="fixed top-0 left-0 right-0 z-20 flex items-center justify-center gap-4 px-4 py-3 bg-background border-b border-primary/10 transition-transform duration-500 ease-out"
-      style={{
-        transform: ready ? "translateY(0)" : "translateY(-100%)",
-        transitionDelay: ready ? "300ms" : "0ms",
-      }}
-    >
+    <nav className="fixed top-0 left-0 right-0 z-20 flex items-center justify-center gap-4 px-4 py-3 bg-background border-b border-primary/10 animate-[page-enter_0.4s_ease-out_forwards]">
       {links.map((link) => (
         <Link
           key={link.href}
@@ -30,7 +22,7 @@ export function NavBar() {
           className={`font-mono text-sm px-3 py-2 transition-colors ${
             pathname === link.href
               ? "text-state-active"
-              : "text-foreground/50 hover:text-foreground/80"
+              : "text-foreground/70 hover:text-foreground/90"
           }`}
         >
           {link.label}

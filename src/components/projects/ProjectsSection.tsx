@@ -57,7 +57,7 @@ function Gallery({
           ? { opacity: 0, transition: { duration: 0.15 } }
           : { opacity: 0, y: "-30vh", transition: { duration: 0.3, ease: "easeIn" } }
         }
-        className="relative w-[92vw] h-[88vh] max-w-[1600px] overflow-hidden bg-card before:absolute before:inset-0 before:bg-gradient-to-b before:from-primary/8 before:to-transparent before:pointer-events-none"
+        className="relative w-[96vw] h-[65vh] sm:w-[92vw] sm:h-[88vh] max-w-[1600px] overflow-hidden bg-card before:absolute before:inset-0 before:bg-gradient-to-b before:from-primary/8 before:to-transparent before:pointer-events-none"
         onClick={(e) => e.stopPropagation()}
         style={{
           clipPath: "polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px))",
@@ -104,14 +104,14 @@ function Gallery({
               animate={prefersReduced ? { opacity: 1 } : { opacity: 1, scale: 1 }}
               exit={prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}
               transition={{ duration: 0.15 }}
-              className="relative w-full h-full p-8"
+              className="relative w-full h-full p-2 sm:p-8"
             >
               <Image
                 unoptimized
                 src={images[index].src}
                 alt={images[index].alt}
                 fill
-                className="object-contain p-8"
+                className="object-contain p-2 sm:p-8"
                 sizes="85vw"
               />
             </m.div>
@@ -214,15 +214,15 @@ function ProjectPreview({ project }: { project: Project }) {
           animate={prefersReduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
           exit={prefersReduced ? { opacity: 0 } : { opacity: 0, y: -8 }}
           transition={prefersReduced ? { duration: 0.15 } : { type: "spring", damping: 25, stiffness: 250 }}
-          className="flex flex-col h-full"
+          className="flex flex-col flex-1 min-h-0"
         >
           {/* Visual zone — carousel + optional sections */}
-          <div className={`grid ${hasSections ? "grid-cols-[55fr_45fr]" : ""} flex-1 min-h-[250px] sm:min-h-0 overflow-hidden`}>
+          <div className={`flex flex-col sm:grid ${hasSections ? "sm:grid-cols-[55fr_45fr]" : ""} sm:grid-rows-[1fr_auto] flex-1 min-h-0 overflow-hidden`}>
             {/* Carousel */}
             {project.images.length > 0 && (
               <button
                 type="button"
-                className="relative min-h-0 cursor-pointer overflow-hidden group"
+                className="relative aspect-video sm:aspect-auto sm:row-start-1 sm:col-start-1 cursor-pointer overflow-hidden group"
                 onClick={() => setGalleryIndex(carouselIndex)}
               >
                 <div className="absolute inset-0 bg-primary/20" />
@@ -308,9 +308,79 @@ function ProjectPreview({ project }: { project: Project }) {
               </button>
             )}
 
-            {/* Sections — right column */}
+            {/* Info row — inside the grid so on mobile it sits between carousel and sections */}
+            <div className="shrink-0 sm:col-span-2 sm:row-start-2">
+              <div className="relative border-t border-primary/15">
+                <div aria-hidden="true" className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-[55fr_45fr]">
+                <div className="px-4 py-3 flex flex-col gap-1.5 overflow-y-auto">
+                  <h2 className="font-medium text-foreground text-base 2xl:text-lg text-wrap-balance">{project.title}</h2>
+                  <p className="text-sm 2xl:text-base text-foreground/60 leading-relaxed font-light">
+                    {project.description}
+                  </p>
+                </div>
+
+                <div className="sm:border-l sm:border-primary/15 flex flex-col">
+                  <div className="grid grid-cols-2 text-xs h-full">
+                    <div className="px-4 py-3">
+                      <span className="uppercase tracking-widest text-foreground/55">Stack</span>
+                      <div className="flex flex-wrap gap-1.5 mt-1.5">
+                        {project.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="text-xs border border-primary/20 px-1.5 py-0.5 text-foreground/70 font-light"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex flex-col border-l border-primary/15 px-4 py-2">
+                      <div className="flex justify-between py-1.5">
+                        <span className="uppercase tracking-widest text-foreground/55">Year</span>
+                        <span className="text-foreground/70">{project.year}</span>
+                      </div>
+                      <div className="flex justify-between py-1.5 border-t border-primary/10">
+                        <span className="uppercase tracking-widest text-foreground/55">Role</span>
+                        <span className="text-foreground/70">{project.role}</span>
+                      </div>
+                      {(project.liveUrl || project.repoUrl) && (
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1.5 border-t border-primary/10 gap-1.5 sm:gap-0">
+                          <span className="uppercase tracking-widest text-foreground/55">Links</span>
+                          <div className="flex gap-3">
+                            {project.liveUrl && (
+                              <a
+                                href={project.liveUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-accent hover:text-accent/80 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
+                              >
+                                [ Live ]
+                              </a>
+                            )}
+                            {project.repoUrl && (
+                              <a
+                                href={project.repoUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
+                              >
+                                [ Repo ]
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Sections — right column on desktop, below metadata on mobile */}
             {hasSections && (
-              <div className="flex flex-col overflow-y-auto px-5 py-4 gap-4 border-l border-primary/15">
+              <div className="flex flex-col flex-1 min-h-0 overflow-y-auto px-5 py-4 gap-4 border-t sm:border-t-0 sm:border-l border-primary/15 sm:col-start-2 sm:row-start-1">
                 {project.sections.map((section) => (
                   <div key={section.title}>
                     <p className="text-xs uppercase tracking-widest text-primary font-display mb-1">
@@ -323,76 +393,6 @@ function ProjectPreview({ project }: { project: Project }) {
                 ))}
               </div>
             )}
-          </div>
-
-          {/* Info row */}
-          <div className="shrink-0">
-            <div className="relative border-t border-primary/15">
-              <div aria-hidden="true" className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-            </div>
-          <div className="grid grid-cols-1 sm:grid-cols-[55fr_45fr]">
-            <div className="px-4 py-3 flex flex-col gap-1.5 overflow-y-auto">
-              <h2 className="font-medium text-foreground text-base 2xl:text-lg text-wrap-balance">{project.title}</h2>
-              <p className="text-sm 2xl:text-base text-foreground/60 leading-relaxed font-light">
-                {project.description}
-              </p>
-            </div>
-
-            <div className="sm:border-l sm:border-primary/15 flex flex-col">
-              <div className="grid grid-cols-2 text-xs h-full">
-                <div className="px-4 py-3">
-                  <span className="uppercase tracking-widest text-foreground/55">Stack</span>
-                  <div className="flex flex-wrap gap-1.5 mt-1.5">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs border border-primary/20 px-1.5 py-0.5 text-foreground/70 font-light"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex flex-col border-l border-primary/15 px-4 py-2">
-                  <div className="flex justify-between py-1.5">
-                    <span className="uppercase tracking-widest text-foreground/55">Year</span>
-                    <span className="text-foreground/70">{project.year}</span>
-                  </div>
-                  <div className="flex justify-between py-1.5 border-t border-primary/10">
-                    <span className="uppercase tracking-widest text-foreground/55">Role</span>
-                    <span className="text-foreground/70">{project.role}</span>
-                  </div>
-                  {(project.liveUrl || project.repoUrl) && (
-                    <div className="flex justify-between items-center py-1.5 border-t border-primary/10">
-                      <span className="uppercase tracking-widest text-foreground/55">Links</span>
-                      <div className="flex gap-3">
-                        {project.liveUrl && (
-                          <a
-                            href={project.liveUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-accent hover:text-accent/80 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
-                          >
-                            [ Live ]
-                          </a>
-                        )}
-                        {project.repoUrl && (
-                          <a
-                            href={project.repoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-primary hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
-                          >
-                            [ Repo ]
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
           </div>
         </m.div>
       </AnimatePresence>
@@ -410,7 +410,7 @@ function ProjectNav({
   onSelect: (slug: string) => void;
 }) {
   return (
-    <nav aria-label="Project list" className="flex flex-col gap-0.5">
+    <nav aria-label="Project list" className="flex sm:flex-col gap-0.5 overflow-x-auto sm:overflow-x-hidden px-2 sm:px-0">
       {projects.map((project, index) => {
         const isActive = project.slug === activeSlug;
         return (
@@ -418,10 +418,10 @@ function ProjectNav({
             key={project.slug}
             onClick={() => onSelect(project.slug)}
             aria-current={isActive ? "true" : undefined}
-            className={`flex items-center gap-2 px-3 py-2 text-left ${isActive ? "cursor-default" : "cursor-pointer"} transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none ${
+            className={`shrink-0 sm:shrink flex items-center gap-2 px-2.5 sm:px-3 py-2 text-left ${isActive ? "cursor-default" : "cursor-pointer"} transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none ${
               isActive
-                ? "bg-primary/10 border-l-2 border-l-state-active text-foreground translate-x-1"
-                : "border-l-2 border-l-transparent text-foreground/55 hover:text-foreground/80 hover:bg-primary/5 hover:translate-x-1 hover:border-l-primary/40"
+                ? "bg-primary/10 border-b-2 sm:border-b-0 border-b-state-active sm:border-l-2 sm:border-l-state-active text-foreground sm:translate-x-1"
+                : "border-b-2 sm:border-b-0 border-b-transparent sm:border-l-2 sm:border-l-transparent text-foreground/55 hover:text-foreground/80 hover:bg-primary/5 sm:hover:translate-x-1 sm:hover:border-l-primary/40"
             }`}
           >
             <span className="text-xs 2xl:text-sm text-primary shrink-0 font-light">
@@ -471,11 +471,11 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
   const preview = activeProject && <ProjectPreview project={activeProject} />;
 
   const content = (
-    <div className="grid sm:grid-cols-[12rem_1fr] w-full h-full">
-      <div className="sm:border-r sm:border-primary/15 py-2 overflow-hidden">
+    <div className="flex flex-col sm:grid sm:grid-cols-[12rem_1fr] w-full h-full">
+      <div className="border-b sm:border-b-0 sm:border-r border-primary/15 py-2 overflow-hidden">
         <ProjectNav projects={projects} activeSlug={activeSlug} onSelect={selectProject} />
       </div>
-      <div className="flex flex-col min-h-0 overflow-hidden">
+      <div className="flex-1 sm:flex-none flex flex-col min-h-0 overflow-hidden">
         {preview}
       </div>
     </div>
@@ -483,19 +483,19 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
 
   const staggeredContent = (
     <m.div
-      className="grid sm:grid-cols-[12rem_1fr] w-full h-full"
+      className="flex flex-col sm:grid sm:grid-cols-[12rem_1fr] w-full h-full"
       variants={containerVariants}
       initial="hidden"
       animate={ready ? "visible" : "hidden"}
     >
       <m.div
-        className="sm:border-r sm:border-primary/15 py-2 overflow-hidden"
+        className="border-b sm:border-b-0 sm:border-r border-primary/15 py-2 overflow-hidden"
         variants={prefersReduced ? reducedItemVariants : itemVariants}
       >
         <ProjectNav projects={projects} activeSlug={activeSlug} onSelect={selectProject} />
       </m.div>
       <m.div
-        className="flex flex-col min-h-0 overflow-hidden"
+        className="flex-1 sm:flex-none flex flex-col min-h-0 overflow-hidden"
         variants={prefersReduced ? reducedItemVariants : itemVariants}
       >
         {preview}

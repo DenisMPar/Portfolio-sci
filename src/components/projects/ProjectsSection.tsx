@@ -9,8 +9,7 @@ import { AnimatedPanel } from "../panel/AnimatedPanel";
 import { NoiseTexture, CrtScanlines, VignetteEdge, ColorAberration } from "../panel";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 import { useHasHover } from "@/hooks/useHasHover";
-import { CaseStudyPreview } from "./CaseStudyPreview";
-import type { Project, ShowcaseProject } from "@/data/projects";
+import type { Project } from "@/data/projects";
 
 function Gallery({
   images,
@@ -48,7 +47,6 @@ function Gallery({
       role="dialog"
       aria-label="Image gallery"
     >
-      {/* Frame */}
       <m.div
         initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: "-40vh" }}
         animate={prefersReduced
@@ -69,16 +67,13 @@ function Gallery({
         <CrtScanlines />
         <VignetteEdge />
         <ColorAberration />
-        {/* Top glow line */}
         <div aria-hidden="true" className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent z-20" />
-        {/* Bottom glow line */}
         <div aria-hidden="true" className="absolute bottom-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent z-20" />
 
-        {/* Header bar */}
         <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-primary/15">
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_rgba(80,140,204,0.6)]" aria-hidden="true" />
-            <span className="text-xs uppercase tracking-widest text-foreground/50 font-display">
+            <span className="text-xs uppercase tracking-widest text-foreground/55 font-display">
               Gallery — {index + 1} / {images.length}
             </span>
           </div>
@@ -92,7 +87,6 @@ function Gallery({
           </button>
         </div>
 
-        {/* Image area */}
         <div className="relative flex-1 h-[calc(100%-theme(spacing.12))]">
           <button
             type="button"
@@ -133,7 +127,6 @@ function Gallery({
           </button>
         </div>
 
-        {/* Bottom bar */}
         <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center gap-3 py-3 border-t border-primary/15">
           {images.map((_, i) => (
             <button
@@ -149,7 +142,6 @@ function Gallery({
             />
           ))}
         </div>
-
       </m.div>
     </m.div>
   );
@@ -176,12 +168,14 @@ const reducedItemVariants = {
   visible: { opacity: 1 },
 };
 
-function ProjectPreview({ project }: { project: ShowcaseProject }) {
+function ProjectPreview({ project }: { project: Project }) {
   const prefersReduced = useReducedMotion();
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
+  useEffect(() => setCarouselIndex(0), [project.slug]);
 
   const closeGallery = useCallback(() => setGalleryIndex(null), []);
 
@@ -189,6 +183,17 @@ function ProjectPreview({ project }: { project: ShowcaseProject }) {
     src,
     alt: i === 0 ? project.title : `${project.title} — ${i}`,
   }));
+
+  const hasSections = project.sections.length > 0;
+  const hasMultipleImages = project.images.length > 1;
+
+  const prevImage = useCallback(() => {
+    setCarouselIndex((i) => (i - 1 + project.images.length) % project.images.length);
+  }, [project.images.length]);
+
+  const nextImage = useCallback(() => {
+    setCarouselIndex((i) => (i + 1) % project.images.length);
+  }, [project.images.length]);
 
   return (
     <>
@@ -211,42 +216,14 @@ function ProjectPreview({ project }: { project: ShowcaseProject }) {
           transition={prefersReduced ? { duration: 0.15 } : { type: "spring", damping: 25, stiffness: 250 }}
           className="flex flex-col h-full"
         >
-          {/* Image grid — hero (60%) + stacked secondaries (40%) */}
-          <div className={`grid ${project.images.length > 1 ? "grid-cols-[60fr_40fr]" : ""} flex-1 min-h-[250px] sm:min-h-0 overflow-hidden`}>
-            {project.images[0] && (
-            <button
-              type="button"
-              className="relative min-h-0 cursor-pointer overflow-hidden group"
-              onClick={() => setGalleryIndex(0)}
-            >
-              <div className="absolute inset-0 bg-primary/20" />
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <div
-                  className="absolute inset-[-100%] animate-[border-glow_5s_linear_infinite]"
-                  style={{ background: 'conic-gradient(from 0deg, transparent 70%, var(--accent) 85%, transparent 95%)' }}
-                />
-              </div>
-              <div className="absolute inset-[2px] z-10 overflow-hidden">
-                <Image
-                  unoptimized
-                  src={project.images[0]}
-                  alt={project.title}
-                  fill
-                  className="object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:brightness-110"
-                  sizes="(max-width: 768px) 90vw, 40vw"
-                />
-              </div>
-            </button>
-            )}
-
-            {project.images.length > 1 && (
-            <div className={`grid grid-rows-${project.images.length - 1} min-h-0 border-l border-primary/15`}>
-              {project.images.slice(1).map((src, i) => (
+          {/* Visual zone — carousel + optional sections */}
+          <div className={`grid ${hasSections ? "grid-cols-[55fr_45fr]" : ""} flex-1 min-h-[250px] sm:min-h-0 overflow-hidden`}>
+            {/* Carousel */}
+            {project.images.length > 0 && (
               <button
-                key={src}
                 type="button"
-                className={`relative min-h-0 cursor-pointer overflow-hidden group ${i > 0 ? "border-t border-primary/15" : ""}`}
-                onClick={() => setGalleryIndex(i + 1)}
+                className="relative min-h-0 cursor-pointer overflow-hidden group"
+                onClick={() => setGalleryIndex(carouselIndex)}
               >
                 <div className="absolute inset-0 bg-primary/20" />
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -255,93 +232,166 @@ function ProjectPreview({ project }: { project: ShowcaseProject }) {
                     style={{ background: 'conic-gradient(from 0deg, transparent 70%, var(--accent) 85%, transparent 95%)' }}
                   />
                 </div>
-                <div className="absolute inset-[2px] z-10 overflow-hidden">
-                  <Image
-                    unoptimized
-                    src={src}
-                    alt={`${project.title} — ${i + 1}`}
-                    fill
-                    className="object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:brightness-110"
-                    sizes="25vw"
-                  />
+                <div
+                  className="absolute inset-[1px] z-[5] animate-[skeleton-shimmer_2s_ease-in-out_infinite]"
+                  style={{
+                    background: 'linear-gradient(90deg, #1a1a2e 30%, #1e2d4a 50%, #1a1a2e 70%)',
+                    backgroundSize: '200% 100%',
+                  }}
+                />
+                <div className="absolute inset-[1px] z-10 overflow-hidden">
+                  <AnimatePresence mode="wait">
+                    <m.div
+                      key={carouselIndex}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="relative w-full h-full"
+                    >
+                      <Image
+                        unoptimized
+                        src={project.images[carouselIndex]}
+                        alt={carouselIndex === 0 ? project.title : `${project.title} — ${carouselIndex}`}
+                        fill
+                        className="object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:brightness-110"
+                        sizes="(max-width: 768px) 90vw, 50vw"
+                      />
+                    </m.div>
+                  </AnimatePresence>
                 </div>
+
+                {/* Carousel controls */}
+                {hasMultipleImages && (
+                  <>
+                    <div
+                      className="absolute left-2 top-1/2 -translate-y-1/2 z-20 text-foreground/30 hover:text-foreground/80 transition-colors text-2xl"
+                      role="button"
+                      onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                      onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); prevImage(); } }}
+                      tabIndex={0}
+                      aria-label="Previous image"
+                    >
+                      ‹
+                    </div>
+                    <div
+                      className="absolute right-2 top-1/2 -translate-y-1/2 z-20 text-foreground/30 hover:text-foreground/80 transition-colors text-2xl"
+                      role="button"
+                      onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                      onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); nextImage(); } }}
+                      tabIndex={0}
+                      aria-label="Next image"
+                    >
+                      ›
+                    </div>
+                    <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-2">
+                      {project.images.map((_, i) => (
+                        <div
+                          key={i}
+                          role="button"
+                          tabIndex={0}
+                          onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
+                          onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); setCarouselIndex(i); } }}
+                          className={`w-1.5 h-1.5 rotate-45 transition-all cursor-pointer ${
+                            i === carouselIndex
+                              ? "bg-primary shadow-[0_0_6px_rgba(80,140,204,0.6)]"
+                              : "bg-foreground/30 hover:bg-foreground/50"
+                          }`}
+                          aria-label={`Image ${i + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
               </button>
-              ))}
-            </div>
+            )}
+
+            {/* Sections — right column */}
+            {hasSections && (
+              <div className="flex flex-col overflow-y-auto px-5 py-4 gap-4 border-l border-primary/15">
+                {project.sections.map((section) => (
+                  <div key={section.title}>
+                    <h4 className="text-xs uppercase tracking-widest text-primary font-display mb-1">
+                      {section.title}
+                    </h4>
+                    <p className="text-sm 2xl:text-base text-foreground/70 leading-relaxed font-light">
+                      {section.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
 
-        {/* Info row — wide description | narrow metadata */}
-        <div className="grid grid-cols-1 sm:grid-cols-[60fr_40fr] border-t border-primary/15 shrink-0">
-          <div className="px-4 py-3 flex flex-col gap-1.5 overflow-y-auto">
-            <h3 className="font-medium text-foreground text-base 2xl:text-lg text-wrap-balance">{project.title}</h3>
-            <p className="text-sm 2xl:text-base text-foreground/60 leading-relaxed font-light">
-              {project.description}
-            </p>
-          </div>
-
-          <div className="sm:border-l sm:border-primary/15 flex flex-col">
-            {/* Stack */}
-            <div className="px-4 py-3">
-              <span className="uppercase tracking-widest text-foreground/30 text-xs">Stack</span>
-              <div className="flex flex-wrap gap-1.5 mt-1.5">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs border border-primary/20 px-1.5 py-0.5 text-foreground/50 font-light"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+          {/* Info row */}
+          <div className="shrink-0">
+            <div className="relative border-t border-primary/15">
+              <div aria-hidden="true" className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[55fr_45fr]">
+            <div className="px-4 py-3 flex flex-col gap-1.5 overflow-y-auto">
+              <h3 className="font-medium text-foreground text-base 2xl:text-lg text-wrap-balance">{project.title}</h3>
+              <p className="text-sm 2xl:text-base text-foreground/60 leading-relaxed font-light">
+                {project.description}
+              </p>
             </div>
 
-            {/* Metadata rows */}
-            <div className="border-t border-primary/15 px-4 py-2 flex flex-col text-xs">
-              {([
-                ["Year", String(project.year)],
-                ["Role", project.role],
-                ["Status", project.status],
-                ["Type", "Showcase"],
-              ] as const).map(([label, value], i) => (
-                <div
-                  key={label}
-                  className={`flex justify-between py-1.5 ${i > 0 ? "border-t border-primary/10" : ""}`}
-                >
-                  <span className="uppercase tracking-widest text-foreground/30">{label}</span>
-                  <span className="text-foreground/50">{value}</span>
+            <div className="sm:border-l sm:border-primary/15 flex flex-col">
+              <div className="grid grid-cols-2 text-xs h-full">
+                <div className="px-4 py-3">
+                  <span className="uppercase tracking-widest text-foreground/55">Stack</span>
+                  <div className="flex flex-wrap gap-1.5 mt-1.5">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs border border-primary/20 px-1.5 py-0.5 text-foreground/70 font-light"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-
-            {/* Links */}
-            <div className="border-t border-primary/15 px-4 py-3 mt-auto flex items-center justify-between text-sm">
-              <span className="uppercase tracking-widest text-foreground/30 text-xs">Links</span>
-              <div className="flex gap-3">
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent hover:text-accent/80 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors"
-                >
-                  [ Live ]
-                </a>
-              )}
-              {project.repoUrl && (
-                <a
-                  href={project.repoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors"
-                >
-                  [ Repo ]
-                </a>
-              )}
+                <div className="flex flex-col border-l border-primary/15 px-4 py-2">
+                  <div className="flex justify-between py-1.5">
+                    <span className="uppercase tracking-widest text-foreground/55">Year</span>
+                    <span className="text-foreground/70">{project.year}</span>
+                  </div>
+                  <div className="flex justify-between py-1.5 border-t border-primary/10">
+                    <span className="uppercase tracking-widest text-foreground/55">Role</span>
+                    <span className="text-foreground/70">{project.role}</span>
+                  </div>
+                  {(project.liveUrl || project.repoUrl) && (
+                    <div className="flex justify-between items-center py-1.5 border-t border-primary/10">
+                      <span className="uppercase tracking-widest text-foreground/55">Links</span>
+                      <div className="flex gap-3">
+                        {project.liveUrl && (
+                          <a
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-accent hover:text-accent/80 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
+                          >
+                            [ Live ]
+                          </a>
+                        )}
+                        {project.repoUrl && (
+                          <a
+                            href={project.repoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
+                          >
+                            [ Repo ]
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+          </div>
         </m.div>
       </AnimatePresence>
     </>
@@ -369,10 +419,10 @@ function ProjectNav({
             className={`flex items-center gap-2 px-3 py-2 text-left ${isActive ? "cursor-default" : "cursor-pointer"} transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none ${
               isActive
                 ? "bg-primary/10 border-l-2 border-l-state-active text-foreground translate-x-1"
-                : "border-l-2 border-l-transparent text-foreground/50 hover:text-foreground/80 hover:bg-primary/5 hover:translate-x-1 hover:border-l-primary/40"
+                : "border-l-2 border-l-transparent text-foreground/55 hover:text-foreground/80 hover:bg-primary/5 hover:translate-x-1 hover:border-l-primary/40"
             }`}
           >
-            <span className="text-xs 2xl:text-sm text-primary/70 shrink-0 font-light">
+            <span className="text-xs 2xl:text-sm text-primary shrink-0 font-light">
               {String(index + 1).padStart(2, "0")}
             </span>
             <span className="text-sm 2xl:text-base truncate font-normal">{project.title}</span>
@@ -409,25 +459,22 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
       >
         <AnimatedPanel title="Projects" className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
           <div className="min-h-full flex items-center justify-center">
-            <p className="text-sm text-foreground/50">No projects yet.</p>
+            <p className="text-sm text-foreground/55">No projects yet.</p>
           </div>
         </AnimatedPanel>
       </section>
     );
   }
 
+  const preview = activeProject && <ProjectPreview project={activeProject} />;
+
   const content = (
     <div className="grid sm:grid-cols-[12rem_1fr] w-full h-full">
-      {/* Navigation sidebar */}
-      <div className="sm:border-r sm:border-primary/15 py-2">
+      <div className="sm:border-r sm:border-primary/15 py-2 overflow-hidden">
         <ProjectNav projects={projects} activeSlug={activeSlug} onSelect={selectProject} />
       </div>
-
-      {/* Main content — preview top, info row bottom */}
       <div className="flex flex-col min-h-0 overflow-hidden">
-        {activeProject && (activeProject.type === "case-study"
-                  ? <CaseStudyPreview project={activeProject} />
-                  : <ProjectPreview project={activeProject} />)}
+        {preview}
       </div>
     </div>
   );
@@ -439,22 +486,17 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
       initial="hidden"
       animate={ready ? "visible" : "hidden"}
     >
-      {/* Navigation sidebar */}
       <m.div
-        className="sm:border-r sm:border-primary/15 py-2"
+        className="sm:border-r sm:border-primary/15 py-2 overflow-hidden"
         variants={prefersReduced ? reducedItemVariants : itemVariants}
       >
         <ProjectNav projects={projects} activeSlug={activeSlug} onSelect={selectProject} />
       </m.div>
-
-      {/* Main content — preview top, info row bottom */}
       <m.div
         className="flex flex-col min-h-0 overflow-hidden"
         variants={prefersReduced ? reducedItemVariants : itemVariants}
       >
-        {activeProject && (activeProject.type === "case-study"
-                  ? <CaseStudyPreview project={activeProject} />
-                  : <ProjectPreview project={activeProject} />)}
+        {preview}
       </m.div>
     </m.div>
   );

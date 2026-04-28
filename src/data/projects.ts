@@ -1,4 +1,9 @@
-interface ProjectBase {
+export interface ProjectSection {
+  title: string;
+  content: string;
+}
+
+export interface Project {
   slug: string;
   title: string;
   description: string;
@@ -8,21 +13,6 @@ interface ProjectBase {
   status: "Live" | "In Progress" | "Archived";
   liveUrl?: string;
   repoUrl?: string;
-}
-
-export interface ShowcaseProject extends ProjectBase {
-  type: "showcase";
   images: string[];
+  sections: ProjectSection[];
 }
-
-export interface CaseStudySection {
-  title: string;
-  content: string;
-}
-
-export interface CaseStudyProject extends ProjectBase {
-  type: "case-study";
-  sections: CaseStudySection[];
-}
-
-export type Project = ShowcaseProject | CaseStudyProject;

@@ -1,17 +1,11 @@
 import { createClient } from "contentful";
 import type { EntrySkeletonType, EntryFieldTypes } from "contentful";
-import type {
-  Project,
-  ShowcaseProject,
-  CaseStudyProject,
-  CaseStudySection,
-} from "@/data/projects";
+import type { Project, ProjectSection } from "@/data/projects";
 
 interface ProjectFields {
   title: EntryFieldTypes.Text;
   slug: EntryFieldTypes.Text;
   description: EntryFieldTypes.RichText;
-  type: EntryFieldTypes.Text;
   tags: EntryFieldTypes.Object;
   year: EntryFieldTypes.Integer;
   role: EntryFieldTypes.Text;
@@ -61,8 +55,12 @@ export async function getProjects(): Promise<Project[]> {
 
   return entries.items.map((item) => {
     const f = item.fields;
+    const rawImages = (f.images as unknown as AssetShape[] | undefined) ?? [];
+    const rawSections = f.caseStudySections as unknown as {
+      sections: ProjectSection[];
+    } | undefined;
 
-    const base = {
+    return {
       slug: f.slug as unknown as string,
       title: f.title as unknown as string,
       description: richTextToPlain(f.description),
@@ -72,26 +70,8 @@ export async function getProjects(): Promise<Project[]> {
       status: f.status as unknown as Project["status"],
       liveUrl: (f.liveUrl as unknown as string) || undefined,
       repoUrl: (f.repoUrl as unknown as string) || undefined,
-    };
-
-    const type = f.type as unknown as string;
-
-    if (type === "case-study") {
-      const raw = f.caseStudySections as unknown as {
-        sections: CaseStudySection[];
-      };
-      return {
-        ...base,
-        type: "case-study" as const,
-        sections: raw?.sections ?? [],
-      } satisfies CaseStudyProject;
-    }
-
-    const rawImages = (f.images as unknown as AssetShape[] | undefined) ?? [];
-    return {
-      ...base,
-      type: "showcase" as const,
       images: rawImages.map(assetUrl),
-    } satisfies ShowcaseProject;
+      sections: rawSections?.sections ?? [],
+    };
   });
 }

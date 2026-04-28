@@ -61,15 +61,15 @@ function StatsBar() {
   return (
     <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 px-4 pb-4 border-b border-primary/10">
       <div className="flex items-baseline gap-1.5">
-        <span className="text-xs text-foreground/50 uppercase tracking-wider">skills:</span>
+        <span className="text-xs text-foreground/55 uppercase tracking-wider">skills:</span>
         <span className="text-sm text-accent/70 font-bold">{totalSkills}</span>
       </div>
       <div className="flex items-baseline gap-1.5">
-        <span className="text-xs text-foreground/50 uppercase tracking-wider">experience:</span>
+        <span className="text-xs text-foreground/55 uppercase tracking-wider">experience:</span>
         <span className="text-sm text-accent/70 font-bold">+3 yrs</span>
       </div>
       <div className="flex items-baseline gap-1.5">
-        <span className="text-xs text-foreground/50 uppercase tracking-wider">main stack:</span>
+        <span className="text-xs text-foreground/55 uppercase tracking-wider">main stack:</span>
         <span className="text-sm text-accent/70 font-bold">Next.js · React · TypeScript</span>
       </div>
     </div>
@@ -79,7 +79,7 @@ function StatsBar() {
 function ExploringBar() {
   return (
     <div className="px-4 pt-4 border-t border-primary/10">
-      <span className="text-xs text-foreground/50 uppercase tracking-wider">
+      <span className="text-xs text-foreground/55 uppercase tracking-wider">
         Exploring & Improving
       </span>
       <div className="flex flex-wrap gap-1.5 mt-2">

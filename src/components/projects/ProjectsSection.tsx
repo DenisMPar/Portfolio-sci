@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import Image from "next/image";
@@ -168,14 +168,24 @@ const reducedItemVariants = {
   visible: { opacity: 1 },
 };
 
-function ProjectPreview({ project }: { project: Project }) {
+const metaRowVariants = {
+  hidden: { opacity: 0, x: -6 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.2, ease: "easeOut" as const },
+  },
+};
+
+function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boolean }) {
   const prefersReduced = useReducedMotion();
+  const clipInitial = prefersReduced ? { opacity: 0 } : { clipPath: hasHover ? "inset(0 100% 0 0)" : "inset(0 0 100% 0)" };
+  const clipVisible = prefersReduced ? { opacity: 1 } : { clipPath: "inset(0 0% 0 0)" };
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => setMounted(true), []);
-  useEffect(() => setCarouselIndex(0), [project.slug]);
+  useEffect(() => { setCarouselIndex(0); }, [project.slug]);
 
   const closeGallery = useCallback(() => setGalleryIndex(null), []);
 
@@ -196,7 +206,7 @@ function ProjectPreview({ project }: { project: Project }) {
   }, [project.images.length]);
 
   return (
-    <>
+    <div className="relative flex flex-col flex-1 min-h-0">
       {mounted &&
         createPortal(
           <AnimatePresence>
@@ -207,23 +217,27 @@ function ProjectPreview({ project }: { project: Project }) {
           document.body,
         )}
 
+
       <AnimatePresence mode="wait">
         <m.div
           key={project.slug}
-          initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 8 }}
-          animate={prefersReduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
-          exit={prefersReduced ? { opacity: 0 } : { opacity: 0, y: -8 }}
-          transition={prefersReduced ? { duration: 0.15 } : { type: "spring", damping: 25, stiffness: 250 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={prefersReduced ? { opacity: 0 } : { clipPath: hasHover ? "inset(0 100% 0 0)" : "inset(0 0 100% 0)", transition: { duration: 0.35, ease: [0.4, 0, 1, 1] } }}
+          transition={{ duration: 0.15 }}
           className="flex flex-col flex-1 min-h-0"
         >
           {/* Visual zone — carousel + optional sections */}
           <div className={`flex flex-col sm:grid ${hasSections ? "sm:grid-cols-[55fr_45fr]" : ""} sm:grid-rows-[1fr_auto] flex-1 min-h-0 overflow-hidden`}>
             {/* Carousel */}
             {project.images.length > 0 && (
-              <button
+              <m.button
                 type="button"
                 className="relative aspect-video sm:aspect-auto sm:row-start-1 sm:col-start-1 cursor-pointer overflow-hidden group"
                 onClick={() => setGalleryIndex(carouselIndex)}
+                initial={clipInitial}
+                animate={clipVisible}
+                transition={prefersReduced ? { duration: 0.15 } : { duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
               >
                 <div className="absolute inset-0 bg-primary/20" />
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -305,54 +319,109 @@ function ProjectPreview({ project }: { project: Project }) {
                     </div>
                   </>
                 )}
-              </button>
+              </m.button>
             )}
 
             {/* Info row — inside the grid so on mobile it sits between carousel and sections */}
             <div className="shrink-0 sm:col-span-2 sm:row-start-2">
-              <div className="relative border-t border-primary/15">
-                <div aria-hidden="true" className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+              <div className="relative">
+                <div
+                  aria-hidden="true"
+                  className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent origin-left motion-reduce:!animate-none"
+                  style={{ transform: 'scaleX(0)', animation: 'line-expand 0.8s ease-out 0.2s forwards' }}
+                />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-[55fr_45fr]">
-                <div className="px-4 py-3 flex flex-col gap-1.5 overflow-y-auto">
-                  <h2 className="font-medium text-foreground text-base 2xl:text-lg text-wrap-balance">{project.title}</h2>
-                  <p className="text-sm 2xl:text-base text-foreground/60 leading-relaxed font-light">
+                <m.div
+                  className="px-4 py-3 flex flex-col gap-1.5 overflow-y-auto"
+                  initial={clipInitial}
+                  animate={clipVisible}
+                  transition={prefersReduced ? { duration: 0.15 } : { duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <m.h2
+                    className="glitch font-medium text-foreground text-base 2xl:text-lg text-wrap-balance"
+                    data-text={project.title}
+                    initial={prefersReduced ? { opacity: 0 } : { opacity: 0, x: -6 }}
+                    animate={prefersReduced ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                    transition={prefersReduced ? { duration: 0.15 } : { duration: 0.25, ease: "easeOut", delay: 0.2 }}
+                  >
+                    {project.title}
+                  </m.h2>
+                  <m.p
+                    className="text-sm 2xl:text-base text-foreground/60 leading-relaxed font-light"
+                    initial={prefersReduced ? { opacity: 0 } : { opacity: 0, x: -6 }}
+                    animate={prefersReduced ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                    transition={prefersReduced ? { duration: 0.15 } : { duration: 0.4, ease: "easeOut", delay: 0.38 }}
+                  >
                     {project.description}
-                  </p>
-                </div>
+                  </m.p>
+                </m.div>
 
-                <div className="sm:border-l sm:border-primary/15 flex flex-col">
+                <m.div
+                  className="sm:border-l sm:border-primary/15 flex flex-col"
+                  initial={clipInitial}
+                  animate={clipVisible}
+                  transition={prefersReduced ? { duration: 0.15 } : { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+                >
                   <div className="grid grid-cols-2 text-xs h-full">
-                    <div className="px-4 py-3">
-                      <span className="uppercase tracking-widest text-foreground/55">Stack</span>
+                    <m.div
+                      className="px-4 py-3"
+                      variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.06, delayChildren: 0.9 } } }}
+                      initial={prefersReduced ? undefined : "hidden"}
+                      animate={prefersReduced ? undefined : "visible"}
+                    >
+                      <m.span
+                        className="uppercase tracking-widest text-foreground/55"
+                        variants={prefersReduced ? undefined : metaRowVariants}
+                      >
+                        Stack
+                      </m.span>
                       <div className="flex flex-wrap gap-1.5 mt-1.5">
                         {project.tags.map((tag) => (
-                          <span
+                          <m.span
                             key={tag}
                             className="text-xs border border-primary/20 px-1.5 py-0.5 text-foreground/70 font-light"
+                            variants={prefersReduced ? undefined : metaRowVariants}
                           >
                             {tag}
-                          </span>
+                          </m.span>
                         ))}
                       </div>
-                    </div>
-                    <div className="flex flex-col border-l border-primary/15 px-4 py-2">
-                      <div className="flex justify-between py-1.5">
+                    </m.div>
+                    <m.div
+                      className="flex flex-col border-l border-primary/15 px-4 py-2"
+                      variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.08, delayChildren: 0.9 } } }}
+                      initial={prefersReduced ? undefined : "hidden"}
+                      animate={prefersReduced ? undefined : "visible"}
+                    >
+                      <m.div
+                        className="flex justify-between py-1.5"
+                        variants={prefersReduced ? undefined : metaRowVariants}
+                      >
                         <span className="uppercase tracking-widest text-foreground/55">Year</span>
                         <span className="text-foreground/70">{project.year}</span>
-                      </div>
-                      <div className="flex justify-between py-1.5 border-t border-primary/10">
+                      </m.div>
+                      <m.div
+                        className="flex justify-between py-1.5 border-t border-primary/10"
+                        variants={prefersReduced ? undefined : metaRowVariants}
+                      >
                         <span className="uppercase tracking-widest text-foreground/55">Role</span>
                         <span className="text-foreground/70">{project.role}</span>
-                      </div>
+                      </m.div>
                       {project.type && (
-                        <div className="flex justify-between py-1.5 border-t border-primary/10">
+                        <m.div
+                          className="flex justify-between py-1.5 border-t border-primary/10"
+                          variants={prefersReduced ? undefined : metaRowVariants}
+                        >
                           <span className="uppercase tracking-widest text-foreground/55">Type</span>
                           <span className="text-foreground/70 capitalize">{project.type.replace("-", " ")}</span>
-                        </div>
+                        </m.div>
                       )}
                       {(project.liveUrl || project.repoUrl) && (
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1.5 border-t border-primary/10 gap-1.5 sm:gap-0">
+                        <m.div
+                          className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1.5 border-t border-primary/10 gap-1.5 sm:gap-0"
+                          variants={prefersReduced ? undefined : metaRowVariants}
+                        >
                           <span className="uppercase tracking-widest text-foreground/55">Links</span>
                           <div className="flex gap-3">
                             {project.liveUrl && (
@@ -376,17 +445,22 @@ function ProjectPreview({ project }: { project: Project }) {
                               </a>
                             )}
                           </div>
-                        </div>
+                        </m.div>
                       )}
-                    </div>
+                    </m.div>
                   </div>
-                </div>
+                </m.div>
               </div>
             </div>
 
             {/* Sections — right column on desktop, below metadata on mobile */}
             {hasSections && (
-              <div className="flex flex-col flex-1 min-h-0 overflow-y-auto px-5 py-4 gap-4 border-t sm:border-t-0 sm:border-l border-primary/15 sm:col-start-2 sm:row-start-1">
+              <m.div
+                className="flex flex-col flex-1 min-h-0 overflow-y-auto px-5 py-4 gap-4 border-t sm:border-t-0 sm:border-l border-primary/15 sm:col-start-2 sm:row-start-1"
+                initial={clipInitial}
+                animate={clipVisible}
+                transition={prefersReduced ? { duration: 0.15 } : { duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+              >
                 {project.sections.map((section) => (
                   <div key={section.title}>
                     <p className="text-xs uppercase tracking-widest text-primary font-display mb-1">
@@ -397,12 +471,12 @@ function ProjectPreview({ project }: { project: Project }) {
                     </p>
                   </div>
                 ))}
-              </div>
+              </m.div>
             )}
           </div>
         </m.div>
       </AnimatePresence>
-    </>
+    </div>
   );
 }
 
@@ -415,8 +489,43 @@ function ProjectNav({
   activeSlug: string;
   onSelect: (slug: string) => void;
 }) {
+  const navRef = useRef<HTMLElement>(null);
+  const [showLeft, setShowLeft] = useState(false);
+  const [showRight, setShowRight] = useState(false);
+
+  const updateFades = useCallback(() => {
+    const el = navRef.current;
+    if (!el) return;
+    setShowLeft(el.scrollLeft > 4);
+    setShowRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    const el = navRef.current;
+    if (!el) return;
+    updateFades();
+    el.addEventListener("scroll", updateFades, { passive: true });
+    window.addEventListener("resize", updateFades, { passive: true });
+    return () => {
+      el.removeEventListener("scroll", updateFades);
+      window.removeEventListener("resize", updateFades);
+    };
+  }, [updateFades]);
+
+  const maskImage = (() => {
+    if (showLeft && showRight) return "linear-gradient(to right, transparent 0px, black 40px, black calc(100% - 40px), transparent 100%)";
+    if (showLeft) return "linear-gradient(to right, transparent 0px, black 40px)";
+    if (showRight) return "linear-gradient(to right, black calc(100% - 40px), transparent 100%)";
+    return undefined;
+  })();
+
   return (
-    <nav aria-label="Project list" className="flex sm:flex-col gap-0.5 overflow-x-auto sm:overflow-x-hidden px-2 sm:px-0">
+    <nav
+      ref={navRef}
+      aria-label="Project list"
+      className="flex sm:flex-col gap-0.5 overflow-x-auto sm:overflow-x-hidden px-2 sm:px-0"
+      style={{ maskImage, WebkitMaskImage: maskImage }}
+    >
       {projects.map((project, index) => {
         const isActive = project.slug === activeSlug;
         return (
@@ -474,7 +583,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
     );
   }
 
-  const preview = activeProject && <ProjectPreview project={activeProject} />;
+  const preview = activeProject && <ProjectPreview project={activeProject} hasHover={hasHover} />;
 
   const content = (
     <div className="flex flex-col sm:grid sm:grid-cols-[12rem_1fr] w-full h-full">

@@ -11,6 +11,7 @@ export interface Project {
   year: number;
   role: "Solo Dev" | "Team Dev";
   status: "Live" | "In Progress" | "Archived";
+  type?: "showcase" | "case-study";
   liveUrl?: string;
   repoUrl?: string;
   images: string[];

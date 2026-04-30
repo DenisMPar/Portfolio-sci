@@ -345,6 +345,12 @@ function ProjectPreview({ project }: { project: Project }) {
                         <span className="uppercase tracking-widest text-foreground/55">Role</span>
                         <span className="text-foreground/70">{project.role}</span>
                       </div>
+                      {project.type && (
+                        <div className="flex justify-between py-1.5 border-t border-primary/10">
+                          <span className="uppercase tracking-widest text-foreground/55">Type</span>
+                          <span className="text-foreground/70 capitalize">{project.type.replace("-", " ")}</span>
+                        </div>
+                      )}
                       {(project.liveUrl || project.repoUrl) && (
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1.5 border-t border-primary/10 gap-1.5 sm:gap-0">
                           <span className="uppercase tracking-widest text-foreground/55">Links</span>

@@ -10,6 +10,7 @@ interface ProjectFields {
   year: EntryFieldTypes.Integer;
   role: EntryFieldTypes.Text;
   status: EntryFieldTypes.Text;
+  type?: EntryFieldTypes.Text;
   liveUrl?: EntryFieldTypes.Text;
   repoUrl?: EntryFieldTypes.Text;
   caseStudySections?: EntryFieldTypes.Object;
@@ -68,6 +69,7 @@ export async function getProjects(): Promise<Project[]> {
       year: f.year as unknown as number,
       role: f.role as unknown as Project["role"],
       status: f.status as unknown as Project["status"],
+      type: (f.type as unknown as Project["type"]) || undefined,
       liveUrl: (f.liveUrl as unknown as string) || undefined,
       repoUrl: (f.repoUrl as unknown as string) || undefined,
       images: rawImages.map(assetUrl),

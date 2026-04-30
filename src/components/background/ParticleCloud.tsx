@@ -5,9 +5,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import {
   Vector3,
   Raycaster,
-  SphereGeometry,
-  Mesh,
-  MeshBasicMaterial,
+  Sphere,
   AdditiveBlending,
 } from 'three';
 import { fibonacciSphere } from './utils/fibonacciSphere';
@@ -77,13 +75,8 @@ export function ParticleCloud() {
   const lastTrailTime = useRef(0);
 
   const raycaster = useMemo(() => hasHover ? new Raycaster() : null, [hasHover]);
-  const sphereGeo = useMemo(() => hasHover ? new SphereGeometry(13.5, 8, 8) : null, [hasHover]);
-  const dummyMesh = useMemo(() => {
-    if (!hasHover || !sphereGeo) return null;
-    const m = new Mesh(sphereGeo, new MeshBasicMaterial());
-    m.visible = false;
-    return m;
-  }, [hasHover, sphereGeo]);
+  const boundingSphere = useMemo(() => hasHover ? new Sphere(new Vector3(0, 0, 0), 13.5) : null, [hasHover]);
+  const hitPoint = useRef(new Vector3());
 
   const uniformsRef = useRef({
     uTime:       { value: 0 },
@@ -104,10 +97,7 @@ export function ParticleCloud() {
     uniformsRef.current.uTime.value       = t;
     uniformsRef.current.uPixelRatio.value = gl.getPixelRatio();
 
-    if (!hasHover || !dummyMesh || !raycaster || !trailArray) return;
-
-    dummyMesh.rotation.set(0, t * 0.025, 0);
-    dummyMesh.updateMatrixWorld();
+    if (!hasHover || !boundingSphere || !raycaster || !trailArray) return;
 
     const pointerMoved = pointer.x !== lastPointer.current.x || pointer.y !== lastPointer.current.y;
     lastPointer.current.x = pointer.x;
@@ -116,12 +106,12 @@ export function ParticleCloud() {
     if (!pointerMoved) return;
 
     raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObject(dummyMesh);
+    const hit = raycaster.ray.intersectSphere(boundingSphere, hitPoint.current);
 
-    if (hits.length > 0) {
+    if (hit) {
       if (t - lastTrailTime.current > 0.03) {
         const idx = trailIndex.current % TRAIL_LENGTH;
-        trailArray[idx].copy(hits[0].point);
+        trailArray[idx].copy(hitPoint.current);
         trailIndex.current++;
         trailCount.current = Math.min(trailCount.current + 1, TRAIL_LENGTH);
         lastTrailTime.current = t;

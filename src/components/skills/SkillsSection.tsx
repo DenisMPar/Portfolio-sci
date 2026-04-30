@@ -13,23 +13,50 @@ const gridVariants = {
   },
 };
 
-const categoryVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.03 },
-  },
-};
-
 const chipVariants = {
-  hidden: { opacity: 0, y: 6 },
+  hidden: { opacity: 0, x: 6 },
   visible: {
     opacity: 1,
-    y: 0,
+    x: 0,
     transition: { type: "spring" as const, damping: 25, stiffness: 250 },
   },
 };
 
 const reducedChipVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};
+
+const columnWipeVariants = {
+  hidden: { clipPath: "inset(0 100% 0 0)" },
+  visible: {
+    clipPath: "inset(0 0% 0 0)",
+    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
+const columnWipeVerticalVariants = {
+  hidden: { clipPath: "inset(0 0 100% 0)" },
+  visible: {
+    clipPath: "inset(0 0 0% 0)",
+    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
+const reducedColumnVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.3 } },
+};
+
+const barFillVariants = {
+  hidden: { scaleX: 0 },
+  visible: {
+    scaleX: 1,
+    transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1] as const, delay: 0.6 },
+  },
+};
+
+const reducedBarVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
 };
@@ -77,16 +104,22 @@ function StatsBar() {
 }
 
 function ExploringBar() {
+  const prefersReduced = useReducedMotion();
   return (
     <div className="px-4 pt-4 border-t border-primary/10">
       <span className="text-xs text-foreground/55 uppercase tracking-wider">
         Exploring & Improving
       </span>
-      <div className="flex flex-wrap gap-1.5 mt-2">
+      <m.div
+        className="flex flex-wrap gap-1.5 mt-2"
+        variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.03, delayChildren: 0.7 } } }}
+      >
         {exploringSkills.map((skill) => (
-          <SkillChip key={skill.name} skill={skill} />
+          <m.div key={skill.name} variants={prefersReduced ? undefined : chipVariants}>
+            <SkillChip skill={skill} />
+          </m.div>
         ))}
-      </div>
+      </m.div>
     </div>
   );
 }
@@ -163,27 +196,26 @@ function CategoryColumn({
 function AnimatedCategoryColumn({
   category,
   index,
+  hasHover,
 }: {
   category: (typeof skills)[number];
   index: number;
+  hasHover: boolean;
 }) {
   const prefersReduced = useReducedMotion();
-  const variants = prefersReduced ? reducedChipVariants : chipVariants;
   const barWidth = Math.round((category.skills.length / maxSkillCount) * 100);
+  const wipeVariants = hasHover ? columnWipeVariants : columnWipeVerticalVariants;
 
   return (
     <m.div
-      variants={categoryVariants}
+      variants={prefersReduced ? reducedColumnVariants : wipeVariants}
       className={`flex flex-col gap-3 px-4 py-2 min-[1920px]:py-6 ${getColumnDividers(index)}`}
     >
       <div className="flex items-start justify-between pb-2 border-b border-primary/15">
         <div>
-          <m.span
-            variants={variants}
-            className="text-sm 2xl:text-base text-primary uppercase tracking-wider font-normal"
-          >
+          <span className="text-sm 2xl:text-base text-primary uppercase tracking-wider font-normal">
             {category.name}
-          </m.span>
+          </span>
           <span className="block text-xs text-accent/70 mt-0.5">
             {category.skills.length} skills
           </span>
@@ -202,23 +234,26 @@ function AnimatedCategoryColumn({
         style={{ background: "rgba(80,140,204,0.08)" }}
         aria-hidden="true"
       >
-        <div
-          className="h-full rounded-sm"
+        <m.div
+          className="h-full rounded-sm origin-left"
+          variants={prefersReduced ? reducedBarVariants : barFillVariants}
           style={{
             width: `${barWidth}%`,
-            background:
-              "linear-gradient(to right, rgba(80,140,204,0.55), rgba(80,140,204,0.15))",
+            background: "linear-gradient(to right, rgba(80,140,204,0.55), rgba(80,140,204,0.15))",
           }}
         />
       </div>
 
-      <div className="flex flex-wrap gap-1.5">
+      <m.div
+        className="flex flex-wrap gap-1.5"
+        variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.03, delayChildren: 0.4 } } }}
+      >
         {category.skills.map((skill) => (
-          <m.div key={skill.name} variants={variants}>
+          <m.div key={skill.name} variants={prefersReduced ? undefined : chipVariants}>
             <SkillChip skill={skill} />
           </m.div>
         ))}
-      </div>
+      </m.div>
     </m.div>
   );
 }
@@ -237,10 +272,10 @@ function SkillsContent() {
   );
 }
 
-function AnimatedSkillsContent() {
+function AnimatedSkillsContent({ hasHover }: { hasHover: boolean }) {
   const ready = useBackgroundReady();
   const prefersReduced = useReducedMotion();
-  const variants = prefersReduced ? reducedChipVariants : chipVariants;
+  const wipeVariants = hasHover ? columnWipeVariants : columnWipeVerticalVariants;
 
   return (
     <m.div
@@ -249,15 +284,15 @@ function AnimatedSkillsContent() {
       initial="hidden"
       animate={ready ? "visible" : "hidden"}
     >
-      <m.div variants={variants}>
+      <m.div variants={prefersReduced ? reducedColumnVariants : wipeVariants}>
         <StatsBar />
       </m.div>
       <m.div variants={gridVariants} className="grid grid-cols-1 md:grid-cols-2 w-full">
         {skills.map((category, i) => (
-          <AnimatedCategoryColumn key={category.name} category={category} index={i} />
+          <AnimatedCategoryColumn key={category.name} category={category} index={i} hasHover={hasHover} />
         ))}
       </m.div>
-      <m.div variants={variants}>
+      <m.div variants={prefersReduced ? reducedColumnVariants : wipeVariants}>
         <ExploringBar />
       </m.div>
     </m.div>
@@ -276,13 +311,7 @@ export function SkillsSection() {
     >
       <AnimatedPanel title="Skills" className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
         <div className="h-full flex items-center">
-          {hasHover ? (
-            <AnimatedSkillsContent />
-          ) : (
-            <div className="w-full transition-opacity duration-300" style={{ opacity: ready ? 1 : 0 }}>
-              <SkillsContent />
-            </div>
-          )}
+          <AnimatedSkillsContent hasHover={hasHover} />
         </div>
       </AnimatedPanel>
     </section>

@@ -2,7 +2,14 @@
 
 import { useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import * as THREE from 'three';
+import {
+  Vector3,
+  Raycaster,
+  SphereGeometry,
+  Mesh,
+  MeshBasicMaterial,
+  AdditiveBlending,
+} from 'three';
 import { fibonacciSphere } from './utils/fibonacciSphere';
 import { useHasHover } from '@/hooks/useHasHover';
 
@@ -52,7 +59,7 @@ const fragmentShader = /* glsl */ `
   }
 `;
 
-const FAR_AWAY = new THREE.Vector3(0, 0, -1000);
+const FAR_AWAY = new Vector3(0, 0, -1000);
 
 export function ParticleCloud() {
   const hasHover = useHasHover();
@@ -60,7 +67,7 @@ export function ParticleCloud() {
 
   const trailArray = useMemo(
     () => hasHover
-      ? Array.from({ length: TRAIL_LENGTH }, () => new THREE.Vector3().copy(FAR_AWAY))
+      ? Array.from({ length: TRAIL_LENGTH }, () => new Vector3().copy(FAR_AWAY))
       : null,
     [hasHover],
   );
@@ -68,11 +75,11 @@ export function ParticleCloud() {
   const trailCount = useRef(0);
   const lastTrailTime = useRef(0);
 
-  const raycaster = useMemo(() => hasHover ? new THREE.Raycaster() : null, [hasHover]);
-  const sphereGeo = useMemo(() => hasHover ? new THREE.SphereGeometry(13.5, 32, 32) : null, [hasHover]);
+  const raycaster = useMemo(() => hasHover ? new Raycaster() : null, [hasHover]);
+  const sphereGeo = useMemo(() => hasHover ? new SphereGeometry(13.5, 32, 32) : null, [hasHover]);
   const dummyMesh = useMemo(() => {
     if (!hasHover || !sphereGeo) return null;
-    const m = new THREE.Mesh(sphereGeo, new THREE.MeshBasicMaterial());
+    const m = new Mesh(sphereGeo, new MeshBasicMaterial());
     m.visible = false;
     return m;
   }, [hasHover, sphereGeo]);
@@ -143,7 +150,7 @@ export function ParticleCloud() {
         uniforms={uniformsRef.current}
         transparent
         depthWrite={false}
-        blending={THREE.AdditiveBlending}
+        blending={AdditiveBlending}
       />
     </points>
   );

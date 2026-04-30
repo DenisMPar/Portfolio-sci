@@ -9,13 +9,15 @@ export function HeroSection() {
       <AnimatedPanel className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh]">
         <div className="flex flex-col items-center justify-center h-full text-center pointer-events-auto select-text">
         <h1
-          className="text-5xl font-bold sm:text-7xl font-display text-foreground"
+          className="text-5xl font-bold sm:text-7xl font-display text-foreground glitch"
           style={{ letterSpacing: '-0.04em' }}
+          data-text="DENIS"
+          aria-label="DENIS"
         >
           DENIS
         </h1>
         <p
-          className="mt-4 text-xl sm:text-2xl font-medium tracking-tight text-accent"
+          className="mt-4 text-xl sm:text-2xl font-medium tracking-tight text-accent typing-cursor"
         >
           Frontend Engineer
         </p>

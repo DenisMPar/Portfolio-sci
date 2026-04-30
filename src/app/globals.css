@@ -53,6 +53,76 @@
   }
 }
 
+/* Hero glitch text */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  aria-hidden: true;
+}
+
+.glitch::before {
+  color: var(--primary);
+  animation: glitch-r 5s infinite;
+}
+
+.glitch::after {
+  color: var(--state-active);
+  animation: glitch-c 5s infinite;
+}
+
+/* Typing cursor — insert mode beam */
+.typing-cursor::after {
+  content: "";
+  display: inline-block;
+  width: 0.4em;
+  height: 1em;
+  background-color: var(--accent);
+  vertical-align: text-bottom;
+  margin-left: 4px;
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes glitch-r {
+  0%   { opacity: 0; transform: none; clip-path: none; }
+  19%  { opacity: 0; }
+  20%  { opacity: 0.9; clip-path: polygon(0 15%, 100% 15%, 100% 38%, 0 38%); transform: translateX(-6px); }
+  21%  { clip-path: polygon(0 62%, 100% 62%, 100% 80%, 0 80%); transform: translateX(4px); }
+  22%  { clip-path: polygon(0 5%, 100% 5%, 100% 22%, 0 22%); transform: translateX(-3px); }
+  23%  { opacity: 0; clip-path: none; transform: none; }
+  85%  { opacity: 0; }
+  86%  { opacity: 0.9; clip-path: polygon(0 30%, 100% 30%, 100% 52%, 0 52%); transform: translateX(-5px); }
+  87%  { clip-path: polygon(0 70%, 100% 70%, 100% 88%, 0 88%); transform: translateX(3px); }
+  88%  { opacity: 0; clip-path: none; transform: none; }
+  100% { opacity: 0; }
+}
+
+@keyframes glitch-c {
+  0%   { opacity: 0; transform: none; clip-path: none; }
+  22%  { opacity: 0; }
+  23%  { opacity: 0.9; clip-path: polygon(0 45%, 100% 45%, 100% 65%, 0 65%); transform: translateX(6px); }
+  24%  { clip-path: polygon(0 75%, 100% 75%, 100% 92%, 0 92%); transform: translateX(-4px); }
+  25%  { clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%); transform: translateX(3px); }
+  26%  { opacity: 0; clip-path: none; transform: none; }
+  88%  { opacity: 0; }
+  89%  { opacity: 0.9; clip-path: polygon(0 55%, 100% 55%, 100% 75%, 0 75%); transform: translateX(5px); }
+  90%  { clip-path: polygon(0 10%, 100% 10%, 100% 28%, 0 28%); transform: translateX(-3px); }
+  91%  { opacity: 0; clip-path: none; transform: none; }
+  100% { opacity: 0; }
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: rgb(30 50 95 / 0.6) transparent;

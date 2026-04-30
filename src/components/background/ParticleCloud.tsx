@@ -60,10 +60,11 @@ const fragmentShader = /* glsl */ `
 `;
 
 const FAR_AWAY = new Vector3(0, 0, -1000);
+const PARTICLE_POSITIONS = fibonacciSphere(2000, 13.5);
 
 export function ParticleCloud() {
   const hasHover = useHasHover();
-  const positions = useMemo(() => fibonacciSphere(2800, 13.5), []);
+  const positions = PARTICLE_POSITIONS;
 
   const trailArray = useMemo(
     () => hasHover
@@ -76,7 +77,7 @@ export function ParticleCloud() {
   const lastTrailTime = useRef(0);
 
   const raycaster = useMemo(() => hasHover ? new Raycaster() : null, [hasHover]);
-  const sphereGeo = useMemo(() => hasHover ? new SphereGeometry(13.5, 32, 32) : null, [hasHover]);
+  const sphereGeo = useMemo(() => hasHover ? new SphereGeometry(13.5, 8, 8) : null, [hasHover]);
   const dummyMesh = useMemo(() => {
     if (!hasHover || !sphereGeo) return null;
     const m = new Mesh(sphereGeo, new MeshBasicMaterial());

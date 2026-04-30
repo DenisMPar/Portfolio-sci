@@ -6,7 +6,6 @@ import {
   TextureLoader,
   RepeatWrapping,
   LinearFilter,
-  LinearMipMapNearestFilter,
   ShaderMaterial,
   AdditiveBlending,
 } from 'three';
@@ -75,8 +74,8 @@ export function LiquidSmoke() {
   noiseTex.wrapS = RepeatWrapping;
   noiseTex.wrapT = RepeatWrapping;
   noiseTex.magFilter = LinearFilter;
-  noiseTex.minFilter = LinearMipMapNearestFilter;
-  noiseTex.anisotropy = 1;
+  noiseTex.minFilter = LinearFilter;
+  noiseTex.generateMipmaps = false;
 
   const uniforms = useMemo(
     () => ({

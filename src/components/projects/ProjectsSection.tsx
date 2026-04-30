@@ -559,7 +559,6 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
   const ready = useBackgroundReady();
   const hasHover = useHasHover();
   const prefersReduced = useReducedMotion();
-
   const selectProject = useCallback((slug: string) => {
     setActiveSlug(slug);
     window.history.replaceState(null, "", `/projects?project=${slug}`);

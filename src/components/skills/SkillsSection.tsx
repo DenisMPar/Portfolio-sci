@@ -302,7 +302,6 @@ function AnimatedSkillsContent({ hasHover }: { hasHover: boolean }) {
 export function SkillsSection() {
   const ready = useBackgroundReady();
   const hasHover = useHasHover();
-
   return (
     <section
       id="skills"

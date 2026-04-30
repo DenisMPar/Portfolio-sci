@@ -19,7 +19,7 @@ export function NavBar() {
           key={link.href}
           href={link.href}
           aria-current={pathname === link.href ? "page" : undefined}
-          className={`font-mono text-sm px-3 py-2 transition-colors ${
+className={`font-mono text-sm px-3 py-2 transition-colors ${
             pathname === link.href
               ? "text-state-active"
               : "text-foreground/70 hover:text-foreground/90"

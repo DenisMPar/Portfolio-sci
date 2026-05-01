@@ -2,6 +2,7 @@
 
 :root {
   --background: #1a1a2e;
+  --background-elevated: #1e2d4a;
   --foreground: #eaeaea;
   --card: rgb(30 30 54 / 0.45);
   --primary: #508ccc;
@@ -13,6 +14,21 @@
   --section-gap-top: 30px;
   --section-pt: calc(var(--nav-h) + var(--section-gap-top));
   --section-pb: calc(var(--footer-h) + var(--section-gap));
+
+  /* Primary alpha variants */
+  --primary-ghost: rgba(80, 140, 204, 0.07);
+  --primary-faint: rgba(80, 140, 204, 0.08);
+  --primary-subtle: rgba(80, 140, 204, 0.15);
+  --primary-dim: rgba(80, 140, 204, 0.4);
+  --primary-mid: rgba(80, 140, 204, 0.55);
+  --primary-strong: rgba(80, 140, 204, 0.6);
+  --primary-vivid: rgba(80, 140, 204, 0.7);
+
+  /* Panel decorative effects */
+  --panel-scanlines-color: rgba(0, 0, 0, 0.3);
+  --panel-vignette-color: rgba(0, 10, 30, 0.6);
+  --panel-aberration-inner: rgba(50, 120, 180, 0.15);
+  --panel-aberration-outer: rgba(80, 160, 220, 0.1);
 }
 
 @theme inline {

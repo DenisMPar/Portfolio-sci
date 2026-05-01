@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "skills": "Skills"
+  },
+  "hero": {
+    "subtitle": "Frontend Engineer",
+    "bio1": "Frontend engineer with <mark>3+ years</mark> building products that feel as good as they look. I've worked closely with design teams in fintech and software factories — from greenfield builds to evolving complex admin systems.",
+    "bio2": "I care about <mark>solid foundations</mark>, reusable components, and interfaces where every detail is intentional. If it ships, it should work — and it should feel right.",
+    "cta": "View projects"
+  },
+  "projects": {
+    "panelTitle": "Projects",
+    "empty": "No projects yet.",
+    "gallery": "Gallery — {current} / {total}",
+    "galleryLabel": "Image gallery",
+    "closeLabel": "Close gallery",
+    "close": "Close",
+    "stack": "Stack",
+    "year": "Year",
+    "role": "Role",
+    "roleSoloDev": "Personal project",
+    "roleTeamDev": "Professional project",
+    "type": "Type",
+    "typeShowcase": "Showcase",
+    "typeCaseStudy": "Case study",
+    "links": "Links",
+    "live": "Live",
+    "repo": "Repo",
+    "prevImage": "Previous image",
+    "nextImage": "Next image",
+    "goToImage": "Go to image {n}",
+    "listLabel": "Project list"
+  },
+  "skills": {
+    "panelTitle": "Skills",
+    "countLabel": "skills:",
+    "experienceLabel": "experience:",
+    "mainStackLabel": "main stack:",
+    "experienceValue": "+3 yrs",
+    "mainStackValue": "Next.js · React · TypeScript",
+    "categoryCount": "{count} skills",
+    "exploring": "Exploring & Improving"
+  },
+  "error": {
+    "title": "Error",
+    "subtitle": "System malfunction",
+    "description": "An unexpected error occurred.",
+    "retry": "Retry"
+  },
+  "notFound": {
+    "subtitle": "Signal not found",
+    "description": "The requested resource does not exist on this server.",
+    "back": "Return to base"
+  },
+  "metadata": {
+    "home": {
+      "title": "Denis — Frontend Engineer",
+      "description": "Portfolio of Denis, a frontend engineer specializing in React, Next.js, and TypeScript."
+    },
+    "projects": {
+      "title": "Projects — Denis Parada",
+      "description": "Showcase and case studies: portfolio projects built with React, Next.js, TypeScript, Three.js, and more."
+    },
+    "skills": {
+      "title": "Skills — Denis Parada",
+      "description": "Technical skills and tools: React, Next.js, TypeScript, Three.js, testing, clean architecture, and more."
+    }
+  }
+}

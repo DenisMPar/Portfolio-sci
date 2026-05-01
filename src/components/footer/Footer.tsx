@@ -1,6 +1,6 @@
 "use client";
 
-import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
+import { m } from "framer-motion";
 
 const contacts = [
   { label: "GitHub", href: "https://github.com/DenisMPar", prefix: "gh:" },
@@ -9,15 +9,12 @@ const contacts = [
 ] as const;
 
 export function Footer() {
-  const ready = useBackgroundReady();
-
   return (
-    <footer
-      className="fixed bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-4 px-4 py-2.5 bg-background border-t border-primary/10 font-mono text-sm transition-transform duration-500 ease-out"
-      style={{
-        transform: ready ? "translateY(0)" : "translateY(100%)",
-        transitionDelay: ready ? "300ms" : "0ms",
-      }}
+    <m.footer
+      className="fixed bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-4 px-4 py-2.5 bg-background border-t border-primary/10 font-mono text-sm"
+      initial={{ y: "100%" }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
     >
       {contacts.map((contact) => (
         <span key={contact.label}>
@@ -32,6 +29,6 @@ export function Footer() {
           </a>
         </span>
       ))}
-    </footer>
+    </m.footer>
   );
 }

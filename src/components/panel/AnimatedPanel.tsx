@@ -2,7 +2,6 @@
 
 import { m, useReducedMotion } from "framer-motion";
 import { InterfacePanel, type InterfacePanelProps } from "./index";
-import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 import { useHasHover } from "@/hooks/useHasHover";
 
 const panelVariants = {
@@ -27,7 +26,6 @@ export function AnimatedPanel({
   delay = 0,
   ...props
 }: InterfacePanelProps & { delay?: number }) {
-  const ready = useBackgroundReady();
   const hasHover = useHasHover();
   const prefersReduced = useReducedMotion();
 
@@ -44,7 +42,7 @@ export function AnimatedPanel({
       className="h-full min-[1920px]:h-auto"
       variants={prefersReduced ? reducedVariants : panelVariants}
       initial="hidden"
-      animate={ready ? "visible" : "hidden"}
+      animate="visible"
       transition={{ delay }}
     >
       <InterfacePanel {...props} />

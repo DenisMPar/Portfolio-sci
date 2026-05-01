@@ -8,7 +8,6 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { AnimatedPanel } from "../panel/AnimatedPanel";
 import { NoiseTexture, CrtScanlines, VignetteEdge, ColorAberration } from "../panel";
-import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 import { useHasHover } from "@/hooks/useHasHover";
 import type { Project } from "@/data/projects";
 
@@ -564,7 +563,6 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
   const [activeSlug, setActiveSlug] = useState(
     () => searchParams.get("project") ?? defaultSlug,
   );
-  const ready = useBackgroundReady();
   const hasHover = useHasHover();
   const prefersReduced = useReducedMotion();
   const t = useTranslations("projects");
@@ -609,7 +607,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
       className="flex flex-col sm:grid sm:grid-cols-[12rem_1fr] w-full h-full"
       variants={containerVariants}
       initial="hidden"
-      animate={ready ? "visible" : "hidden"}
+      animate="visible"
     >
       <m.div
         className="border-b sm:border-b-0 sm:border-r border-primary/15 py-2 overflow-hidden"
@@ -637,9 +635,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
           {hasHover ? (
             staggeredContent
           ) : (
-            <div className="w-full transition-opacity duration-300" style={{ opacity: ready ? 1 : 0 }}>
-              {content}
-            </div>
+            {content}
           )}
         </div>
       </AnimatedPanel>

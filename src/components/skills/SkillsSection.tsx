@@ -3,7 +3,6 @@
 import { m, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { AnimatedPanel } from "../panel/AnimatedPanel";
-import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 import { useHasHover } from "@/hooks/useHasHover";
 import { skills, exploringSkills, type Skill } from "@/data/skills";
 
@@ -278,7 +277,6 @@ function SkillsContent() {
 }
 
 function AnimatedSkillsContent({ hasHover }: { hasHover: boolean }) {
-  const ready = useBackgroundReady();
   const prefersReduced = useReducedMotion();
   const wipeVariants = hasHover ? columnWipeVariants : columnWipeVerticalVariants;
 
@@ -287,7 +285,7 @@ function AnimatedSkillsContent({ hasHover }: { hasHover: boolean }) {
       className="flex flex-col w-full"
       variants={contentVariants}
       initial="hidden"
-      animate={ready ? "visible" : "hidden"}
+      animate="visible"
     >
       <m.div variants={prefersReduced ? reducedColumnVariants : wipeVariants}>
         <StatsBar />
@@ -305,7 +303,6 @@ function AnimatedSkillsContent({ hasHover }: { hasHover: boolean }) {
 }
 
 export function SkillsSection() {
-  const ready = useBackgroundReady();
   const hasHover = useHasHover();
   const t = useTranslations("skills");
   return (

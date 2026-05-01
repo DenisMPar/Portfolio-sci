@@ -28,6 +28,13 @@ const client = createClient({
   accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!,
 });
 
+// Map next-intl locales to Contentful locale codes.
+// Adjust these values to match your Contentful space configuration.
+const CONTENTFUL_LOCALE: Record<string, string> = {
+  en: "en-US",
+  es: "es",
+};
+
 function richTextToPlain(doc: unknown): string {
   const node = doc as {
     content?: Array<{ content?: Array<{ value?: string }> }>;
@@ -48,10 +55,13 @@ function assetUrl(asset: unknown): string {
   return `https:${a.fields.file.url}`;
 }
 
-export async function getProjects(): Promise<Project[]> {
+export async function getProjects(locale = "en"): Promise<Project[]> {
+  const contentfulLocale = CONTENTFUL_LOCALE[locale] ?? CONTENTFUL_LOCALE.en;
+
   const entries = await client.getEntries<ProjectSkeleton>({
     content_type: "project",
     order: ["fields.order"],
+    locale: contentfulLocale,
   });
 
   return entries.items.map((item) => {

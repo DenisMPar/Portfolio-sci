@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { DeferredBackground } from "@/components/background/DeferredBackground";
-import { BackgroundReadyProvider } from "@/components/background/BackgroundReadyContext";
+import { MountedProvider } from "@/components/background/MountedContext";
 import { NavBar } from "@/components/nav/NavBar";
 import { Footer } from "@/components/footer/Footer";
 import "../globals.css";
@@ -100,12 +100,12 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <NextIntlClientProvider messages={messages}>
-          <BackgroundReadyProvider>
+          <MountedProvider>
             <DeferredBackground />
             <NavBar />
             {children}
             <Footer />
-          </BackgroundReadyProvider>
+          </MountedProvider>
         </NextIntlClientProvider>
       </body>
     </html>

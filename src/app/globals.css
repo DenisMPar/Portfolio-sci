@@ -139,7 +139,7 @@
   100% { opacity: 0; }
 }
 
-@media (max-width: 768px) {
+@media (hover: none) {
   .glitch::before,
   .glitch::after {
     display: none;

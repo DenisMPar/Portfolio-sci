@@ -8,7 +8,7 @@ export function DeferredBackground() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia('(max-width: 768px)').matches) return;
+    if (window.matchMedia('(hover: none)').matches) return;
     setMounted(true);
     const t = setTimeout(() => setVisible(true), 200);
     return () => clearTimeout(t);

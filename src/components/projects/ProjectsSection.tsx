@@ -632,11 +632,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
     >
       <AnimatedPanel title={t("panelTitle")} className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
         <div className="h-full flex items-start justify-center">
-          {hasHover ? (
-            staggeredContent
-          ) : (
-            {content}
-          )}
+          {hasHover ? staggeredContent : content}
         </div>
       </AnimatedPanel>
     </section>

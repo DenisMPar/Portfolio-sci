@@ -1,6 +1,10 @@
-import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 
-export default function NotFound() {
+export default async function NotFound() {
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: "notFound" });
+
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center h-screen w-screen">
       <div className="flex flex-col items-center text-center">
@@ -9,10 +13,10 @@ export default function NotFound() {
         </h1>
         <div className="mx-auto my-6 h-px w-48 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
         <p className="text-foreground/70 text-sm uppercase tracking-wider">
-          Signal not found
+          {t("subtitle")}
         </p>
         <p className="mt-2 text-foreground/70 text-xs">
-          The requested resource does not exist on this server.
+          {t("description")}
         </p>
         <Link
           href="/"
@@ -22,7 +26,7 @@ export default function NotFound() {
               "polygon(0 4px, 4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px))",
           }}
         >
-          Return to base
+          {t("back")}
         </Link>
       </div>
     </div>

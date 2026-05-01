@@ -63,7 +63,7 @@ const reducedBarVariants = {
 };
 
 const chipClass =
-  "inline-flex items-center gap-1.5 text-xs 2xl:text-sm border border-primary/20 px-2 py-0.5 2xl:px-2.5 2xl:py-1 text-foreground/70 font-light transition-all hover:text-foreground hover:border-primary/40 hover:shadow-[0_0_12px_rgba(80,140,204,0.15)] cursor-default";
+  "inline-flex items-center gap-1.5 text-xs 2xl:text-sm border border-primary/20 px-2 py-0.5 2xl:px-2.5 2xl:py-1 text-foreground/70 font-light transition-all hover:text-foreground hover:border-primary/40 hover:shadow-[0_0_12px_var(--primary-subtle)] cursor-default";
 
 function SkillChip({ skill }: { skill: Skill }) {
   const Icon = skill.icon;
@@ -166,7 +166,7 @@ function CategoryColumn({
         </div>
         <span
           className="text-[32px] font-bold leading-none select-none"
-          style={{ color: "rgba(80,140,204,0.07)" }}
+          style={{ color: "var(--primary-ghost)" }}
           aria-hidden="true"
         >
           {String(index + 1).padStart(2, "0")}
@@ -175,7 +175,7 @@ function CategoryColumn({
 
       <div
         className="h-0.5 w-full rounded-sm"
-        style={{ background: "rgba(80,140,204,0.08)" }}
+        style={{ background: "var(--primary-faint)" }}
         aria-hidden="true"
       >
         <div
@@ -183,7 +183,7 @@ function CategoryColumn({
           style={{
             width: `${barWidth}%`,
             background:
-              "linear-gradient(to right, rgba(80,140,204,0.55), rgba(80,140,204,0.15))",
+              "linear-gradient(to right, var(--primary-mid), var(--primary-subtle))",
           }}
         />
       </div>
@@ -227,7 +227,7 @@ function AnimatedCategoryColumn({
         </div>
         <span
           className="text-[32px] font-bold leading-none select-none"
-          style={{ color: "rgba(80,140,204,0.07)" }}
+          style={{ color: "var(--primary-ghost)" }}
           aria-hidden="true"
         >
           {String(index + 1).padStart(2, "0")}
@@ -236,7 +236,7 @@ function AnimatedCategoryColumn({
 
       <div
         className="h-0.5 w-full rounded-sm"
-        style={{ background: "rgba(80,140,204,0.08)" }}
+        style={{ background: "var(--primary-faint)" }}
         aria-hidden="true"
       >
         <m.div
@@ -244,7 +244,7 @@ function AnimatedCategoryColumn({
           variants={prefersReduced ? reducedBarVariants : barFillVariants}
           style={{
             width: `${barWidth}%`,
-            background: "linear-gradient(to right, rgba(80,140,204,0.55), rgba(80,140,204,0.15))",
+            background: "linear-gradient(to right, var(--primary-mid), var(--primary-subtle))",
           }}
         />
       </div>

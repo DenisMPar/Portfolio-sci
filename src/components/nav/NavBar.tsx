@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { m, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 
 const NAV_LINKS = [
@@ -39,7 +39,7 @@ function LocaleSwitcher({ onSwitch }: { onSwitch?: () => void }) {
             aria-label={l === "en" ? "Switch to English" : "Cambiar a Español"}
             className={`px-1.5 py-2 uppercase transition-colors duration-200 ${
               locale === l
-                ? "text-accent cursor-default drop-shadow-[0_0_8px_rgba(80,140,204,0.7)]"
+                ? "text-accent cursor-default drop-shadow-[0_0_8px_var(--primary-vivid)]"
                 : "text-foreground/30 hover:text-foreground/70 cursor-pointer"
             }`}
           >
@@ -56,6 +56,7 @@ export function NavBar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const prefersReduced = useReducedMotion();
 
   useEffect(() => {
     setOpen(false);
@@ -107,10 +108,10 @@ export function NavBar() {
           {open && (
             <m.div
               id="mobile-menu"
-              initial={{ clipPath: "inset(0 0 100% 0)" }}
-              animate={{ clipPath: "inset(0 0 0% 0)" }}
-              exit={{ clipPath: "inset(0 0 100% 0)" }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              initial={prefersReduced ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }}
+              animate={prefersReduced ? { opacity: 1 } : { clipPath: "inset(0 0 0% 0)" }}
+              exit={prefersReduced ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }}
+              transition={prefersReduced ? { duration: 0.15 } : { duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="sm:hidden border-t border-primary/10"
             >
               <div className="px-6 py-3 flex flex-col">

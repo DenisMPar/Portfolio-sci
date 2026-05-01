@@ -13,7 +13,7 @@ export default function ErrorPage({
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center h-screen w-screen">
       <div className="flex flex-col items-center text-center">
-        <h1 className="text-7xl font-bold text-primary tracking-widest drop-shadow-[0_0_30px_rgba(80,140,204,0.5)]">
+        <h1 className="text-7xl font-bold text-primary tracking-widest drop-shadow-[0_0_30px_var(--primary-dim)]">
           {t("title")}
         </h1>
         <div className="mx-auto my-6 h-px w-48 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />

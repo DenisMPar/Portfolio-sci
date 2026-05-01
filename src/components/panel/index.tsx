@@ -19,7 +19,7 @@ export function CrtScanlines() {
       aria-hidden="true"
       className="absolute inset-0 pointer-events-none opacity-[0.04]"
       style={{
-        background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.3) 2px, rgba(0, 0, 0, 0.3) 4px)",
+        background: "repeating-linear-gradient(0deg, transparent, transparent 2px, var(--panel-scanlines-color) 2px, var(--panel-scanlines-color) 4px)",
       }}
     />
   )
@@ -31,7 +31,7 @@ export function VignetteEdge() {
       aria-hidden="true"
       className="absolute inset-0 pointer-events-none"
       style={{
-        background: "radial-gradient(ellipse at center, transparent 50%, rgba(0, 10, 30, 0.6) 100%)",
+        background: "radial-gradient(ellipse at center, transparent 50%, var(--panel-vignette-color) 100%)",
       }}
     />
   )
@@ -43,7 +43,7 @@ export function ColorAberration() {
       aria-hidden="true"
       className="absolute inset-0 pointer-events-none opacity-30"
       style={{
-        boxShadow: "inset 0 0 60px rgba(50, 120, 180, 0.15), inset 0 0 20px rgba(80, 160, 220, 0.1)",
+        boxShadow: "inset 0 0 60px var(--panel-aberration-inner), inset 0 0 20px var(--panel-aberration-outer)",
       }}
     />
   )
@@ -66,7 +66,7 @@ function PanelContent({ title, children }: { title?: string; children: ReactNode
     <div className="relative z-10 h-full flex flex-col">
       {title && (
         <div className="flex items-center gap-3 px-4 py-3">
-          <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_rgba(80,140,204,0.6)]" aria-hidden="true" />
+          <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_var(--primary-strong)]" aria-hidden="true" />
           <h1 className="text-base font-medium uppercase tracking-wider text-foreground text-wrap-balance font-display">
             {title}
           </h1>
@@ -96,7 +96,7 @@ export function InterfacePanel({ children, title, className, variant = "default"
     <div
       className={cn(
         "relative",
-        variant === "glow" && "drop-shadow-[0_0_25px_rgba(80,140,204,0.4)]",
+        variant === "glow" && "drop-shadow-[0_0_25px_var(--primary-dim)]",
         className
       )}
     >

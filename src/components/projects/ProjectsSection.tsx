@@ -74,7 +74,7 @@ function Gallery({
 
         <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-primary/15">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_rgba(80,140,204,0.6)]" aria-hidden="true" />
+            <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_var(--primary-strong)]" aria-hidden="true" />
             <span className="text-xs uppercase tracking-widest text-foreground/55 font-display">
               {t("gallery", { current: index + 1, total: images.length })}
             </span>
@@ -137,7 +137,7 @@ function Gallery({
               onClick={() => setIndex(i)}
               className={`w-2 h-2 rotate-45 transition-all cursor-pointer ${
                 i === index
-                  ? "bg-primary shadow-[0_0_8px_rgba(80,140,204,0.6)]"
+                  ? "bg-primary shadow-[0_0_8px_var(--primary-strong)]"
                   : "bg-foreground/20 hover:bg-foreground/40"
               }`}
               aria-label={t("goToImage", { n: i + 1 })}
@@ -252,7 +252,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                 <div
                   className="absolute inset-[1px] z-[5] animate-[skeleton-shimmer_2s_ease-in-out_infinite]"
                   style={{
-                    background: 'linear-gradient(90deg, #1a1a2e 30%, #1e2d4a 50%, #1a1a2e 70%)',
+                    background: 'linear-gradient(90deg, var(--background) 30%, var(--background-elevated) 50%, var(--background) 70%)',
                     backgroundSize: '200% 100%',
                   }}
                 />
@@ -314,7 +314,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                         >
                           <span className={`w-1.5 h-1.5 rotate-45 transition-all block ${
                             i === carouselIndex
-                              ? "bg-primary shadow-[0_0_6px_rgba(80,140,204,0.6)]"
+                              ? "bg-primary shadow-[0_0_6px_var(--primary-strong)]"
                               : "bg-foreground/30 hover:bg-foreground/50"
                           }`} />
                         </div>

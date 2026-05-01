@@ -1,6 +1,7 @@
 "use client";
 
 import { m, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { AnimatedPanel } from "../panel/AnimatedPanel";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
 import { useHasHover } from "@/hooks/useHasHover";
@@ -85,19 +86,20 @@ const contentVariants = {
 };
 
 function StatsBar() {
+  const t = useTranslations("skills");
   return (
     <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 px-4 pb-4 border-b border-primary/10">
       <div className="flex items-baseline gap-1.5">
-        <span className="text-xs text-foreground/55 uppercase tracking-wider">skills:</span>
+        <span className="text-xs text-foreground/55 uppercase tracking-wider">{t("countLabel")}</span>
         <span className="text-sm text-accent/70 font-bold">{totalSkills}</span>
       </div>
       <div className="flex items-baseline gap-1.5">
-        <span className="text-xs text-foreground/55 uppercase tracking-wider">experience:</span>
-        <span className="text-sm text-accent/70 font-bold">+3 yrs</span>
+        <span className="text-xs text-foreground/55 uppercase tracking-wider">{t("experienceLabel")}</span>
+        <span className="text-sm text-accent/70 font-bold">{t("experienceValue")}</span>
       </div>
       <div className="flex items-baseline gap-1.5">
-        <span className="text-xs text-foreground/55 uppercase tracking-wider">main stack:</span>
-        <span className="text-sm text-accent/70 font-bold">Next.js · React · TypeScript</span>
+        <span className="text-xs text-foreground/55 uppercase tracking-wider">{t("mainStackLabel")}</span>
+        <span className="text-sm text-accent/70 font-bold">{t("mainStackValue")}</span>
       </div>
     </div>
   );
@@ -105,10 +107,11 @@ function StatsBar() {
 
 function ExploringBar() {
   const prefersReduced = useReducedMotion();
+  const t = useTranslations("skills");
   return (
     <div className="px-4 pt-4 border-t border-primary/10">
       <span className="text-xs text-foreground/55 uppercase tracking-wider">
-        Exploring & Improving
+        {t("exploring")}
       </span>
       <m.div
         className="flex flex-wrap gap-1.5 mt-2"
@@ -146,6 +149,7 @@ function CategoryColumn({
   index: number;
 }) {
   const barWidth = Math.round((category.skills.length / maxSkillCount) * 100);
+  const t = useTranslations("skills");
 
   return (
     <div
@@ -157,7 +161,7 @@ function CategoryColumn({
             {category.name}
           </span>
           <span className="block text-xs text-accent/70 mt-0.5">
-            {category.skills.length} skills
+            {t("categoryCount", { count: category.skills.length })}
           </span>
         </div>
         <span
@@ -205,6 +209,7 @@ function AnimatedCategoryColumn({
   const prefersReduced = useReducedMotion();
   const barWidth = Math.round((category.skills.length / maxSkillCount) * 100);
   const wipeVariants = hasHover ? columnWipeVariants : columnWipeVerticalVariants;
+  const t = useTranslations("skills");
 
   return (
     <m.div
@@ -217,7 +222,7 @@ function AnimatedCategoryColumn({
             {category.name}
           </span>
           <span className="block text-xs text-accent/70 mt-0.5">
-            {category.skills.length} skills
+            {t("categoryCount", { count: category.skills.length })}
           </span>
         </div>
         <span
@@ -302,13 +307,14 @@ function AnimatedSkillsContent({ hasHover }: { hasHover: boolean }) {
 export function SkillsSection() {
   const ready = useBackgroundReady();
   const hasHover = useHasHover();
+  const t = useTranslations("skills");
   return (
     <section
       id="skills"
       className="relative z-10 h-screen w-full flex items-center justify-center pointer-events-none"
       style={{ paddingTop: "var(--section-pt)", paddingBottom: "var(--section-pb)" }}
     >
-      <AnimatedPanel title="Skills" className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
+      <AnimatedPanel title={t("panelTitle")} className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
         <div className="h-full flex items-center">
           <AnimatedSkillsContent hasHover={hasHover} />
         </div>

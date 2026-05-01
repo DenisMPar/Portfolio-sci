@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { AnimatedPanel } from "../panel/AnimatedPanel";
 import { NoiseTexture, CrtScanlines, VignetteEdge, ColorAberration } from "../panel";
 import { useBackgroundReady } from "@/components/background/BackgroundReadyContext";
@@ -22,6 +23,7 @@ function Gallery({
 }) {
   const [index, setIndex] = useState(initialIndex);
   const prefersReduced = useReducedMotion();
+  const t = useTranslations("projects");
   const direction = useCallback((dir: 1 | -1) => {
     setIndex((i) => (i + dir + images.length) % images.length);
   }, [images.length]);
@@ -45,7 +47,7 @@ function Gallery({
       className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/60 backdrop-blur-sm"
       onClick={onClose}
       role="dialog"
-      aria-label="Image gallery"
+      aria-label={t("galleryLabel")}
     >
       <m.div
         initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: "-40vh" }}
@@ -74,16 +76,16 @@ function Gallery({
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_rgba(80,140,204,0.6)]" aria-hidden="true" />
             <span className="text-xs uppercase tracking-widest text-foreground/55 font-display">
-              Gallery — {index + 1} / {images.length}
+              {t("gallery", { current: index + 1, total: images.length })}
             </span>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="text-accent hover:text-accent/80 transition-colors text-xs uppercase tracking-widest cursor-pointer"
-            aria-label="Close gallery"
+            aria-label={t("closeLabel")}
           >
-            [ Close ]
+            [ {t("close")} ]
           </button>
         </div>
 
@@ -92,7 +94,7 @@ function Gallery({
             type="button"
             onClick={() => direction(-1)}
             className="absolute left-4 top-1/2 -translate-y-1/2 z-10 text-foreground/30 hover:text-foreground/80 transition-colors text-3xl cursor-pointer"
-            aria-label="Previous image"
+            aria-label={t("prevImage")}
           >
             ‹
           </button>
@@ -121,7 +123,7 @@ function Gallery({
             type="button"
             onClick={() => direction(1)}
             className="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-foreground/30 hover:text-foreground/80 transition-colors text-3xl cursor-pointer"
-            aria-label="Next image"
+            aria-label={t("nextImage")}
           >
             ›
           </button>
@@ -138,7 +140,7 @@ function Gallery({
                   ? "bg-primary shadow-[0_0_8px_rgba(80,140,204,0.6)]"
                   : "bg-foreground/20 hover:bg-foreground/40"
               }`}
-              aria-label={`Go to image ${i + 1}`}
+              aria-label={t("goToImage", { n: i + 1 })}
             />
           ))}
         </div>
@@ -179,6 +181,7 @@ const metaRowVariants = {
 
 function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boolean }) {
   const prefersReduced = useReducedMotion();
+  const t = useTranslations("projects");
   const clipInitial = prefersReduced ? { opacity: 0 } : { clipPath: hasHover ? "inset(0 100% 0 0)" : "inset(0 0 100% 0)" };
   const clipVisible = prefersReduced ? { opacity: 1 } : { clipPath: "inset(0 0% 0 0)" };
   const [carouselIndex, setCarouselIndex] = useState(0);
@@ -284,7 +287,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                       onClick={(e) => { e.stopPropagation(); prevImage(); }}
                       onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); prevImage(); } }}
                       tabIndex={0}
-                      aria-label="Previous image"
+                      aria-label={t("prevImage")}
                     >
                       ‹
                     </div>
@@ -294,7 +297,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                       onClick={(e) => { e.stopPropagation(); nextImage(); }}
                       onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); nextImage(); } }}
                       tabIndex={0}
-                      aria-label="Next image"
+                      aria-label={t("nextImage")}
                     >
                       ›
                     </div>
@@ -307,7 +310,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                           onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
                           onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); setCarouselIndex(i); } }}
                           className="w-6 h-6 flex items-center justify-center cursor-pointer"
-                          aria-label={`Image ${i + 1}`}
+                          aria-label={t("goToImage", { n: i + 1 })}
                         >
                           <span className={`w-1.5 h-1.5 rotate-45 transition-all block ${
                             i === carouselIndex
@@ -374,7 +377,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                         className="uppercase tracking-widest text-foreground/55"
                         variants={prefersReduced ? undefined : metaRowVariants}
                       >
-                        Stack
+                        {t("stack")}
                       </m.span>
                       <div className="flex flex-wrap gap-1.5 mt-1.5">
                         {project.tags.map((tag) => (
@@ -398,23 +401,27 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                         className="flex justify-between py-1.5"
                         variants={prefersReduced ? undefined : metaRowVariants}
                       >
-                        <span className="uppercase tracking-widest text-foreground/55">Year</span>
+                        <span className="uppercase tracking-widest text-foreground/55">{t("year")}</span>
                         <span className="text-foreground/70">{project.year}</span>
                       </m.div>
                       <m.div
                         className="flex justify-between py-1.5 border-t border-primary/10"
                         variants={prefersReduced ? undefined : metaRowVariants}
                       >
-                        <span className="uppercase tracking-widest text-foreground/55">Role</span>
-                        <span className="text-foreground/70">{project.role}</span>
+                        <span className="uppercase tracking-widest text-foreground/55">{t("role")}</span>
+                        <span className="text-foreground/70">
+                          {project.role === "Solo Dev" ? t("roleSoloDev") : t("roleTeamDev")}
+                        </span>
                       </m.div>
                       {project.type && (
                         <m.div
                           className="flex justify-between py-1.5 border-t border-primary/10"
                           variants={prefersReduced ? undefined : metaRowVariants}
                         >
-                          <span className="uppercase tracking-widest text-foreground/55">Type</span>
-                          <span className="text-foreground/70 capitalize">{project.type.replace("-", " ")}</span>
+                          <span className="uppercase tracking-widest text-foreground/55">{t("type")}</span>
+                          <span className="text-foreground/70">
+                            {project.type === "showcase" ? t("typeShowcase") : t("typeCaseStudy")}
+                          </span>
                         </m.div>
                       )}
                       {(project.liveUrl || project.repoUrl) && (
@@ -422,7 +429,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                           className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1.5 border-t border-primary/10 gap-1.5 sm:gap-0"
                           variants={prefersReduced ? undefined : metaRowVariants}
                         >
-                          <span className="uppercase tracking-widest text-foreground/55">Links</span>
+                          <span className="uppercase tracking-widest text-foreground/55">{t("links")}</span>
                           <div className="flex gap-3">
                             {project.liveUrl && (
                               <a
@@ -431,7 +438,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                                 rel="noopener noreferrer"
                                 className="text-accent hover:text-accent/80 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
                               >
-                                [ Live ]
+                                [ {t("live")} ]
                               </a>
                             )}
                             {project.repoUrl && (
@@ -441,7 +448,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                                 rel="noopener noreferrer"
                                 className="text-primary hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
                               >
-                                [ Repo ]
+                                [ {t("repo")} ]
                               </a>
                             )}
                           </div>
@@ -519,10 +526,11 @@ function ProjectNav({
     return undefined;
   })();
 
+  const t = useTranslations("projects");
   return (
     <nav
       ref={navRef}
-      aria-label="Project list"
+      aria-label={t("listLabel")}
       className="flex sm:flex-col gap-0.5 overflow-x-auto sm:overflow-x-hidden px-2 sm:px-0"
       style={{ maskImage, WebkitMaskImage: maskImage }}
     >
@@ -559,6 +567,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
   const ready = useBackgroundReady();
   const hasHover = useHasHover();
   const prefersReduced = useReducedMotion();
+  const t = useTranslations("projects");
   const selectProject = useCallback((slug: string) => {
     setActiveSlug(slug);
     window.history.replaceState(null, "", `/projects?project=${slug}`);
@@ -573,9 +582,9 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
         className="relative z-10 h-screen w-full flex items-center justify-center pointer-events-none pb-[env(safe-area-inset-bottom)]"
         style={{ paddingTop: "var(--section-pt)", paddingBottom: "var(--section-pb)" }}
       >
-        <AnimatedPanel title="Projects" className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
+        <AnimatedPanel title={t("panelTitle")} className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
           <div className="min-h-full flex items-center justify-center">
-            <p className="text-sm text-foreground/55">No projects yet.</p>
+            <p className="text-sm text-foreground/55">{t("empty")}</p>
           </div>
         </AnimatedPanel>
       </section>
@@ -623,7 +632,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
       className="relative z-10 h-screen w-full flex items-center justify-center pointer-events-none pb-[env(safe-area-inset-bottom)]"
       style={{ paddingTop: "var(--section-pt)", paddingBottom: "var(--section-pb)" }}
     >
-      <AnimatedPanel title="Projects" className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
+      <AnimatedPanel title={t("panelTitle")} className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
         <div className="h-full flex items-start justify-center">
           {hasHover ? (
             staggeredContent

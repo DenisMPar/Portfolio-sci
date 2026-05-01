@@ -139,6 +139,13 @@
   100% { opacity: 0; }
 }
 
+@media (max-width: 768px) {
+  .glitch::before,
+  .glitch::after {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .glitch::before,
   .glitch::after {

@@ -33,7 +33,7 @@ export function AnimatedPanel({
 
   if (!hasHover) {
     return (
-      <div className="h-full min-[1920px]:h-auto transition-opacity duration-300" style={{ opacity: ready ? 1 : 0 }}>
+      <div className="h-full min-[1920px]:h-auto">
         <InterfacePanel {...props} />
       </div>
     );

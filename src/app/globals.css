@@ -139,6 +139,19 @@
   100% { opacity: 0; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .glitch::before,
+  .glitch::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  .typing-cursor::after {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: rgb(30 50 95 / 0.6) transparent;

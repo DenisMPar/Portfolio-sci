@@ -65,7 +65,7 @@ export function NavBar() {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-20 bg-background border-b border-primary/10 animate-[page-enter_0.4s_ease-out_forwards]"
+        className="fixed top-0 left-0 right-0 z-20 bg-background border-b border-primary/10 animate-[page-enter_0.4s_ease-out_forwards] motion-reduce:animate-none"
         aria-label="Main navigation"
       >
         {/* Desktop */}
@@ -90,7 +90,7 @@ export function NavBar() {
         {/* Mobile bar */}
         <div className="flex sm:hidden items-center justify-between px-4 py-3">
           <span className="font-mono text-xs text-foreground/40 tracking-widest">
-            DENIS<span className="text-accent animate-pulse">_</span>
+            DENIS<span className="text-accent animate-pulse motion-reduce:animate-none">_</span>
           </span>
           <button
             onClick={() => setOpen((o) => !o)}

@@ -26,9 +26,9 @@ export function GlobalLoader() {
       }`}
     >
       <div className="flex flex-col items-center gap-4">
-        <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin motion-reduce:animate-none" />
 
-        <div className="text-sm tracking-widest text-primary/80 animate-pulse">
+        <div className="text-sm tracking-widest text-primary/80 animate-pulse motion-reduce:animate-none">
           INITIALIZING_
         </div>
         <span className="sr-only">Loading interface</span>

@@ -245,12 +245,12 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                 <div className="absolute inset-0 bg-primary/20" />
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   <div
-                    className="absolute inset-[-100%] animate-[border-glow_5s_linear_infinite]"
+                    className="absolute inset-[-100%] animate-[border-glow_5s_linear_infinite] motion-reduce:animate-none"
                     style={{ background: 'conic-gradient(from 0deg, transparent 70%, var(--accent) 85%, transparent 95%)' }}
                   />
                 </div>
                 <div
-                  className="absolute inset-[1px] z-[5] animate-[skeleton-shimmer_2s_ease-in-out_infinite]"
+                  className="absolute inset-[1px] z-[5] animate-[skeleton-shimmer_2s_ease-in-out_infinite] motion-reduce:animate-none"
                   style={{
                     background: 'linear-gradient(90deg, var(--background) 30%, var(--background-elevated) 50%, var(--background) 70%)',
                     backgroundSize: '200% 100%',

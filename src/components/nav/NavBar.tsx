@@ -20,7 +20,7 @@ function LocaleSwitcher({ onSwitch }: { onSwitch?: () => void }) {
 
   return (
     <div className="flex items-center font-mono text-xs tracking-widest select-none">
-      <span className="text-foreground/30">[</span>
+      <span className="text-foreground/30" aria-hidden="true">[</span>
       {LOCALES.map((l, i) => (
         <span key={l} className="flex items-center">
           {i > 0 && (
@@ -40,14 +40,14 @@ function LocaleSwitcher({ onSwitch }: { onSwitch?: () => void }) {
             className={`px-1.5 py-2 uppercase transition-colors duration-200 ${
               locale === l
                 ? "text-accent cursor-default drop-shadow-[0_0_8px_var(--primary-vivid)]"
-                : "text-foreground/30 hover:text-foreground/70 cursor-pointer"
+                : "text-foreground/55 hover:text-foreground/80 cursor-pointer"
             }`}
           >
             {l}
           </button>
         </span>
       ))}
-      <span className="text-foreground/30">]</span>
+      <span className="text-foreground/30" aria-hidden="true">]</span>
     </div>
   );
 }
@@ -89,12 +89,12 @@ export function NavBar() {
 
         {/* Mobile bar */}
         <div className="flex sm:hidden items-center justify-between px-4 py-3">
-          <span className="font-mono text-xs text-foreground/40 tracking-widest">
+          <span className="font-mono text-xs text-foreground/55 tracking-widest">
             DENIS<span className="text-accent animate-pulse motion-reduce:animate-none">_</span>
           </span>
           <button
             onClick={() => setOpen((o) => !o)}
-            className="font-mono text-xs tracking-widest text-foreground/50 hover:text-foreground/90 transition-colors cursor-pointer"
+            className="font-mono text-xs tracking-widest text-foreground/60 hover:text-foreground/90 transition-colors cursor-pointer"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-menu"

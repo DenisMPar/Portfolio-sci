@@ -208,7 +208,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
   }, [project.images.length]);
 
   return (
-    <div className="relative flex flex-col flex-1 min-h-0">
+    <div className="relative flex flex-col lg:flex-1 lg:min-h-0">
       {mounted &&
         createPortal(
           <AnimatePresence>
@@ -227,15 +227,15 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
           animate={{ opacity: 1 }}
           exit={prefersReduced ? { opacity: 0 } : { clipPath: hasHover ? "inset(0 100% 0 0)" : "inset(0 0 100% 0)", transition: { duration: 0.35, ease: [0.4, 0, 1, 1] } }}
           transition={{ duration: 0.15 }}
-          className="flex flex-col flex-1 min-h-0"
+          className="flex flex-col lg:flex-1 lg:min-h-0"
         >
           {/* Visual zone — carousel + optional sections */}
-          <div className={`flex flex-col sm:grid ${hasSections ? "sm:grid-cols-[55fr_45fr]" : ""} sm:grid-rows-[1fr_auto] flex-1 min-h-0 overflow-hidden`}>
+          <div className={`flex flex-col lg:grid ${hasSections ? "lg:grid-cols-[55fr_45fr]" : ""} lg:grid-rows-[1fr_auto] lg:flex-1 lg:min-h-0 lg:overflow-hidden`}>
             {/* Carousel */}
             {project.images.length > 0 && (
               <m.button
                 type="button"
-                className="relative aspect-video sm:aspect-auto sm:row-start-1 sm:col-start-1 cursor-pointer overflow-hidden group"
+                className="relative aspect-video lg:aspect-auto lg:row-start-1 lg:col-start-1 cursor-pointer overflow-hidden group"
                 onClick={() => setGalleryIndex(carouselIndex)}
                 initial={clipInitial}
                 animate={clipVisible}
@@ -325,7 +325,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
             )}
 
             {/* Info row — inside the grid so on mobile it sits between carousel and sections */}
-            <div className="shrink-0 sm:col-span-2 sm:row-start-2">
+            <div className="shrink-0 lg:col-span-2 lg:row-start-2">
               <div className="relative">
                 <div
                   aria-hidden="true"
@@ -333,7 +333,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                   style={{ transform: 'scaleX(0)', animation: 'line-expand 0.8s ease-out 0.2s forwards' }}
                 />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-[55fr_45fr]">
+              <div className="grid grid-cols-1 lg:grid-cols-[55fr_45fr]">
                 <m.div
                   className="px-4 py-3 flex flex-col gap-1.5 overflow-y-auto"
                   initial={clipInitial}
@@ -360,7 +360,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                 </m.div>
 
                 <m.div
-                  className="sm:border-l sm:border-primary/15 flex flex-col"
+                  className="lg:border-l lg:border-primary/15 flex flex-col"
                   initial={clipInitial}
                   animate={clipVisible}
                   transition={prefersReduced ? { duration: 0.15 } : { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
@@ -462,7 +462,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
             {/* Sections — right column on desktop, below metadata on mobile */}
             {hasSections && (
               <m.div
-                className="flex flex-col flex-1 min-h-0 overflow-y-auto px-5 py-4 gap-4 border-t sm:border-t-0 sm:border-l border-primary/15 sm:col-start-2 sm:row-start-1"
+                className="flex flex-col lg:flex-1 lg:min-h-0 lg:overflow-y-auto px-5 py-4 gap-4 border-t lg:border-t-0 lg:border-l border-primary/15 lg:col-start-2 lg:row-start-1"
                 initial={clipInitial}
                 animate={clipVisible}
                 transition={prefersReduced ? { duration: 0.15 } : { duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
@@ -592,11 +592,11 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
   const preview = activeProject && <ProjectPreview project={activeProject} hasHover={hasHover} />;
 
   const content = (
-    <div className="flex flex-col sm:grid sm:grid-cols-[12rem_1fr] w-full h-full">
+    <div className="flex flex-col sm:grid sm:grid-cols-[12rem_1fr] w-full sm:h-full">
       <div className="border-b sm:border-b-0 sm:border-r border-primary/15 py-2 overflow-hidden">
         <ProjectNav projects={projects} activeSlug={activeSlug} onSelect={selectProject} />
       </div>
-      <div className="flex-1 sm:flex-none flex flex-col min-h-0 overflow-hidden">
+      <div className="flex flex-col sm:min-h-0 sm:overflow-y-auto lg:overflow-hidden">
         {preview}
       </div>
     </div>
@@ -604,7 +604,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
 
   const staggeredContent = (
     <m.div
-      className="flex flex-col sm:grid sm:grid-cols-[12rem_1fr] w-full h-full"
+      className="flex flex-col sm:grid sm:grid-cols-[12rem_1fr] w-full sm:h-full"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -616,7 +616,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
         <ProjectNav projects={projects} activeSlug={activeSlug} onSelect={selectProject} />
       </m.div>
       <m.div
-        className="flex-1 sm:flex-none flex flex-col min-h-0 overflow-hidden"
+        className="flex flex-col sm:min-h-0 sm:overflow-y-auto lg:overflow-hidden"
         variants={prefersReduced ? reducedItemVariants : itemVariants}
       >
         {preview}
@@ -631,7 +631,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
       style={{ paddingTop: "var(--section-pt)", paddingBottom: "var(--section-pb)" }}
     >
       <AnimatedPanel title={t("panelTitle")} className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
-        <div className="h-full flex items-start justify-center">
+        <div className="sm:h-full flex items-start justify-center">
           {hasHover ? staggeredContent : content}
         </div>
       </AnimatedPanel>

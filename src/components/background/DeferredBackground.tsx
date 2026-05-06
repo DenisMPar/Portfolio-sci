@@ -9,6 +9,13 @@ export function DeferredBackground() {
 
   useEffect(() => {
     if (window.matchMedia('(hover: none)').matches) return;
+    try {
+      const probe = document.createElement('canvas');
+      const ctx = probe.getContext('webgl') ?? probe.getContext('experimental-webgl');
+      if (!ctx) return;
+    } catch {
+      return;
+    }
     setMounted(true);
     const t = setTimeout(() => setVisible(true), 200);
     return () => clearTimeout(t);

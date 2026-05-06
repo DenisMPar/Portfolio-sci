@@ -6,8 +6,8 @@
   },
   "hero": {
     "subtitle": "Frontend Engineer",
-    "bio1": "Frontend engineer with <mark>3+ years</mark> building products that feel as good as they look. I've worked closely with design teams in fintech and software factories — from greenfield builds to evolving complex admin systems.",
-    "bio2": "I care about <mark>solid foundations</mark>, reusable components, and interfaces where every detail is intentional. If it ships, it should work — and it should feel right.",
+    "bio1": "Frontend engineer with <mark>3+ years</mark> working on real products — fintech and software factories, on projects that go from zero to complex evolving systems.",
+    "bio2": "I care about precise, performant, and visually refined interfaces — the kind of work where <mark>development and design meet closely</mark>. The web can solve problems and be memorable at the same time.",
     "cta": "View projects"
   },
   "projects": {

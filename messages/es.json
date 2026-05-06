@@ -6,8 +6,8 @@
   },
   "hero": {
     "subtitle": "Frontend Engineer",
-    "bio1": "Frontend engineer con <mark>+3 años</mark> construyendo productos que se sienten tan bien como se ven. Trabajé con equipos de diseño en fintech y software factories — desde proyectos greenfield hasta sistemas admin complejos en evolución.",
-    "bio2": "Me importan las <mark>bases sólidas</mark>, los componentes reutilizables, y las interfaces donde cada detalle es intencional. Si se publica, tiene que funcionar — y tiene que sentirse bien.",
+    "bio1": "Frontend engineer con <mark>+3 años</mark> trabajando en productos reales — fintech y software factories, en proyectos que van desde cero hasta sistemas complejos en evolución.",
+    "bio2": "Me importan las interfaces precisas, performantes y visualmente cuidadas — el tipo de trabajo donde <mark>desarrollo y diseño se tocan de cerca</mark>. La web puede resolver problemas y ser memorable al mismo tiempo.",
     "cta": "Ver proyectos"
   },
   "projects": {

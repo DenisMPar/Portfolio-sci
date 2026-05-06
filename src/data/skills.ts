@@ -23,6 +23,8 @@ import {
   SiGit,
   SiGithub,
   SiFramer,
+  SiFigma,
+  SiVercel,
 } from "react-icons/si";
 import {
   TbLayoutDashboard,
@@ -78,6 +80,7 @@ export const skills: SkillCategory[] = [
   {
     name: "State & Testing",
     skills: [
+      { name: "React Hooks", icon: SiReact },
       { name: "Recoil", icon: SiRecoil },
       { name: "Zustand", icon: TbDatabase },
       { name: "React Context API", icon: SiReact },
@@ -92,6 +95,8 @@ export const skills: SkillCategory[] = [
     skills: [
       { name: "Git", icon: SiGit },
       { name: "GitHub", icon: SiGithub },
+      { name: "Figma", icon: SiFigma },
+      { name: "Vercel", icon: SiVercel },
       { name: "Agile methodologies (Scrum)", icon: TbLayoutKanban },
       { name: "CI/CD basics", icon: TbCloud },
     ],

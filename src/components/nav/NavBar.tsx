@@ -37,7 +37,7 @@ function LocaleSwitcher({ onSwitch }: { onSwitch?: () => void }) {
             }}
             disabled={locale === l}
             aria-label={l === "en" ? "Switch to English" : "Cambiar a Español"}
-            className={`px-1.5 py-2 uppercase transition-colors duration-200 ${
+            className={`px-1.5 py-2 uppercase transition-[color,transform] duration-200 active:scale-[0.97] ${
               locale === l
                 ? "text-accent cursor-default drop-shadow-[0_0_8px_var(--primary-vivid)]"
                 : "text-foreground/55 pointer-hover:text-foreground/80 cursor-pointer"
@@ -75,7 +75,7 @@ export function NavBar() {
               key={link.href}
               href={link.href}
               aria-current={pathname === link.href ? "page" : undefined}
-              className={`font-mono text-sm px-3 py-2 transition-colors ${
+              className={`font-mono text-sm px-3 py-2 transition-[color,transform] active:scale-[0.97] ${
                 pathname === link.href
                   ? "text-state-active"
                   : "text-foreground/70 pointer-hover:text-foreground/90"
@@ -94,7 +94,7 @@ export function NavBar() {
           </span>
           <button
             onClick={() => setOpen((o) => !o)}
-            className="font-mono text-xs tracking-widest text-foreground/60 pointer-hover:text-foreground/90 transition-colors cursor-pointer"
+            className="font-mono text-xs tracking-widest text-foreground/60 pointer-hover:text-foreground/90 transition-[color,transform] active:scale-[0.97] cursor-pointer"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-menu"
@@ -120,7 +120,7 @@ export function NavBar() {
                     href={link.href}
                     onClick={() => setOpen(false)}
                     aria-current={pathname === link.href ? "page" : undefined}
-                    className={`flex items-center gap-3 font-mono text-sm py-3.5 border-b border-primary/5 transition-colors ${
+                    className={`flex items-center gap-3 font-mono text-sm py-3.5 border-b border-primary/5 transition-[color,transform] active:scale-[0.98] ${
                       pathname === link.href
                         ? "text-state-active"
                         : "text-foreground/55 pointer-hover:text-foreground/90"

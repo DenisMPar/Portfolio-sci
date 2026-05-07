@@ -5,9 +5,10 @@ import { InterfacePanel, type InterfacePanelProps } from "./index";
 import { useHasHover } from "@/hooks/useHasHover";
 
 const panelVariants = {
-  hidden: { y: -30 },
+  hidden: { transform: "translateY(-20px)", opacity: 0 },
   visible: {
-    y: 0,
+    transform: "translateY(0px)",
+    opacity: 1,
     transition: {
       type: "spring" as const,
       damping: 20,

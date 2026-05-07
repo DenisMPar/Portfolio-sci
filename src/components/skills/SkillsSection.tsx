@@ -14,10 +14,10 @@ const gridVariants = {
 };
 
 const chipVariants = {
-  hidden: { opacity: 0, x: 6 },
+  hidden: { opacity: 0, transform: "translateX(6px)" },
   visible: {
     opacity: 1,
-    x: 0,
+    transform: "translateX(0px)",
     transition: { type: "spring" as const, damping: 25, stiffness: 250 },
   },
 };
@@ -31,7 +31,7 @@ const columnWipeVariants = {
   hidden: { clipPath: "inset(0 100% 0 0)" },
   visible: {
     clipPath: "inset(0 0% 0 0)",
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const },
   },
 };
 
@@ -39,7 +39,7 @@ const columnWipeVerticalVariants = {
   hidden: { clipPath: "inset(0 0 100% 0)" },
   visible: {
     clipPath: "inset(0 0 0% 0)",
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const },
   },
 };
 
@@ -52,7 +52,7 @@ const barFillVariants = {
   hidden: { scaleX: 0 },
   visible: {
     scaleX: 1,
-    transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1] as const, delay: 0.6 },
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const, delay: 0.4 },
   },
 };
 
@@ -62,7 +62,7 @@ const reducedBarVariants = {
 };
 
 const chipClass =
-  "inline-flex items-center gap-1.5 text-xs 2xl:text-sm border border-primary/20 px-2 py-0.5 2xl:px-2.5 2xl:py-1 text-foreground/70 font-light transition-all hover:text-foreground hover:border-primary/40 hover:shadow-[0_0_12px_var(--primary-subtle)] cursor-default";
+  "inline-flex items-center gap-1.5 text-xs 2xl:text-sm border border-primary/20 px-2 py-0.5 2xl:px-2.5 2xl:py-1 text-foreground/70 font-light transition-[color,border-color,box-shadow] duration-200 ease-out pointer-hover:text-foreground pointer-hover:border-primary/40 pointer-hover:shadow-[0_0_12px_var(--primary-subtle)] cursor-default";
 
 function SkillChip({ skill }: { skill: Skill }) {
   const Icon = skill.icon;

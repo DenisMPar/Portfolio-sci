@@ -81,7 +81,7 @@ function Gallery({
           <button
             type="button"
             onClick={onClose}
-            className="text-accent pointer-hover:text-accent/80 transition-colors text-xs uppercase tracking-widest cursor-pointer"
+            className="text-accent pointer-hover:text-accent/80 transition-[color,transform] active:scale-[0.97] text-xs uppercase tracking-widest cursor-pointer"
             aria-label={t("closeLabel")}
           >
             [ {t("close")} ]
@@ -92,7 +92,7 @@ function Gallery({
           <button
             type="button"
             onClick={() => direction(-1)}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 text-foreground/30 pointer-hover:text-foreground/80 transition-colors text-3xl cursor-pointer"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 text-foreground/30 pointer-hover:text-foreground/80 transition-[color,transform] active:scale-[0.97] text-3xl cursor-pointer"
             aria-label={t("prevImage")}
           >
             ‹
@@ -121,7 +121,7 @@ function Gallery({
           <button
             type="button"
             onClick={() => direction(1)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-foreground/30 pointer-hover:text-foreground/80 transition-colors text-3xl cursor-pointer"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-foreground/30 pointer-hover:text-foreground/80 transition-[color,transform] active:scale-[0.97] text-3xl cursor-pointer"
             aria-label={t("nextImage")}
           >
             ›
@@ -134,7 +134,7 @@ function Gallery({
               key={i}
               type="button"
               onClick={() => setIndex(i)}
-              className={`w-2 h-2 rotate-45 transition-[background-color,box-shadow] duration-200 ease-out cursor-pointer ${
+              className={`w-2 h-2 rotate-45 transition-[background-color,box-shadow,transform] duration-200 ease-out cursor-pointer active:scale-[0.75] ${
                 i === index
                   ? "bg-primary shadow-[0_0_8px_var(--primary-strong)]"
                   : "bg-foreground/20 pointer-hover:bg-foreground/40"
@@ -281,7 +281,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                 {hasMultipleImages && (
                   <>
                     <div
-                      className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-colors text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-[color,transform] active:scale-[0.97] text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
                       role="button"
                       onClick={(e) => { e.stopPropagation(); prevImage(); }}
                       onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); prevImage(); } }}
@@ -291,7 +291,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                       ‹
                     </div>
                     <div
-                      className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-colors text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-[color,transform] active:scale-[0.97] text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
                       role="button"
                       onClick={(e) => { e.stopPropagation(); nextImage(); }}
                       onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); nextImage(); } }}
@@ -308,7 +308,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                           tabIndex={0}
                           onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
                           onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); setCarouselIndex(i); } }}
-                          className="w-6 h-6 flex items-center justify-center cursor-pointer"
+                          className="w-6 h-6 flex items-center justify-center cursor-pointer transition-transform active:scale-[0.85]"
                           aria-label={t("goToImage", { n: i + 1 })}
                         >
                           <span className={`w-1.5 h-1.5 rotate-45 transition-[background-color,box-shadow] duration-200 ease-out block ${
@@ -540,7 +540,7 @@ function ProjectNav({
             key={project.slug}
             onClick={() => onSelect(project.slug)}
             aria-current={isActive ? "true" : undefined}
-            className={`shrink-0 sm:shrink flex items-center gap-2 px-2.5 sm:px-3 py-2 text-left ${isActive ? "cursor-default" : "cursor-pointer"} transition-[color,background-color,border-color,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none ${
+            className={`shrink-0 sm:shrink flex items-center gap-2 px-2.5 sm:px-3 py-2 text-left ${isActive ? "cursor-default" : "cursor-pointer"} transition-[color,background-color,border-color,transform] duration-200 ease-out active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none ${
               isActive
                 ? "bg-primary/10 border-b-2 sm:border-b-0 border-b-state-active sm:border-l-2 sm:border-l-state-active text-foreground sm:translate-x-1"
                 : "border-b-2 sm:border-b-0 border-b-transparent sm:border-l-2 sm:border-l-transparent text-foreground/55 pointer-hover:text-foreground/80 pointer-hover:bg-primary/5 sm:pointer-hover:translate-x-1 sm:pointer-hover:border-l-primary/40"

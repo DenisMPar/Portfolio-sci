@@ -23,7 +23,7 @@ export function Footer() {
             href={contact.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-accent pointer-hover:text-accent/80 transition-colors"
+            className="text-accent pointer-hover:text-accent/80 transition-[color,opacity] active:opacity-70"
           >
             {contact.label}
           </a>

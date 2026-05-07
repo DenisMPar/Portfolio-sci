@@ -42,7 +42,7 @@ export async function HeroSection() {
           </div>
           <Link
             href="/projects"
-            className="mt-10 inline-flex items-center gap-2 border border-accent/40 px-6 py-3 text-sm font-mono text-accent tracking-wider uppercase hover:bg-accent/10 hover:border-accent/70 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="mt-10 inline-flex items-center gap-2 border border-accent/40 px-6 py-3 text-sm font-mono text-accent tracking-wider uppercase hover:bg-accent/10 hover:border-accent/70 transition-[color,background-color,border-color,transform] duration-200 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             style={{
               clipPath:
                 "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)",

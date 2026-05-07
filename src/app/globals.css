@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@custom-variant pointer-hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
 :root {
   --background: #1a1a2e;
   --background-elevated: #1e2d4a;

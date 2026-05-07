@@ -40,7 +40,7 @@ function LocaleSwitcher({ onSwitch }: { onSwitch?: () => void }) {
             className={`px-1.5 py-2 uppercase transition-colors duration-200 ${
               locale === l
                 ? "text-accent cursor-default drop-shadow-[0_0_8px_var(--primary-vivid)]"
-                : "text-foreground/55 hover:text-foreground/80 cursor-pointer"
+                : "text-foreground/55 pointer-hover:text-foreground/80 cursor-pointer"
             }`}
           >
             {l}
@@ -78,7 +78,7 @@ export function NavBar() {
               className={`font-mono text-sm px-3 py-2 transition-colors ${
                 pathname === link.href
                   ? "text-state-active"
-                  : "text-foreground/70 hover:text-foreground/90"
+                  : "text-foreground/70 pointer-hover:text-foreground/90"
               }`}
             >
               {t(link.key)}
@@ -90,11 +90,11 @@ export function NavBar() {
         {/* Mobile bar */}
         <div className="flex sm:hidden items-center justify-between px-4 py-3">
           <span className="font-mono text-xs text-foreground/55 tracking-widest">
-            DENIS<span className="text-accent animate-pulse motion-reduce:animate-none">_</span>
+            DENIS<span className="text-accent motion-reduce:opacity-100" style={{ animation: 'blink 1s steps(1) infinite' }}>_</span>
           </span>
           <button
             onClick={() => setOpen((o) => !o)}
-            className="font-mono text-xs tracking-widest text-foreground/60 hover:text-foreground/90 transition-colors cursor-pointer"
+            className="font-mono text-xs tracking-widest text-foreground/60 pointer-hover:text-foreground/90 transition-colors cursor-pointer"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-menu"
@@ -109,9 +109,8 @@ export function NavBar() {
             <m.div
               id="mobile-menu"
               initial={prefersReduced ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }}
-              animate={prefersReduced ? { opacity: 1 } : { clipPath: "inset(0 0 0% 0)" }}
-              exit={prefersReduced ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }}
-              transition={prefersReduced ? { duration: 0.15 } : { duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              animate={prefersReduced ? { opacity: 1, transition: { duration: 0.15 } } : { clipPath: "inset(0 0 0% 0)", transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } }}
+              exit={prefersReduced ? { opacity: 0, transition: { duration: 0.1 } } : { clipPath: "inset(0 0 100% 0)", transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } }}
               className="sm:hidden border-t border-primary/10"
             >
               <div className="px-6 py-3 flex flex-col">
@@ -124,7 +123,7 @@ export function NavBar() {
                     className={`flex items-center gap-3 font-mono text-sm py-3.5 border-b border-primary/5 transition-colors ${
                       pathname === link.href
                         ? "text-state-active"
-                        : "text-foreground/55 hover:text-foreground/90"
+                        : "text-foreground/55 pointer-hover:text-foreground/90"
                     }`}
                   >
                     <span className="text-primary/35 text-xs tabular-nums">

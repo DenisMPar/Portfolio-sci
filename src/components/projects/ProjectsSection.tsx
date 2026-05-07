@@ -49,14 +49,14 @@ function Gallery({
       aria-label={t("galleryLabel")}
     >
       <m.div
-        initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: "-40vh" }}
+        initial={prefersReduced ? { opacity: 0 } : { opacity: 0, transform: "translateY(-40vh)" }}
         animate={prefersReduced
           ? { opacity: 1, transition: { duration: 0.15 } }
-          : { opacity: 1, y: 0, transition: { type: "spring", damping: 25, stiffness: 200 } }
+          : { opacity: 1, transform: "translateY(0vh)", transition: { type: "spring", damping: 25, stiffness: 200 } }
         }
         exit={prefersReduced
           ? { opacity: 0, transition: { duration: 0.15 } }
-          : { opacity: 0, y: "-30vh", transition: { duration: 0.3, ease: "easeIn" } }
+          : { opacity: 0, transform: "translateY(-30vh)", transition: { duration: 0.3, ease: "easeIn" } }
         }
         className="relative w-[96vw] h-[65vh] sm:w-[92vw] sm:h-[88vh] max-w-[1600px] overflow-hidden bg-card before:absolute before:inset-0 before:bg-gradient-to-b before:from-primary/8 before:to-transparent before:pointer-events-none"
         onClick={(e) => e.stopPropagation()}
@@ -81,7 +81,7 @@ function Gallery({
           <button
             type="button"
             onClick={onClose}
-            className="text-accent hover:text-accent/80 transition-colors text-xs uppercase tracking-widest cursor-pointer"
+            className="text-accent pointer-hover:text-accent/80 transition-colors text-xs uppercase tracking-widest cursor-pointer"
             aria-label={t("closeLabel")}
           >
             [ {t("close")} ]
@@ -92,7 +92,7 @@ function Gallery({
           <button
             type="button"
             onClick={() => direction(-1)}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 text-foreground/30 hover:text-foreground/80 transition-colors text-3xl cursor-pointer"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 text-foreground/30 pointer-hover:text-foreground/80 transition-colors text-3xl cursor-pointer"
             aria-label={t("prevImage")}
           >
             ‹
@@ -121,7 +121,7 @@ function Gallery({
           <button
             type="button"
             onClick={() => direction(1)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-foreground/30 hover:text-foreground/80 transition-colors text-3xl cursor-pointer"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-foreground/30 pointer-hover:text-foreground/80 transition-colors text-3xl cursor-pointer"
             aria-label={t("nextImage")}
           >
             ›
@@ -137,7 +137,7 @@ function Gallery({
               className={`w-2 h-2 rotate-45 transition-[background-color,box-shadow] duration-200 ease-out cursor-pointer ${
                 i === index
                   ? "bg-primary shadow-[0_0_8px_var(--primary-strong)]"
-                  : "bg-foreground/20 hover:bg-foreground/40"
+                  : "bg-foreground/20 pointer-hover:bg-foreground/40"
               }`}
               aria-label={t("goToImage", { n: i + 1 })}
             />
@@ -239,10 +239,10 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                 onClick={() => setGalleryIndex(carouselIndex)}
                 initial={clipInitial}
                 animate={clipVisible}
-                transition={prefersReduced ? { duration: 0.15 } : { duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                transition={prefersReduced ? { duration: 0.15 } : { duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               >
                 <div className="absolute inset-0 bg-primary/20" />
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute inset-0 opacity-0 group-pointer-hover:opacity-100 transition-opacity duration-500">
                   <div
                     className="absolute inset-[-100%] animate-[border-glow_5s_linear_infinite] motion-reduce:animate-none"
                     style={{ background: 'conic-gradient(from 0deg, transparent 70%, var(--accent) 85%, transparent 95%)' }}
@@ -270,7 +270,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                         src={project.images[carouselIndex]}
                         alt={carouselIndex === 0 ? project.title : `${project.title} — ${carouselIndex}`}
                         fill
-                        className="object-cover transition-[transform,filter] duration-300 group-hover:scale-[1.03] group-hover:brightness-110"
+                        className="object-cover transition-[transform,filter] duration-300 group-pointer-hover:scale-[1.03] group-pointer-hover:brightness-110"
                         sizes="(max-width: 768px) 90vw, 50vw"
                       />
                     </m.div>
@@ -281,7 +281,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                 {hasMultipleImages && (
                   <>
                     <div
-                      className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 hover:text-foreground/90 transition-colors text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-colors text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
                       role="button"
                       onClick={(e) => { e.stopPropagation(); prevImage(); }}
                       onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); prevImage(); } }}
@@ -291,7 +291,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                       ‹
                     </div>
                     <div
-                      className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 hover:text-foreground/90 transition-colors text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-colors text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
                       role="button"
                       onClick={(e) => { e.stopPropagation(); nextImage(); }}
                       onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); nextImage(); } }}
@@ -314,7 +314,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                           <span className={`w-1.5 h-1.5 rotate-45 transition-[background-color,box-shadow] duration-200 ease-out block ${
                             i === carouselIndex
                               ? "bg-primary shadow-[0_0_6px_var(--primary-strong)]"
-                              : "bg-foreground/30 hover:bg-foreground/50"
+                              : "bg-foreground/30 pointer-hover:bg-foreground/50"
                           }`} />
                         </div>
                       ))}
@@ -338,7 +338,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                   className="px-4 py-3 flex flex-col gap-1.5 overflow-y-auto"
                   initial={clipInitial}
                   animate={clipVisible}
-                  transition={prefersReduced ? { duration: 0.15 } : { duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                  transition={prefersReduced ? { duration: 0.15 } : { duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <m.h2
                     className="glitch font-medium text-foreground text-base 2xl:text-lg text-wrap-balance"
@@ -363,7 +363,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                   className="lg:border-l lg:border-primary/15 flex flex-col"
                   initial={clipInitial}
                   animate={clipVisible}
-                  transition={prefersReduced ? { duration: 0.15 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+                  transition={prefersReduced ? { duration: 0.15 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
                 >
                   <div className="grid grid-cols-2 text-xs h-full">
                     <m.div
@@ -435,7 +435,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                                 href={project.liveUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-accent hover:text-accent/80 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
+                                className="text-accent pointer-hover:text-accent/80 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
                               >
                                 [ {t("live")} ]
                               </a>
@@ -445,7 +445,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                                 href={project.repoUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-primary hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
+                                className="text-primary pointer-hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
                               >
                                 [ {t("repo")} ]
                               </a>
@@ -465,7 +465,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                 className="flex flex-col lg:flex-1 lg:min-h-0 lg:overflow-y-auto px-5 py-4 gap-4 border-t lg:border-t-0 lg:border-l border-primary/15 lg:col-start-2 lg:row-start-1"
                 initial={clipInitial}
                 animate={clipVisible}
-                transition={prefersReduced ? { duration: 0.15 } : { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+                transition={prefersReduced ? { duration: 0.15 } : { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
               >
                 {project.sections.map((section) => (
                   <div key={section.title}>
@@ -543,7 +543,7 @@ function ProjectNav({
             className={`shrink-0 sm:shrink flex items-center gap-2 px-2.5 sm:px-3 py-2 text-left ${isActive ? "cursor-default" : "cursor-pointer"} transition-[color,background-color,border-color,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none ${
               isActive
                 ? "bg-primary/10 border-b-2 sm:border-b-0 border-b-state-active sm:border-l-2 sm:border-l-state-active text-foreground sm:translate-x-1"
-                : "border-b-2 sm:border-b-0 border-b-transparent sm:border-l-2 sm:border-l-transparent text-foreground/55 hover:text-foreground/80 hover:bg-primary/5 sm:hover:translate-x-1 sm:hover:border-l-primary/40"
+                : "border-b-2 sm:border-b-0 border-b-transparent sm:border-l-2 sm:border-l-transparent text-foreground/55 pointer-hover:text-foreground/80 pointer-hover:bg-primary/5 sm:pointer-hover:translate-x-1 sm:pointer-hover:border-l-primary/40"
             }`}
           >
             <span className="text-xs 2xl:text-sm text-primary shrink-0 font-light">

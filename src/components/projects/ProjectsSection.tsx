@@ -134,7 +134,7 @@ function Gallery({
               key={i}
               type="button"
               onClick={() => setIndex(i)}
-              className={`w-2 h-2 rotate-45 transition-all cursor-pointer ${
+              className={`w-2 h-2 rotate-45 transition-[background-color,box-shadow] duration-200 ease-out cursor-pointer ${
                 i === index
                   ? "bg-primary shadow-[0_0_8px_var(--primary-strong)]"
                   : "bg-foreground/20 hover:bg-foreground/40"
@@ -156,10 +156,10 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, x: -10 },
+  hidden: { opacity: 0, transform: "translateX(-10px)" },
   visible: {
     opacity: 1,
-    x: 0,
+    transform: "translateX(0px)",
     transition: { type: "spring" as const, damping: 25, stiffness: 250 },
   },
 };
@@ -170,10 +170,10 @@ const reducedItemVariants = {
 };
 
 const metaRowVariants = {
-  hidden: { opacity: 0, x: -6 },
+  hidden: { opacity: 0, transform: "translateX(-6px)" },
   visible: {
     opacity: 1,
-    x: 0,
+    transform: "translateX(0px)",
     transition: { duration: 0.2, ease: "easeOut" as const },
   },
 };
@@ -225,7 +225,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
           key={project.slug}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={prefersReduced ? { opacity: 0 } : { clipPath: hasHover ? "inset(0 100% 0 0)" : "inset(0 0 100% 0)", transition: { duration: 0.35, ease: [0.4, 0, 1, 1] } }}
+          exit={prefersReduced ? { opacity: 0 } : { clipPath: hasHover ? "inset(0 100% 0 0)" : "inset(0 0 100% 0)", transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } }}
           transition={{ duration: 0.15 }}
           className="flex flex-col lg:flex-1 lg:min-h-0"
         >
@@ -249,7 +249,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                   />
                 </div>
                 <div
-                  className="absolute inset-[1px] z-[5] animate-[skeleton-shimmer_2s_ease-in-out_infinite] motion-reduce:animate-none"
+                  className="absolute inset-[1px] z-[5] animate-[skeleton-shimmer_2s_linear_infinite] motion-reduce:animate-none"
                   style={{
                     background: 'linear-gradient(90deg, var(--background) 30%, var(--background-elevated) 50%, var(--background) 70%)',
                     backgroundSize: '200% 100%',
@@ -270,7 +270,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                         src={project.images[carouselIndex]}
                         alt={carouselIndex === 0 ? project.title : `${project.title} — ${carouselIndex}`}
                         fill
-                        className="object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:brightness-110"
+                        className="object-cover transition-[transform,filter] duration-300 group-hover:scale-[1.03] group-hover:brightness-110"
                         sizes="(max-width: 768px) 90vw, 50vw"
                       />
                     </m.div>
@@ -311,7 +311,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                           className="w-6 h-6 flex items-center justify-center cursor-pointer"
                           aria-label={t("goToImage", { n: i + 1 })}
                         >
-                          <span className={`w-1.5 h-1.5 rotate-45 transition-all block ${
+                          <span className={`w-1.5 h-1.5 rotate-45 transition-[background-color,box-shadow] duration-200 ease-out block ${
                             i === carouselIndex
                               ? "bg-primary shadow-[0_0_6px_var(--primary-strong)]"
                               : "bg-foreground/30 hover:bg-foreground/50"
@@ -330,7 +330,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                 <div
                   aria-hidden="true"
                   className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent origin-left motion-reduce:!animate-none"
-                  style={{ transform: 'scaleX(0)', animation: 'line-expand 0.8s ease-out 0.2s forwards' }}
+                  style={{ transform: 'scaleX(0)', animation: 'line-expand 0.5s ease-out 0.15s forwards' }}
                 />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-[55fr_45fr]">
@@ -343,16 +343,16 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                   <m.h2
                     className="glitch font-medium text-foreground text-base 2xl:text-lg text-wrap-balance"
                     data-text={project.title}
-                    initial={prefersReduced ? { opacity: 0 } : { opacity: 0, x: -6 }}
-                    animate={prefersReduced ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                    initial={prefersReduced ? { opacity: 0 } : { opacity: 0, transform: "translateX(-6px)" }}
+                    animate={prefersReduced ? { opacity: 1 } : { opacity: 1, transform: "translateX(0px)" }}
                     transition={prefersReduced ? { duration: 0.15 } : { duration: 0.25, ease: "easeOut", delay: 0.2 }}
                   >
                     {project.title}
                   </m.h2>
                   <m.p
                     className="text-sm 2xl:text-base text-foreground/60 leading-relaxed font-light"
-                    initial={prefersReduced ? { opacity: 0 } : { opacity: 0, x: -6 }}
-                    animate={prefersReduced ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                    initial={prefersReduced ? { opacity: 0 } : { opacity: 0, transform: "translateX(-6px)" }}
+                    animate={prefersReduced ? { opacity: 1 } : { opacity: 1, transform: "translateX(0px)" }}
                     transition={prefersReduced ? { duration: 0.15 } : { duration: 0.4, ease: "easeOut", delay: 0.38 }}
                   >
                     {project.description}
@@ -363,12 +363,12 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                   className="lg:border-l lg:border-primary/15 flex flex-col"
                   initial={clipInitial}
                   animate={clipVisible}
-                  transition={prefersReduced ? { duration: 0.15 } : { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+                  transition={prefersReduced ? { duration: 0.15 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
                 >
                   <div className="grid grid-cols-2 text-xs h-full">
                     <m.div
                       className="px-4 py-3"
-                      variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.06, delayChildren: 0.9 } } }}
+                      variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.06, delayChildren: 0.5 } } }}
                       initial={prefersReduced ? undefined : "hidden"}
                       animate={prefersReduced ? undefined : "visible"}
                     >
@@ -392,7 +392,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                     </m.div>
                     <m.div
                       className="flex flex-col border-l border-primary/15 px-4 py-2"
-                      variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.08, delayChildren: 0.9 } } }}
+                      variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.08, delayChildren: 0.5 } } }}
                       initial={prefersReduced ? undefined : "hidden"}
                       animate={prefersReduced ? undefined : "visible"}
                     >
@@ -465,7 +465,7 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                 className="flex flex-col lg:flex-1 lg:min-h-0 lg:overflow-y-auto px-5 py-4 gap-4 border-t lg:border-t-0 lg:border-l border-primary/15 lg:col-start-2 lg:row-start-1"
                 initial={clipInitial}
                 animate={clipVisible}
-                transition={prefersReduced ? { duration: 0.15 } : { duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+                transition={prefersReduced ? { duration: 0.15 } : { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
               >
                 {project.sections.map((section) => (
                   <div key={section.title}>
@@ -540,7 +540,7 @@ function ProjectNav({
             key={project.slug}
             onClick={() => onSelect(project.slug)}
             aria-current={isActive ? "true" : undefined}
-            className={`shrink-0 sm:shrink flex items-center gap-2 px-2.5 sm:px-3 py-2 text-left ${isActive ? "cursor-default" : "cursor-pointer"} transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none ${
+            className={`shrink-0 sm:shrink flex items-center gap-2 px-2.5 sm:px-3 py-2 text-left ${isActive ? "cursor-default" : "cursor-pointer"} transition-[color,background-color,border-color,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none ${
               isActive
                 ? "bg-primary/10 border-b-2 sm:border-b-0 border-b-state-active sm:border-l-2 sm:border-l-state-active text-foreground sm:translate-x-1"
                 : "border-b-2 sm:border-b-0 border-b-transparent sm:border-l-2 sm:border-l-transparent text-foreground/55 hover:text-foreground/80 hover:bg-primary/5 sm:hover:translate-x-1 sm:hover:border-l-primary/40"

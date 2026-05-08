@@ -425,11 +425,11 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                       )}
                       {(project.liveUrl || project.repoUrl) && (
                         <m.div
-                          className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1.5 border-t border-primary/10 gap-1.5 sm:gap-0"
+                          className="flex justify-between items-start py-1.5 border-t border-primary/10"
                           variants={prefersReduced ? undefined : metaRowVariants}
                         >
                           <span className="uppercase tracking-widest text-foreground/55">{t("links")}</span>
-                          <div className="flex gap-3">
+                          <div className="flex flex-col items-start gap-1">
                             {project.liveUrl && (
                               <a
                                 href={project.liveUrl}

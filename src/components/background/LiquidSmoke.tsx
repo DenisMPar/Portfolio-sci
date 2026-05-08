@@ -1,13 +1,16 @@
-import { useRef, useMemo } from 'react';
-import { useFrame, useLoader } from '@react-three/fiber';
+import { useMemo } from 'react';
+import { useFrame, useLoader, useThree, createPortal } from '@react-three/fiber';
+import { useFBO } from '@react-three/drei';
 import {
   Vector2,
-  Mesh,
+  Scene,
+  OrthographicCamera,
   TextureLoader,
   RepeatWrapping,
   LinearFilter,
   ShaderMaterial,
   AdditiveBlending,
+  NoBlending,
 } from 'three';
 
 const elapsedRef = { value: 0 };
@@ -65,10 +68,38 @@ const fragmentShader = /* glsl */ `
   }
 `;
 
+const displayFragmentShader = /* glsl */ `
+  uniform sampler2D uTex;
+  varying vec2 vUv;
+
+  void main() {
+    gl_FragColor = texture2D(uTex, vUv);
+  }
+`;
+
 const PLANE_SIZE = 120;
+const RES_SCALE = 0.5;
 
 export function LiquidSmoke() {
-  const meshRef = useRef<Mesh>(null);
+  const { size } = useThree();
+
+  const fboW = Math.max(1, Math.floor(size.width * RES_SCALE));
+  const fboH = Math.max(1, Math.floor(size.height * RES_SCALE));
+
+  const fbo = useFBO(fboW, fboH, {
+    depthBuffer: false,
+    stencilBuffer: false,
+    minFilter: LinearFilter,
+    magFilter: LinearFilter,
+    generateMipmaps: false,
+  });
+
+  const offscreenScene = useMemo(() => new Scene(), []);
+  const offscreenCamera = useMemo(() => {
+    const c = new OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0, 1);
+    c.position.z = 0.5;
+    return c;
+  }, []);
 
   const noiseTex = useLoader(TextureLoader, '/noise.webp');
   noiseTex.wrapS = RepeatWrapping;
@@ -86,33 +117,57 @@ export function LiquidSmoke() {
     [noiseTex]
   );
 
-  const material = useMemo(
+  const smokeMaterial = useMemo(
     () =>
       new ShaderMaterial({
         vertexShader,
         fragmentShader,
         uniforms,
+        depthWrite: false,
+        depthTest: false,
+        blending: NoBlending,
+      }),
+    [uniforms]
+  );
+
+  const displayMaterial = useMemo(
+    () =>
+      new ShaderMaterial({
+        vertexShader,
+        fragmentShader: displayFragmentShader,
+        uniforms: { uTex: { value: fbo.texture } },
         transparent: true,
         depthWrite: false,
         blending: AdditiveBlending,
       }),
-    [uniforms]
+    [fbo.texture]
   );
 
   useFrame(({ gl }, delta) => {
     elapsedRef.value += delta;
     uniforms.uTime.value = elapsedRef.value;
     uniforms.uResolution.value.copy(gl.getSize(_sizeVec));
+
+    gl.setRenderTarget(fbo);
+    gl.render(offscreenScene, offscreenCamera);
+    gl.setRenderTarget(null);
   });
 
   return (
-    <mesh
-      ref={meshRef}
-      position={[0, 0, -15]}
-      material={material}
-      renderOrder={-10}
-    >
-      <planeGeometry args={[PLANE_SIZE, PLANE_SIZE]} />
-    </mesh>
+    <>
+      {createPortal(
+        <mesh material={smokeMaterial}>
+          <planeGeometry args={[1, 1]} />
+        </mesh>,
+        offscreenScene
+      )}
+      <mesh
+        position={[0, 0, -15]}
+        material={displayMaterial}
+        renderOrder={-10}
+      >
+        <planeGeometry args={[PLANE_SIZE, PLANE_SIZE]} />
+      </mesh>
+    </>
   );
 }

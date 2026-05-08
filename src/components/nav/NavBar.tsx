@@ -89,7 +89,7 @@ export function NavBar() {
           <Link
             href="/explore"
             aria-label="Explore background"
-            className={`p-2 transition-[color,transform] active:scale-[0.97] ${
+            className={`p-2 transition-[color,transform] duration-200 active:scale-[0.97] ${
               pathname === "/explore"
                 ? "text-accent"
                 : "text-foreground/40 pointer-hover:text-foreground/80"

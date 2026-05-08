@@ -312,7 +312,7 @@ export function SkillsSection() {
       style={{ paddingTop: "var(--section-pt)", paddingBottom: "var(--section-pb)" }}
     >
       <AnimatedPanel title={t("panelTitle")} className="w-[90vw] max-w-[1500px] h-full min-[1920px]:h-[70vh] pointer-events-auto">
-        <div className="h-full flex items-center">
+        <div className="md:h-full flex items-start md:items-center">
           <AnimatedSkillsContent hasHover={hasHover} />
         </div>
       </AnimatedPanel>

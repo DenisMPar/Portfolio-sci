@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { RiRocketLine } from "react-icons/ri";
 
 const NAV_LINKS = [
   { key: "home" as const, href: "/" },
@@ -85,6 +86,17 @@ export function NavBar() {
             </Link>
           ))}
           <LocaleSwitcher />
+          <Link
+            href="/explore"
+            aria-label="Explore background"
+            className={`p-2 transition-[color,transform] active:scale-[0.97] ${
+              pathname === "/explore"
+                ? "text-accent"
+                : "text-foreground/40 pointer-hover:text-foreground/80"
+            }`}
+          >
+            <RiRocketLine className="size-4" />
+          </Link>
         </div>
 
         {/* Mobile bar */}

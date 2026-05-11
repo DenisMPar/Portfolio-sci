@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { BackgroundClient } from './BackgroundClient';
 
+type Phase = 'hidden' | 'mounted' | 'visible';
+
 export function DeferredBackground() {
-  const [mounted, setMounted] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [phase, setPhase] = useState<Phase>('hidden');
 
   useEffect(() => {
     if (window.matchMedia('(hover: none)').matches) return;
@@ -16,15 +17,15 @@ export function DeferredBackground() {
     } catch {
       return;
     }
-    setMounted(true);
-    const t = setTimeout(() => setVisible(true), 200);
+    setPhase('mounted');
+    const t = setTimeout(() => setPhase('visible'), 200);
     return () => clearTimeout(t);
   }, []);
 
-  if (!mounted) return null;
+  if (phase === 'hidden') return null;
 
   return (
-    <div className="transition-opacity duration-[1500ms]" style={{ opacity: visible ? 1 : 0 }}>
+    <div className="transition-opacity duration-[1500ms]" style={{ opacity: phase === 'visible' ? 1 : 0 }}>
       <BackgroundClient />
     </div>
   );

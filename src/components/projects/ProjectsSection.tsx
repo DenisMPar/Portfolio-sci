@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { m, AnimatePresence, useReducedMotion } from "framer-motion";
+import type { TargetAndTransition } from "framer-motion";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -10,6 +11,10 @@ import { AnimatedPanel } from "../panel/AnimatedPanel";
 import { NoiseTexture, CrtScanlines, VignetteEdge, ColorAberration } from "../panel";
 import { useHasHover } from "@/hooks/useHasHover";
 import type { Project } from "@/data/projects";
+
+type MotionTarget = TargetAndTransition;
+
+// ── Gallery ──────────────────────────────────────────────────────────────────
 
 function Gallery({
   images,
@@ -148,6 +153,8 @@ function Gallery({
   );
 }
 
+// ── Animation variants ────────────────────────────────────────────────────────
+
 const containerVariants = {
   hidden: {},
   visible: {
@@ -178,11 +185,322 @@ const metaRowVariants = {
   },
 };
 
+// ── ProjectCarousel ───────────────────────────────────────────────────────────
+
+function ProjectCarousel({
+  images,
+  title,
+  activeIndex,
+  hasMultiple,
+  clipInitial,
+  clipVisible,
+  prefersReduced,
+  onPrev,
+  onNext,
+  onSelectIndex,
+  onOpen,
+}: {
+  images: string[];
+  title: string;
+  activeIndex: number;
+  hasMultiple: boolean;
+  clipInitial: MotionTarget;
+  clipVisible: MotionTarget;
+  prefersReduced: boolean | null;
+  onPrev: () => void;
+  onNext: () => void;
+  onSelectIndex: (i: number) => void;
+  onOpen: () => void;
+}) {
+  const t = useTranslations("projects");
+  return (
+    <m.button
+      type="button"
+      className="relative aspect-video lg:aspect-auto lg:row-start-1 lg:col-start-1 cursor-pointer overflow-hidden group"
+      onClick={onOpen}
+      initial={clipInitial}
+      animate={clipVisible}
+      transition={prefersReduced ? { duration: 0.15 } : { duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <div className="absolute inset-0 bg-primary/20" />
+      <div className="absolute inset-0 opacity-0 group-pointer-hover:opacity-100 transition-opacity duration-500">
+        <div
+          className="absolute inset-[-100%] animate-[border-glow_5s_linear_infinite] motion-reduce:animate-none"
+          style={{ background: 'conic-gradient(from 0deg, transparent 70%, var(--accent) 85%, transparent 95%)' }}
+        />
+      </div>
+      <div
+        className="absolute inset-[1px] z-[5] animate-[skeleton-shimmer_2s_linear_infinite] motion-reduce:animate-none"
+        style={{
+          background: 'linear-gradient(90deg, var(--background) 30%, var(--background-elevated) 50%, var(--background) 70%)',
+          backgroundSize: '200% 100%',
+        }}
+      />
+      <div className="absolute inset-[1px] z-10 overflow-hidden">
+        <AnimatePresence mode="wait">
+          <m.div
+            key={activeIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="relative w-full h-full"
+          >
+            <Image
+              unoptimized
+              src={images[activeIndex]}
+              alt={activeIndex === 0 ? title : `${title} — ${activeIndex}`}
+              fill
+              className="object-cover transition-[transform,filter] duration-300 group-pointer-hover:scale-[1.03] group-pointer-hover:brightness-110"
+              sizes="(max-width: 768px) 90vw, 50vw"
+            />
+          </m.div>
+        </AnimatePresence>
+      </div>
+
+      {hasMultiple && (
+        <>
+          <div
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-[color,transform] active:scale-[0.97] text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
+            role="button"
+            onClick={(e) => { e.stopPropagation(); onPrev(); }}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); onPrev(); } }}
+            tabIndex={0}
+            aria-label={t("prevImage")}
+          >
+            ‹
+          </div>
+          <div
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-[color,transform] active:scale-[0.97] text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
+            role="button"
+            onClick={(e) => { e.stopPropagation(); onNext(); }}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); onNext(); } }}
+            tabIndex={0}
+            aria-label={t("nextImage")}
+          >
+            ›
+          </div>
+          <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1">
+            {images.map((img, i) => (
+              <div
+                key={img || i}
+                role="button"
+                tabIndex={0}
+                onClick={(e) => { e.stopPropagation(); onSelectIndex(i); }}
+                onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); onSelectIndex(i); } }}
+                className="size-6 flex items-center justify-center cursor-pointer transition-transform active:scale-[0.85]"
+                aria-label={t("goToImage", { n: i + 1 })}
+              >
+                <span className={`w-1.5 h-1.5 rotate-45 transition-[background-color,box-shadow] duration-200 ease-out block ${
+                  i === activeIndex
+                    ? "bg-primary shadow-[0_0_6px_var(--primary-strong)]"
+                    : "bg-foreground/30 pointer-hover:bg-foreground/50"
+                }`} />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </m.button>
+  );
+}
+
+// ── ProjectInfoRow ────────────────────────────────────────────────────────────
+
+function ProjectInfoRow({
+  project,
+  clipInitial,
+  clipVisible,
+  prefersReduced,
+}: {
+  project: Project;
+  clipInitial: MotionTarget;
+  clipVisible: MotionTarget;
+  prefersReduced: boolean | null;
+}) {
+  const t = useTranslations("projects");
+  return (
+    <div className="shrink-0 lg:col-span-2 lg:row-start-2">
+      <div className="relative">
+        <div
+          aria-hidden="true"
+          className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent origin-left motion-reduce:!animate-none"
+          style={{ transform: 'scaleX(0)', animation: 'line-expand 0.5s ease-out 0.15s forwards' }}
+        />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-[55fr_45fr]">
+        <m.div
+          className="px-4 py-3 flex flex-col gap-1.5 overflow-y-auto"
+          initial={clipInitial}
+          animate={clipVisible}
+          transition={prefersReduced ? { duration: 0.15 } : { duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <m.h2
+            className="glitch font-medium text-foreground text-base 2xl:text-lg text-wrap-balance"
+            data-text={project.title}
+            initial={prefersReduced ? { opacity: 0 } : { opacity: 0, transform: "translateX(-6px)" }}
+            animate={prefersReduced ? { opacity: 1 } : { opacity: 1, transform: "translateX(0px)" }}
+            transition={prefersReduced ? { duration: 0.15 } : { duration: 0.25, ease: "easeOut", delay: 0.2 }}
+          >
+            {project.title}
+          </m.h2>
+          <m.p
+            className="text-sm 2xl:text-base text-foreground/60 leading-relaxed font-light"
+            initial={prefersReduced ? { opacity: 0 } : { opacity: 0, transform: "translateX(-6px)" }}
+            animate={prefersReduced ? { opacity: 1 } : { opacity: 1, transform: "translateX(0px)" }}
+            transition={prefersReduced ? { duration: 0.15 } : { duration: 0.4, ease: "easeOut", delay: 0.38 }}
+          >
+            {project.description}
+          </m.p>
+        </m.div>
+
+        <m.div
+          className="lg:border-l lg:border-primary/15 flex flex-col"
+          initial={clipInitial}
+          animate={clipVisible}
+          transition={prefersReduced ? { duration: 0.15 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+        >
+          <div className="grid grid-cols-2 text-xs h-full">
+            <m.div
+              className="px-4 py-3"
+              variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.06, delayChildren: 0.5 } } }}
+              initial={prefersReduced ? undefined : "hidden"}
+              animate={prefersReduced ? undefined : "visible"}
+            >
+              <m.span
+                className="uppercase tracking-widest text-foreground/55"
+                variants={prefersReduced ? undefined : metaRowVariants}
+              >
+                {t("stack")}
+              </m.span>
+              <div className="flex flex-wrap gap-1.5 mt-1.5">
+                {project.tags.map((tag) => (
+                  <m.span
+                    key={tag}
+                    className="text-xs border border-primary/20 px-1.5 py-0.5 text-foreground/70 font-light"
+                    variants={prefersReduced ? undefined : metaRowVariants}
+                  >
+                    {tag}
+                  </m.span>
+                ))}
+              </div>
+            </m.div>
+            <m.div
+              className="flex flex-col border-l border-primary/15 px-4 py-2"
+              variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.08, delayChildren: 0.5 } } }}
+              initial={prefersReduced ? undefined : "hidden"}
+              animate={prefersReduced ? undefined : "visible"}
+            >
+              <m.div
+                className="flex justify-between py-1.5"
+                variants={prefersReduced ? undefined : metaRowVariants}
+              >
+                <span className="uppercase tracking-widest text-foreground/55">{t("year")}</span>
+                <span className="text-foreground/70">{project.year}</span>
+              </m.div>
+              <m.div
+                className="flex justify-between py-1.5 border-t border-primary/10"
+                variants={prefersReduced ? undefined : metaRowVariants}
+              >
+                <span className="uppercase tracking-widest text-foreground/55">{t("role")}</span>
+                <span className="text-foreground/70">
+                  {project.role === "Solo Dev" ? t("roleSoloDev") : t("roleTeamDev")}
+                </span>
+              </m.div>
+              {project.type && (
+                <m.div
+                  className="flex justify-between py-1.5 border-t border-primary/10"
+                  variants={prefersReduced ? undefined : metaRowVariants}
+                >
+                  <span className="uppercase tracking-widest text-foreground/55">{t("type")}</span>
+                  <span className="text-foreground/70">
+                    {project.type === "showcase" ? t("typeShowcase") : t("typeCaseStudy")}
+                  </span>
+                </m.div>
+              )}
+              {(project.liveUrl || project.repoUrl) && (
+                <m.div
+                  className="flex justify-between items-start py-1.5 border-t border-primary/10"
+                  variants={prefersReduced ? undefined : metaRowVariants}
+                >
+                  <span className="uppercase tracking-widest text-foreground/55">{t("links")}</span>
+                  <div className="flex flex-col items-start gap-1">
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-accent pointer-hover:text-accent/80 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
+                      >
+                        [ {t("live")} ]
+                      </a>
+                    )}
+                    {project.repoUrl && (
+                      <a
+                        href={project.repoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary pointer-hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
+                      >
+                        [ {t("repo")} ]
+                      </a>
+                    )}
+                  </div>
+                </m.div>
+              )}
+            </m.div>
+          </div>
+        </m.div>
+      </div>
+    </div>
+  );
+}
+
+// ── ProjectSections ───────────────────────────────────────────────────────────
+
+function ProjectSections({
+  sections,
+  clipInitial,
+  clipVisible,
+  prefersReduced,
+}: {
+  sections: Project["sections"];
+  clipInitial: MotionTarget;
+  clipVisible: MotionTarget;
+  prefersReduced: boolean | null;
+}) {
+  return (
+    <m.div
+      className="flex flex-col lg:flex-1 lg:min-h-0 lg:overflow-y-auto px-5 py-4 gap-4 border-t lg:border-t-0 lg:border-l border-primary/15 lg:col-start-2 lg:row-start-1"
+      initial={clipInitial}
+      animate={clipVisible}
+      transition={prefersReduced ? { duration: 0.15 } : { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+    >
+      {sections.map((section) => (
+        <div key={section.title}>
+          <p className="text-xs uppercase tracking-widest text-primary font-display mb-1">
+            {section.title}
+          </p>
+          <p className="text-sm 2xl:text-base text-foreground/70 leading-relaxed font-light">
+            {section.content}
+          </p>
+        </div>
+      ))}
+    </m.div>
+  );
+}
+
+// ── ProjectPreview ────────────────────────────────────────────────────────────
+
 function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boolean }) {
   const prefersReduced = useReducedMotion();
-  const t = useTranslations("projects");
-  const clipInitial = prefersReduced ? { opacity: 0 } : { clipPath: hasHover ? "inset(0 100% 0 0)" : "inset(0 0 100% 0)" };
-  const clipVisible = prefersReduced ? { opacity: 1 } : { clipPath: "inset(0 0% 0 0)" };
+  const clipInitial: MotionTarget = prefersReduced
+    ? { opacity: 0 }
+    : { clipPath: hasHover ? "inset(0 100% 0 0)" : "inset(0 0 100% 0)" };
+  const clipVisible: MotionTarget = prefersReduced
+    ? { opacity: 1 }
+    : { clipPath: "inset(0 0% 0 0)" };
+
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -190,14 +508,10 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
   useEffect(() => { setCarouselIndex(0); }, [project.slug]);
 
   const closeGallery = useCallback(() => setGalleryIndex(null), []);
-
   const galleryImages = project.images.map((src, i) => ({
     src,
     alt: i === 0 ? project.title : `${project.title} — ${i}`,
   }));
-
-  const hasSections = project.sections.length > 0;
-  const hasMultipleImages = project.images.length > 1;
 
   const prevImage = useCallback(() => {
     setCarouselIndex((i) => (i - 1 + project.images.length) % project.images.length);
@@ -207,277 +521,60 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
     setCarouselIndex((i) => (i + 1) % project.images.length);
   }, [project.images.length]);
 
+  const hasSections = project.sections.length > 0;
+
   return (
     <div className="relative flex flex-col lg:flex-1 lg:min-h-0">
-      {mounted &&
-        createPortal(
-          <AnimatePresence>
-            {galleryIndex !== null && (
-              <Gallery images={galleryImages} initialIndex={galleryIndex} onClose={closeGallery} />
-            )}
-          </AnimatePresence>,
-          document.body,
-        )}
-
+      {mounted && createPortal(
+        <AnimatePresence>
+          {galleryIndex !== null && (
+            <Gallery images={galleryImages} initialIndex={galleryIndex} onClose={closeGallery} />
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
 
       <AnimatePresence mode="wait">
         <m.div
           key={project.slug}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={prefersReduced ? { opacity: 0 } : { clipPath: hasHover ? "inset(0 100% 0 0)" : "inset(0 0 100% 0)", transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } }}
+          exit={prefersReduced
+            ? { opacity: 0 }
+            : { clipPath: hasHover ? "inset(0 100% 0 0)" : "inset(0 0 100% 0)", transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } }
+          }
           transition={{ duration: 0.15 }}
           className="flex flex-col lg:flex-1 lg:min-h-0"
         >
-          {/* Visual zone — carousel + optional sections */}
           <div className={`flex flex-col lg:grid ${hasSections ? "lg:grid-cols-[55fr_45fr]" : ""} lg:grid-rows-[1fr_auto] lg:flex-1 lg:min-h-0 lg:overflow-hidden`}>
-            {/* Carousel */}
             {project.images.length > 0 && (
-              <m.button
-                type="button"
-                className="relative aspect-video lg:aspect-auto lg:row-start-1 lg:col-start-1 cursor-pointer overflow-hidden group"
-                onClick={() => setGalleryIndex(carouselIndex)}
-                initial={clipInitial}
-                animate={clipVisible}
-                transition={prefersReduced ? { duration: 0.15 } : { duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div className="absolute inset-0 bg-primary/20" />
-                <div className="absolute inset-0 opacity-0 group-pointer-hover:opacity-100 transition-opacity duration-500">
-                  <div
-                    className="absolute inset-[-100%] animate-[border-glow_5s_linear_infinite] motion-reduce:animate-none"
-                    style={{ background: 'conic-gradient(from 0deg, transparent 70%, var(--accent) 85%, transparent 95%)' }}
-                  />
-                </div>
-                <div
-                  className="absolute inset-[1px] z-[5] animate-[skeleton-shimmer_2s_linear_infinite] motion-reduce:animate-none"
-                  style={{
-                    background: 'linear-gradient(90deg, var(--background) 30%, var(--background-elevated) 50%, var(--background) 70%)',
-                    backgroundSize: '200% 100%',
-                  }}
-                />
-                <div className="absolute inset-[1px] z-10 overflow-hidden">
-                  <AnimatePresence mode="wait">
-                    <m.div
-                      key={carouselIndex}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="relative w-full h-full"
-                    >
-                      <Image
-                        unoptimized
-                        src={project.images[carouselIndex]}
-                        alt={carouselIndex === 0 ? project.title : `${project.title} — ${carouselIndex}`}
-                        fill
-                        className="object-cover transition-[transform,filter] duration-300 group-pointer-hover:scale-[1.03] group-pointer-hover:brightness-110"
-                        sizes="(max-width: 768px) 90vw, 50vw"
-                      />
-                    </m.div>
-                  </AnimatePresence>
-                </div>
-
-                {/* Carousel controls */}
-                {hasMultipleImages && (
-                  <>
-                    <div
-                      className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-[color,transform] active:scale-[0.97] text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
-                      role="button"
-                      onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                      onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); prevImage(); } }}
-                      tabIndex={0}
-                      aria-label={t("prevImage")}
-                    >
-                      ‹
-                    </div>
-                    <div
-                      className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-[color,transform] active:scale-[0.97] text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
-                      role="button"
-                      onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                      onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); nextImage(); } }}
-                      tabIndex={0}
-                      aria-label={t("nextImage")}
-                    >
-                      ›
-                    </div>
-                    <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1">
-                      {project.images.map((img, i) => (
-                        <div
-                          key={img.src || i}
-                          role="button"
-                          tabIndex={0}
-                          onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
-                          onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); setCarouselIndex(i); } }}
-                          className="size-6 flex items-center justify-center cursor-pointer transition-transform active:scale-[0.85]"
-                          aria-label={t("goToImage", { n: i + 1 })}
-                        >
-                          <span className={`w-1.5 h-1.5 rotate-45 transition-[background-color,box-shadow] duration-200 ease-out block ${
-                            i === carouselIndex
-                              ? "bg-primary shadow-[0_0_6px_var(--primary-strong)]"
-                              : "bg-foreground/30 pointer-hover:bg-foreground/50"
-                          }`} />
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </m.button>
+              <ProjectCarousel
+                images={project.images}
+                title={project.title}
+                activeIndex={carouselIndex}
+                hasMultiple={project.images.length > 1}
+                clipInitial={clipInitial}
+                clipVisible={clipVisible}
+                prefersReduced={prefersReduced}
+                onPrev={prevImage}
+                onNext={nextImage}
+                onSelectIndex={setCarouselIndex}
+                onOpen={() => setGalleryIndex(carouselIndex)}
+              />
             )}
-
-            {/* Info row — inside the grid so on mobile it sits between carousel and sections */}
-            <div className="shrink-0 lg:col-span-2 lg:row-start-2">
-              <div className="relative">
-                <div
-                  aria-hidden="true"
-                  className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent origin-left motion-reduce:!animate-none"
-                  style={{ transform: 'scaleX(0)', animation: 'line-expand 0.5s ease-out 0.15s forwards' }}
-                />
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-[55fr_45fr]">
-                <m.div
-                  className="px-4 py-3 flex flex-col gap-1.5 overflow-y-auto"
-                  initial={clipInitial}
-                  animate={clipVisible}
-                  transition={prefersReduced ? { duration: 0.15 } : { duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <m.h2
-                    className="glitch font-medium text-foreground text-base 2xl:text-lg text-wrap-balance"
-                    data-text={project.title}
-                    initial={prefersReduced ? { opacity: 0 } : { opacity: 0, transform: "translateX(-6px)" }}
-                    animate={prefersReduced ? { opacity: 1 } : { opacity: 1, transform: "translateX(0px)" }}
-                    transition={prefersReduced ? { duration: 0.15 } : { duration: 0.25, ease: "easeOut", delay: 0.2 }}
-                  >
-                    {project.title}
-                  </m.h2>
-                  <m.p
-                    className="text-sm 2xl:text-base text-foreground/60 leading-relaxed font-light"
-                    initial={prefersReduced ? { opacity: 0 } : { opacity: 0, transform: "translateX(-6px)" }}
-                    animate={prefersReduced ? { opacity: 1 } : { opacity: 1, transform: "translateX(0px)" }}
-                    transition={prefersReduced ? { duration: 0.15 } : { duration: 0.4, ease: "easeOut", delay: 0.38 }}
-                  >
-                    {project.description}
-                  </m.p>
-                </m.div>
-
-                <m.div
-                  className="lg:border-l lg:border-primary/15 flex flex-col"
-                  initial={clipInitial}
-                  animate={clipVisible}
-                  transition={prefersReduced ? { duration: 0.15 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-                >
-                  <div className="grid grid-cols-2 text-xs h-full">
-                    <m.div
-                      className="px-4 py-3"
-                      variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.06, delayChildren: 0.5 } } }}
-                      initial={prefersReduced ? undefined : "hidden"}
-                      animate={prefersReduced ? undefined : "visible"}
-                    >
-                      <m.span
-                        className="uppercase tracking-widest text-foreground/55"
-                        variants={prefersReduced ? undefined : metaRowVariants}
-                      >
-                        {t("stack")}
-                      </m.span>
-                      <div className="flex flex-wrap gap-1.5 mt-1.5">
-                        {project.tags.map((tag) => (
-                          <m.span
-                            key={tag}
-                            className="text-xs border border-primary/20 px-1.5 py-0.5 text-foreground/70 font-light"
-                            variants={prefersReduced ? undefined : metaRowVariants}
-                          >
-                            {tag}
-                          </m.span>
-                        ))}
-                      </div>
-                    </m.div>
-                    <m.div
-                      className="flex flex-col border-l border-primary/15 px-4 py-2"
-                      variants={prefersReduced ? undefined : { hidden: {}, visible: { transition: { staggerChildren: 0.08, delayChildren: 0.5 } } }}
-                      initial={prefersReduced ? undefined : "hidden"}
-                      animate={prefersReduced ? undefined : "visible"}
-                    >
-                      <m.div
-                        className="flex justify-between py-1.5"
-                        variants={prefersReduced ? undefined : metaRowVariants}
-                      >
-                        <span className="uppercase tracking-widest text-foreground/55">{t("year")}</span>
-                        <span className="text-foreground/70">{project.year}</span>
-                      </m.div>
-                      <m.div
-                        className="flex justify-between py-1.5 border-t border-primary/10"
-                        variants={prefersReduced ? undefined : metaRowVariants}
-                      >
-                        <span className="uppercase tracking-widest text-foreground/55">{t("role")}</span>
-                        <span className="text-foreground/70">
-                          {project.role === "Solo Dev" ? t("roleSoloDev") : t("roleTeamDev")}
-                        </span>
-                      </m.div>
-                      {project.type && (
-                        <m.div
-                          className="flex justify-between py-1.5 border-t border-primary/10"
-                          variants={prefersReduced ? undefined : metaRowVariants}
-                        >
-                          <span className="uppercase tracking-widest text-foreground/55">{t("type")}</span>
-                          <span className="text-foreground/70">
-                            {project.type === "showcase" ? t("typeShowcase") : t("typeCaseStudy")}
-                          </span>
-                        </m.div>
-                      )}
-                      {(project.liveUrl || project.repoUrl) && (
-                        <m.div
-                          className="flex justify-between items-start py-1.5 border-t border-primary/10"
-                          variants={prefersReduced ? undefined : metaRowVariants}
-                        >
-                          <span className="uppercase tracking-widest text-foreground/55">{t("links")}</span>
-                          <div className="flex flex-col items-start gap-1">
-                            {project.liveUrl && (
-                              <a
-                                href={project.liveUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-accent pointer-hover:text-accent/80 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
-                              >
-                                [ {t("live")} ]
-                              </a>
-                            )}
-                            {project.repoUrl && (
-                              <a
-                                href={project.repoUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-primary pointer-hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none transition-colors text-sm"
-                              >
-                                [ {t("repo")} ]
-                              </a>
-                            )}
-                          </div>
-                        </m.div>
-                      )}
-                    </m.div>
-                  </div>
-                </m.div>
-              </div>
-            </div>
-
-            {/* Sections — right column on desktop, below metadata on mobile */}
+            <ProjectInfoRow
+              project={project}
+              clipInitial={clipInitial}
+              clipVisible={clipVisible}
+              prefersReduced={prefersReduced}
+            />
             {hasSections && (
-              <m.div
-                className="flex flex-col lg:flex-1 lg:min-h-0 lg:overflow-y-auto px-5 py-4 gap-4 border-t lg:border-t-0 lg:border-l border-primary/15 lg:col-start-2 lg:row-start-1"
-                initial={clipInitial}
-                animate={clipVisible}
-                transition={prefersReduced ? { duration: 0.15 } : { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-              >
-                {project.sections.map((section) => (
-                  <div key={section.title}>
-                    <p className="text-xs uppercase tracking-widest text-primary font-display mb-1">
-                      {section.title}
-                    </p>
-                    <p className="text-sm 2xl:text-base text-foreground/70 leading-relaxed font-light">
-                      {section.content}
-                    </p>
-                  </div>
-                ))}
-              </m.div>
+              <ProjectSections
+                sections={project.sections}
+                clipInitial={clipInitial}
+                clipVisible={clipVisible}
+                prefersReduced={prefersReduced}
+              />
             )}
           </div>
         </m.div>
@@ -485,6 +582,8 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
     </div>
   );
 }
+
+// ── ProjectNav ────────────────────────────────────────────────────────────────
 
 function ProjectNav({
   projects,
@@ -556,6 +655,8 @@ function ProjectNav({
     </nav>
   );
 }
+
+// ── ProjectsSection ───────────────────────────────────────────────────────────
 
 export function ProjectsSection({ projects }: { projects: Project[] }) {
   const searchParams = useSearchParams();

@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Effect } from 'postprocessing';
 import { Uniform, Vector2, type WebGLRenderer } from 'three';
 
@@ -113,14 +113,14 @@ class AnalogDecayEffect extends Effect {
   }
 }
 
-export const AnalogDecay = forwardRef<AnalogDecayEffect, {
+export function AnalogDecay(props: {
   grain?: number;
   bleeding?: number;
   scanlines?: number;
   vignette?: number;
   jitter?: number;
   intensity?: number;
-}>(function AnalogDecay(props, ref) {
+}) {
   const effect = useMemo(() => new AnalogDecayEffect(props), [props]);
-  return <primitive ref={ref} object={effect} dispose={null} />;
-});
+  return <primitive object={effect} dispose={null} />;
+}

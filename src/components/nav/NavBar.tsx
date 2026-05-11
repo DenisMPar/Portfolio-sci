@@ -14,10 +14,9 @@ const NAV_LINKS = [
 
 const LOCALES = ["en", "es"] as const;
 
-function LocaleSwitcher({ onSwitch }: { onSwitch?: () => void }) {
+function LocaleSwitcher({ onSwitch, pathname }: { onSwitch?: () => void; pathname: string }) {
   const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
+  const { replace } = useRouter();
 
   return (
     <div className="flex items-center font-mono text-xs tracking-widest select-none">
@@ -32,7 +31,7 @@ function LocaleSwitcher({ onSwitch }: { onSwitch?: () => void }) {
           <button
             onClick={() => {
               if (locale !== l) {
-                router.replace(pathname, { locale: l });
+                replace(pathname, { locale: l });
                 onSwitch?.();
               }
             }}
@@ -85,7 +84,7 @@ export function NavBar() {
               {t(link.key)}
             </Link>
           ))}
-          <LocaleSwitcher />
+          <LocaleSwitcher pathname={pathname} />
           <Link
             href="/explore"
             aria-label="Explore background"
@@ -150,7 +149,7 @@ export function NavBar() {
                   </Link>
                 ))}
                 <div className="pt-3.5">
-                  <LocaleSwitcher onSwitch={() => setOpen(false)} />
+                  <LocaleSwitcher pathname={pathname} onSwitch={() => setOpen(false)} />
                 </div>
               </div>
             </m.div>

@@ -6,8 +6,13 @@ export default getRequestConfig(async ({ requestLocale }) => {
   if (!locale || !routing.locales.includes(locale as (typeof routing.locales)[number])) {
     locale = routing.defaultLocale;
   }
+  const messageLoaders: Record<string, () => Promise<{ default: Record<string, unknown> }>> = {
+    en: () => import("../../messages/en.json"),
+    es: () => import("../../messages/es.json"),
+  };
+  const loader = messageLoaders[locale] ?? messageLoaders[routing.defaultLocale];
   return {
     locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
+    messages: (await loader()).default,
   };
 });

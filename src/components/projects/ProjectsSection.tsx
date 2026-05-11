@@ -73,7 +73,7 @@ function Gallery({
 
         <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-primary/15">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_var(--primary-strong)]" aria-hidden="true" />
+            <div className="size-2 bg-primary rotate-45 shadow-[0_0_8px_var(--primary-strong)]" aria-hidden="true" />
             <span className="text-xs uppercase tracking-widest text-foreground/55 font-display">
               {t("gallery", { current: index + 1, total: images.length })}
             </span>
@@ -129,9 +129,9 @@ function Gallery({
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center gap-3 py-3 border-t border-primary/15">
-          {images.map((_, i) => (
+          {images.map((img, i) => (
             <button
-              key={i}
+              key={img.src || i}
               type="button"
               onClick={() => setIndex(i)}
               className={`w-2 h-2 rotate-45 transition-[background-color,box-shadow,transform] duration-200 ease-out cursor-pointer active:scale-[0.75] ${
@@ -301,14 +301,14 @@ function ProjectPreview({ project, hasHover }: { project: Project; hasHover: boo
                       ›
                     </div>
                     <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1">
-                      {project.images.map((_, i) => (
+                      {project.images.map((img, i) => (
                         <div
-                          key={i}
+                          key={img.src || i}
                           role="button"
                           tabIndex={0}
                           onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
                           onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); setCarouselIndex(i); } }}
-                          className="w-6 h-6 flex items-center justify-center cursor-pointer transition-transform active:scale-[0.85]"
+                          className="size-6 flex items-center justify-center cursor-pointer transition-transform active:scale-[0.85]"
                           aria-label={t("goToImage", { n: i + 1 })}
                         >
                           <span className={`w-1.5 h-1.5 rotate-45 transition-[background-color,box-shadow] duration-200 ease-out block ${

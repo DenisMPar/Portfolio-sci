@@ -66,7 +66,7 @@ function PanelContent({ title, children }: { title?: string; children: ReactNode
     <div className="relative z-10 h-full flex flex-col">
       {title && (
         <div className="flex items-center gap-3 px-4 py-3">
-          <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_8px_var(--primary-strong)]" aria-hidden="true" />
+          <div className="size-2 bg-primary rotate-45 shadow-[0_0_8px_var(--primary-strong)]" aria-hidden="true" />
           <h1 className="text-base font-medium uppercase tracking-wider text-foreground text-wrap-balance font-display">
             {title}
           </h1>

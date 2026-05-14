@@ -86,12 +86,10 @@ export interface InterfacePanelProps {
   children: ReactNode
   title?: string
   className?: string
-  variant?: "default" | "glow" | "minimal" | "card"
+  variant?: "default" | "glow"
 }
 
 export function InterfacePanel({ children, title, className, variant = "default" }: InterfacePanelProps) {
-  const isCard = variant === "card"
-
   return (
     <div
       className={cn(
@@ -101,25 +99,18 @@ export function InterfacePanel({ children, title, className, variant = "default"
       )}
     >
       <div
-        className={cn(
-          "relative overflow-hidden h-full",
-          isCard
-            ? "bg-[rgb(40_40_70_/_0.25)] before:absolute before:inset-0 before:bg-gradient-to-b before:from-primary/5 before:to-transparent before:pointer-events-none"
-            : "bg-card before:absolute before:inset-0 before:bg-gradient-to-b before:from-primary/8 before:to-transparent before:pointer-events-none"
-        )}
+        className="relative overflow-hidden h-full bg-card before:absolute before:inset-0 before:bg-gradient-to-b before:from-primary/8 before:to-transparent before:pointer-events-none"
         style={{
-          clipPath: isCard
-            ? "polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px))"
-            : "polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px))",
+          clipPath: "polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px))",
         }}
       >
         <NoiseTexture />
         <CrtScanlines />
-        {!isCard && <VignetteEdge />}
-        {!isCard && <ColorAberration />}
+        <VignetteEdge />
+        <ColorAberration />
         <PanelContent title={title}>{children}</PanelContent>
         <GlowLine position="top" />
-        {!isCard && <GlowLine position="bottom" />}
+        <GlowLine position="bottom" />
       </div>
     </div>
   )

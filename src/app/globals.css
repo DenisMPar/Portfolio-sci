@@ -23,14 +23,21 @@
   --section-pt: calc(var(--nav-h) + var(--section-gap-top));
   --section-pb: calc(var(--footer-h) + var(--section-gap));
 
-  /* Primary alpha variants */
-  --primary-ghost: rgba(80, 140, 204, 0.07);
-  --primary-faint: rgba(80, 140, 204, 0.08);
-  --primary-subtle: rgba(80, 140, 204, 0.15);
-  --primary-dim: rgba(80, 140, 204, 0.4);
-  --primary-mid: rgba(80, 140, 204, 0.55);
-  --primary-strong: rgba(80, 140, 204, 0.6);
-  --primary-vivid: rgba(80, 140, 204, 0.7);
+  /* Accent alpha variants — derived from --accent, update automatically */
+  --accent-dim: color-mix(in srgb, var(--accent) 40%, transparent);
+  --accent-vivid: color-mix(in srgb, var(--accent) 70%, transparent);
+
+  /* Card variants */
+  --card-deep: rgb(30 30 54 / 0.75);
+
+/* Primary alpha variants — derived from --primary, update automatically */
+  --primary-ghost: color-mix(in srgb, var(--primary) 7%, transparent);
+  --primary-faint: color-mix(in srgb, var(--primary) 8%, transparent);
+  --primary-subtle: color-mix(in srgb, var(--primary) 15%, transparent);
+  --primary-dim: color-mix(in srgb, var(--primary) 40%, transparent);
+  --primary-mid: color-mix(in srgb, var(--primary) 55%, transparent);
+  --primary-strong: color-mix(in srgb, var(--primary) 60%, transparent);
+  --primary-vivid: color-mix(in srgb, var(--primary) 70%, transparent);
 
   /* Panel decorative effects */
   --panel-scanlines-color: rgba(0, 0, 0, 0.3);
@@ -152,6 +159,11 @@
   .glitch::after {
     display: none;
   }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-dot { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

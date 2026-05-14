@@ -56,7 +56,7 @@ export function ProjectNav({
         return (
           <button
             key={project.slug}
-            onClick={() => onSelect(project.slug)}
+            onClick={(e) => { onSelect(project.slug); (e.currentTarget as HTMLButtonElement).blur(); }}
             aria-current={isActive ? "true" : undefined}
             className={`shrink-0 sm:shrink flex items-center gap-2 px-2.5 sm:px-3 py-2 text-left ${isActive ? "cursor-default" : "cursor-pointer"} transition-[color,background-color,border-color,transform] duration-200 ease-out active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none ${
               isActive

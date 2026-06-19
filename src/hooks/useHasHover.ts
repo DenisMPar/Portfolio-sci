@@ -1,36 +1,30 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from "react";
 
-// Global flag to track if initial SSR hydration is complete.
-// This prevents double-renders on client-side navigations.
-let isHydrated = false;
+const QUERY = "(hover: hover)";
+
+// Cache the MediaQueryList once on the client so getSnapshot is a cheap
+// property read rather than a matchMedia() call on every store read.
+const mql = typeof window !== "undefined" ? window.matchMedia(QUERY) : null;
+
+function subscribe(callback: () => void) {
+  if (!mql) return () => {};
+  mql.addEventListener("change", callback);
+  return () => mql.removeEventListener("change", callback);
+}
+
+function getSnapshot() {
+  return mql ? mql.matches : true;
+}
+
+// Assume a hover-capable (desktop) device during SSR and the first client
+// render so the server and hydrated markup match. The real value is read on
+// the client immediately after hydration via getSnapshot.
+function getServerSnapshot() {
+  return true;
+}
 
 export function useHasHover() {
-  const [hasHover, setHasHover] = useState(() => {
-    // If we've already hydrated, we can safely return the real value
-    // immediately without causing a hydration mismatch.
-    if (typeof window !== 'undefined' && isHydrated) {
-      return window.matchMedia('(hover: hover)').matches;
-    }
-    // Default to true (desktop) for SSR and initial hydration
-    return true;
-  });
-
-  useEffect(() => {
-    isHydrated = true;
-    const mql = window.matchMedia('(hover: hover)');
-    
-    // Update if it doesn't match our initial assumption
-    if (hasHover !== mql.matches) {
-      setHasHover(mql.matches);
-    }
-
-    // Listen for changes (e.g. attaching a mouse to an iPad)
-    const onChange = (e: MediaQueryListEvent) => setHasHover(e.matches);
-    mql.addEventListener('change', onChange);
-    return () => mql.removeEventListener('change', onChange);
-  }, [hasHover]);
-
-  return hasHover;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

@@ -1,52 +1,18 @@
-"use client";
-
-import { m, useReducedMotion } from "framer-motion";
 import { InterfacePanel, type InterfacePanelProps } from "./index";
-import { useHasHover } from "@/hooks/useHasHover";
 
-const panelVariants = {
-  hidden: { transform: "translateY(-20px)", opacity: 0 },
-  visible: {
-    transform: "translateY(0px)",
-    opacity: 1,
-    transition: {
-      type: "spring" as const,
-      damping: 20,
-      stiffness: 200,
-      mass: 0.8,
-    },
-  },
-};
-
-const reducedVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-};
-
+// Entrance is a pure CSS animation (see `.panel-enter` in globals.css), so the
+// panel and its content are visible without JavaScript — no opacity:0 SSR state
+// that depends on hydration to reveal. Reduced motion disables the animation.
 export function AnimatedPanel({
   delay = 0,
   ...props
 }: InterfacePanelProps & { delay?: number }) {
-  const hasHover = useHasHover();
-  const prefersReduced = useReducedMotion();
-
-  if (!hasHover) {
-    return (
-      <div className="h-full min-[1920px]:h-auto">
-        <InterfacePanel {...props} />
-      </div>
-    );
-  }
-
   return (
-    <m.div
-      className="h-full min-[1920px]:h-auto"
-      variants={prefersReduced ? reducedVariants : panelVariants}
-      initial="hidden"
-      animate="visible"
-      transition={{ delay }}
+    <div
+      className="h-full min-[1920px]:h-auto panel-enter"
+      style={delay ? { animationDelay: `${delay}s` } : undefined}
     >
       <InterfacePanel {...props} />
-    </m.div>
+    </div>
   );
 }

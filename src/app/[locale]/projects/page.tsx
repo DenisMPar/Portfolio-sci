@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ProjectsSection } from "@/components/projects/ProjectsSection";
 import { getProjects } from "@/lib/contentful";
@@ -29,9 +28,7 @@ export default async function ProjectsPage({
 
   return (
     <main>
-      <Suspense>
-        <ProjectsSection projects={projects} />
-      </Suspense>
+      <ProjectsSection projects={projects} />
     </main>
   );
 }

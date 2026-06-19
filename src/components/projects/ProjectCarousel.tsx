@@ -7,6 +7,9 @@ import { useTranslations } from "next-intl";
 
 type MotionTarget = TargetAndTransition;
 
+const arrowClass =
+  "absolute top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-[color,transform] active:scale-[0.97] text-2xl bg-background/60 backdrop-blur-sm rounded-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent";
+
 export function ProjectCarousel({
   images,
   title,
@@ -34,10 +37,8 @@ export function ProjectCarousel({
 }) {
   const t = useTranslations("projects");
   return (
-    <m.button
-      type="button"
-      className="relative aspect-video lg:aspect-auto lg:row-start-1 lg:col-start-1 cursor-pointer overflow-hidden group"
-      onClick={onOpen}
+    <m.div
+      className="relative aspect-video lg:aspect-auto lg:row-start-1 lg:col-start-1 overflow-hidden group"
       initial={clipInitial}
       animate={clipVisible}
       transition={prefersReduced ? { duration: 0.15 } : { duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
@@ -78,49 +79,53 @@ export function ProjectCarousel({
         </AnimatePresence>
       </div>
 
+      {/* Open the full-screen gallery. Transparent overlay layered above the
+          image (z-15) but below the carousel controls (z-20), so the arrows and
+          dots stay clickable without nesting interactive elements. */}
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={t("openGallery")}
+        className="absolute inset-0 z-[15] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
+      />
+
       {hasMultiple && (
         <>
-          <div
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-[color,transform] active:scale-[0.97] text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
-            role="button"
-            onClick={(e) => { e.stopPropagation(); onPrev(); }}
-            onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); onPrev(); } }}
-            tabIndex={0}
+          <button
+            type="button"
+            onClick={onPrev}
             aria-label={t("prevImage")}
+            className={`${arrowClass} left-2`}
           >
             ‹
-          </div>
-          <div
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center min-w-[44px] min-h-[44px] text-foreground/50 pointer-hover:text-foreground/90 transition-[color,transform] active:scale-[0.97] text-2xl bg-background/60 backdrop-blur-sm rounded-sm"
-            role="button"
-            onClick={(e) => { e.stopPropagation(); onNext(); }}
-            onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); onNext(); } }}
-            tabIndex={0}
+          </button>
+          <button
+            type="button"
+            onClick={onNext}
             aria-label={t("nextImage")}
+            className={`${arrowClass} right-2`}
           >
             ›
-          </div>
+          </button>
           <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1">
             {images.map((img, i) => (
-              <div
+              <button
                 key={img || i}
-                role="button"
-                tabIndex={0}
-                onClick={(e) => { e.stopPropagation(); onSelectIndex(i); }}
-                onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); onSelectIndex(i); } }}
-                className="size-6 flex items-center justify-center cursor-pointer transition-transform active:scale-[0.85]"
+                type="button"
+                onClick={() => onSelectIndex(i)}
                 aria-label={t("goToImage", { n: i + 1 })}
+                className="size-6 flex items-center justify-center cursor-pointer transition-transform active:scale-[0.85] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 <span className={`w-1.5 h-1.5 rotate-45 transition-[background-color,box-shadow] duration-200 ease-out block ${
                   i === activeIndex
                     ? "bg-primary shadow-[0_0_6px_var(--primary-strong)]"
                     : "bg-foreground/30 pointer-hover:bg-foreground/50"
                 }`} />
-              </div>
+              </button>
             ))}
           </div>
         </>
       )}
-    </m.button>
+    </m.div>
   );
 }

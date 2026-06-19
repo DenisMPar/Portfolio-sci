@@ -31,6 +31,7 @@
     "prevImage": "Imagen anterior",
     "nextImage": "Imagen siguiente",
     "goToImage": "Ir a imagen {n}",
+    "openGallery": "Abrir galería de imágenes",
     "listLabel": "Lista de proyectos"
   },
   "skills": {

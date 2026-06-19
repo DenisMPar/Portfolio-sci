@@ -144,7 +144,10 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
   const t = useTranslations("projects");
   const selectProject = useCallback((slug: string) => {
     setActiveSlug(slug);
-    window.history.replaceState(null, "", `/projects?project=${slug}`);
+    // Keep the current path (which includes the next-intl locale prefix) and
+    // only update the query — a bare `/projects` would drop the locale.
+    const url = `${window.location.pathname}?project=${encodeURIComponent(slug)}`;
+    window.history.replaceState(null, "", url);
   }, []);
 
   const activeProject = projects.find((p) => p.slug === activeSlug) ?? projects[0];

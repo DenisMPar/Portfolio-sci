@@ -9,7 +9,9 @@ export function DeferredBackground() {
   const [phase, setPhase] = useState<Phase>('hidden');
 
   useEffect(() => {
-    if (window.matchMedia('(hover: none)').matches) return;
+    // Mobile (hover: none) keeps a lightweight version of the scene: the
+    // ParticleCloud degrades to rotation-only and BackgroundScene skips the
+    // postprocessing pass, so only the WebGL probe gates mounting here.
     try {
       const probe = document.createElement('canvas');
       const ctx = probe.getContext('webgl') ?? probe.getContext('experimental-webgl');

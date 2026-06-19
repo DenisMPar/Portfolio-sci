@@ -12,6 +12,9 @@ import { useHasHover } from '@/hooks/useHasHover';
 const CAMERA = { position: [0, 0, 16] as const, fov: 75 };
 const GL = { alpha: true, antialias: false };
 const DPR: [number, number] = [1, 1.5];
+// Touch GPUs are fill-rate bound: cap the pixel ratio so the full-screen
+// smoke/particle passes stay cheap without postprocessing.
+const DPR_MOBILE: [number, number] = [1, 1];
 const PERF = { min: 0.5 };
 
 function WebGLGuard() {
@@ -26,7 +29,7 @@ export function BackgroundScene() {
     <div className="fixed inset-0 z-0" aria-hidden>
       <Canvas
         camera={CAMERA}
-        dpr={DPR}
+        dpr={hasHover ? DPR : DPR_MOBILE}
         performance={PERF}
         gl={GL}
         style={{ width: '100%', height: '100%' }}
